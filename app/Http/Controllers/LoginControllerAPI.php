@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-define('YOUR_SERVER_URL', 'http://project.test');
+define('YOUR_SERVER_URL', 'http://projectdad.test');
 // Check "oauth_clients" table for next 2 values:
 define('CLIENT_ID', env("PASSPORT_ID"));
 define('CLIENT_SECRET', env("PASSPORT_SECRET"));
