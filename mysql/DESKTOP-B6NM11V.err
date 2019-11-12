@@ -1,0 +1,6 @@
+2019-11-12T16:00:11.051408Z 0 [ERROR] Cannot open Windows EventLog; check privileges, or start server with --log_syslog=0
+2019-11-12T16:00:14.985068Z 0 [Warning] InnoDB: New log files created, LSN=45790
+2019-11-12T16:00:15.904656Z 0 [Warning] InnoDB: Creating foreign key constraint system tables.
+2019-11-12T16:00:16.546521Z 0 [Warning] No existing UUID has been found, so we assume that this is the first time that this server has been started. Generating a new UUID: 84c2a76f-0565-11ea-a307-74d02bbb3a96.
+2019-11-12T16:00:16.677648Z 0 [Warning] Gtid table is not ready to be used. Table 'mysql.gtid_executed' cannot be opened.
+2019-11-12T16:00:16.773293Z 1 [Warning] root@localhost is created with an empty password ! Please consider switching off the --initialize-insecure option.
