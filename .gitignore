@@ -4,12 +4,12 @@
 /storage/*.key
 /storage/app/public
 /vendor
+/mysql
 .env
 .env.backup
 .phpunit.result.cache
+.env.example
 Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
-/mysql
-.env.example
