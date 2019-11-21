@@ -6,27 +6,23 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require("../../../../../Users/ZenBook/Downloads/05_Laravel_Vue_Updated_Base/resources/js/bootstrap");
+require("./bootstrap");
 
-window.Vue = require("resources/js/vue");
+window.Vue = require("vue");
 import VueRouter from "vue-router";
 
 Vue.use(VueRouter);
 
-import Users from "../../../../../Users/ZenBook/Downloads/05_Laravel_Vue_Updated_Base/resources/js/components/user";
-import Departments from "../../../../../Users/ZenBook/Downloads/05_Laravel_Vue_Updated_Base/resources/js/components/department";
+import Total from "./components/total";
 
-Vue.component("user", Users);
+Vue.component("total", Total);
 
 const routes = [
     {
         path: "./",
-        component: Users
+        component: Total
     },
-    {
-        path: "./",
-        component: Departments
-    }
+    
 ];
 
 const router = new VueRouter({
