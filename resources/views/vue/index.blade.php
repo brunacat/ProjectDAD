@@ -1,8 +1,11 @@
 @extends('master')
 
-@section('title', 'Vue.js App')
+@section('title', 'iWallet')
 
 @section('content')
+
+
+<navbar></navbar>
 
 <total></total>
 
@@ -10,4 +13,4 @@
 @endsection
 @section('pagescript')
 <script src="js/app.js"></script>
- @stop
+@stop

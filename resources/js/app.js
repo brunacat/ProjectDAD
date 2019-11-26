@@ -13,16 +13,27 @@ import VueRouter from "vue-router";
 
 Vue.use(VueRouter);
 
+import Vue from 'vue'
+import BootstrapVue from 'bootstrap-vue'
+
+// app.js
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+
+Vue.use(BootstrapVue)
+
 import Total from "./components/total";
+import Navbar from "./components/navbar";
 
 Vue.component("total", Total);
+Vue.component("navbar", Navbar);
 
 const routes = [
     {
         path: "/",
         component: Total
     },
-    
+
 ];
 
 const router = new VueRouter({
