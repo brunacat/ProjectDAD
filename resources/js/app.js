@@ -13,11 +13,22 @@ import VueRouter from "vue-router";
 
 Vue.use(VueRouter);
 
+import Vue from 'vue'
+import BootstrapVue from 'bootstrap-vue'
+
+// app.js
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
+
+Vue.use(BootstrapVue)
+
 import Total from "./components/total";
 import Login from "./components/login";
+import Navbar from "./components/navbar";
 
 Vue.component("total", Total);
 Vue.component("login", Login);
+Vue.component("navbar", Navbar);
 
 const routes = [
     {
@@ -28,6 +39,7 @@ const routes = [
         path: "/login",
         component: Login
     },
+
 ];
 
 const router = new VueRouter({
