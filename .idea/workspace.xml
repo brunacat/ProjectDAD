@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="00c4121c-8961-407d-9625-7b4413e3444f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/resources/js/components/user.vue" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/js/vue.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/resources/views/master.blade.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/views/vue/index.blade.php" beforeDir="false" afterPath="$PROJECT_DIR$/resources/views/vue/index.blade.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -21,6 +19,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="prettierjs.PrettierConfiguration.Package" value="C:\laragon\www\ProjectDAD\node_modules\prettier" />
   </component>
   <component name="RecentsManager">
@@ -53,7 +52,9 @@
       <option name="presentableId" value="Default" />
       <updated>1574180222981</updated>
       <workItem from="1574180224370" duration="2999000" />
-      <workItem from="1574184270846" duration="103000" />
+      <workItem from="1574184270846" duration="233000" />
+      <workItem from="1574185314245" duration="357000" />
+      <workItem from="1574782892055" duration="255000" />
     </task>
     <servers />
   </component>
