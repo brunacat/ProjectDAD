@@ -5,6 +5,7 @@
 @section('content')
 
 <total></total>
+<login></login>
 
 
 @endsection

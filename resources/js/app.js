@@ -14,15 +14,20 @@ import VueRouter from "vue-router";
 Vue.use(VueRouter);
 
 import Total from "./components/total";
+import Login from "./components/login";
 
 Vue.component("total", Total);
+Vue.component("login", Login);
 
 const routes = [
     {
         path: "/",
         component: Total
     },
-    
+    {
+        path: "/login",
+        component: Login
+    },
 ];
 
 const router = new VueRouter({

@@ -13,10 +13,7 @@ class WalletControllerAPI extends Controller
 {
 	public function total()
     {
-
      $total = Wallet::count();
-
      return response()->json($total);
     }
-   	
 }
