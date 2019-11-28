@@ -29,6 +29,9 @@
                     console.log("user errado");
                 });
             }
+        },
+        mounted() {
+            console.log('Component mounted.')
         }
     }
 </script>

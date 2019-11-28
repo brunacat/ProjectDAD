@@ -22,24 +22,31 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.use(BootstrapVue)
 
-import Total from "./components/total";
-import Login from "./components/login";
-import Navbar from "./components/navbar";
+import TotalComponent from "./components/total.vue";
+const total = Vue.component("total-component", TotalComponent);
 
-Vue.component("total", Total);
-Vue.component("login", Login);
-Vue.component("navbar", Navbar);
+import LoginComponent from "./components/login.vue";
+const login = Vue.component("login-component", LoginComponent);
+
+import RegisterComponent from "./components/register.vue";
+const register = Vue.component("register-component", RegisterComponent);
+
+import NavbarComponent from "./components/navbar.vue";
+const navbar = Vue.component("navbar-component", NavbarComponent);
 
 const routes = [
     {
         path: "/",
-        component: Total
+        component: total
     },
     {
         path: "/login",
-        component: Login
+        component: login
     },
-
+    {
+        path: "/register",
+        component: register
+    }
 ];
 
 const router = new VueRouter({
@@ -51,4 +58,4 @@ const app = new Vue({
     router,
     data: {},
     methods: {}
-});
+}).$mount('#app')

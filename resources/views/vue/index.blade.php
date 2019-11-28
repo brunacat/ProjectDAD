@@ -4,12 +4,8 @@
 
 @section('content')
 
-
-<navbar></navbar>
-
-<total></total>
-<login></login>
-
+<navbar-component></navbar-component>
+<router-view></router-view>
 
 @endsection
 @section('pagescript')

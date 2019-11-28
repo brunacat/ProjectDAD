@@ -1,9 +1,22 @@
 //
-#login {
-    width: 500px;
-    border: 1px solid #CCCCCC;
-    background-color: #FFFFFF;
+#login, #register {
+    width: auto;
+    border: 1px solid #cccccc;
+    background-color: #ffffff;
     margin: auto;
-    margin-top: 200px;
     padding: 20px;
+}
+
+#register{
+    height: 400px;
+    input, button {
+        margin-top: 50px;
+        float: center;
+    }
+}
+
+ #picture-input {
+    float: center;
+    width: 200px;
+    height: 200px;
 }
