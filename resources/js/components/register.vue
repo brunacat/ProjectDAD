@@ -14,27 +14,71 @@
                 drag: 'Optional'
             }"
         ></picture-input>
-        <input
-            type="text"
-            name="name"
-            v-model="input.name"
-            placeholder="Name"
-        />
-        <input
-            type="text"
-            name="email"
-            v-model="input.email"
-            placeholder="Email"
-        />
-        <input
-            type="password"
-            name="password"
-            v-model="input.password"
-            placeholder="Password"
-        />
-        <input type="number" name="nif" v-model="input.nif" placeholder="NIF" />
-        <button type="button" v-on:click="cancel()">Cancel</button>
-        <button type="button" v-on:click="register()">Register</button>
+
+        <b-form>
+            <b-form-group
+                id="input-group-1"
+                label="Name: "
+                label-for="name"
+            >
+                <b-form-input
+                    id="name"
+                    v-model="input.name"
+                    type="text"
+                    required
+                    placeholder="Name"
+                ></b-form-input>
+            </b-form-group>
+
+            <b-form-group
+                id="input-group-2"
+                label="Email: "
+                label-for="email"
+            >
+                <b-form-input
+                    id="email"
+                    v-model="input.email"
+                    type="email"
+                    required
+                    placeholder="Email"
+                ></b-form-input>
+            </b-form-group>
+
+            <b-form-group
+                id="input-group-4"
+                label="NIF: "
+                label-for="nif"
+            >
+                <b-form-input
+                    id="nif"
+                    v-model="input.nif"
+                    type="number"
+                    required
+                    placeholder="NIF"
+                ></b-form-input>
+            </b-form-group>
+
+            <b-form-group
+                id="input-group-4"
+                label="Password:"
+                label-for="password"
+            >
+                <b-form-input
+                    id="password"
+                    v-model="input.password"
+                    type="password"
+                    required
+                    placeholder="Password"
+                ></b-form-input>
+            </b-form-group>
+
+            <b-button type="reset" variant="danger" v-on:click="cancel()"
+                >Reset</b-button
+            >
+            <b-button type="submit" variant="primary" v-on:click="register()"
+                >Register</b-button
+            >
+        </b-form>
     </div>
 </template>
 
@@ -65,9 +109,7 @@ export default {
                 console.log("Picture loaded.");
                 this.image = image;
             } else {
-                console.log(
-                    "FileReader API not supported: use the <form>"
-                );
+                console.log("FileReader API not supported: use the <form>");
             }
         }
     },

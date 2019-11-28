@@ -8,12 +8,11 @@
 }
 
 #register {
-  height: 400px;
+  height: 665px;
 }
 
 #register input,
 #register button {
-  margin-top: 50px;
   float: center;
 }
 
