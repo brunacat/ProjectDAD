@@ -34,6 +34,9 @@ const register = Vue.component("register-component", RegisterComponent);
 import NavbarComponent from "./components/navbar.vue";
 const navbar = Vue.component("navbar-component", NavbarComponent);
 
+import LoggedUserComponent from "./components/loggeduser";
+const logged = Vue.component("logged-component", LoggedUserComponent);
+
 const routes = [
     {
         path: "/",
@@ -46,6 +49,10 @@ const routes = [
     {
         path: "/register",
         component: register
+    },
+    {
+        path: "/wallet",
+        component: logged,
     }
 ];
 

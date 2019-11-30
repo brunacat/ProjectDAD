@@ -45,18 +45,19 @@ export default {
                 email: "",
                 password: ""
             }
-        };
-    },
-    methods: {
-        login() {
-            axios
-                .post("api/login", this.input)
-                .then(response => {
-                    console.log(response.data.access_token);
+        },
+        methods: {
+            login(email, password) {
+                axios.post('api/login', {'email':email, 'password':password})
+                .then(response=>{
+                    this.$root.token = response.data.access_token;
+                    this.$router.push({path: '/wallet'});
+                    document.getElementById("error").classList.add("hidden");
                 })
-                .catch(error => {
-                    console.log(error);
-                    console.log("user errado");
+                .catch(error=>{
+                    this.errorMessage = error.response.data.msg;
+                    this.showError = true;
+                    document.getElementById("error").classList.remove("hidden");
                 });
         }
     },
@@ -67,5 +68,8 @@ export default {
 </script>
 
 <style lang="scss">
-@import "./resources/sass/app.scss";
+     @import "./resources/sass/app.scss";
+     h4.hidden {
+         visibility: hidden;
+     }
 </style>
