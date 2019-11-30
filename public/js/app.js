@@ -2015,7 +2015,9 @@ __webpack_require__.r(__webpack_exports__);
     PictureInput: vue_picture_input__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
   methods: {
-    register: function register() {},
+    register: function register() {
+      axios.post('api/user/register', this.input);
+    },
     cancel: function cancel() {},
     onChange: function onChange(image) {
       console.log("New picture selected!");
@@ -53724,11 +53726,7 @@ var render = function() {
             "b-button",
             {
               attrs: { type: "reset", variant: "danger" },
-              on: {
-                click: function($event) {
-                  return _vm.cancel()
-                }
-              }
+              on: { click: _vm.cancel }
             },
             [_vm._v("Reset")]
           ),
@@ -53737,11 +53735,7 @@ var render = function() {
             "b-button",
             {
               attrs: { type: "submit", variant: "primary" },
-              on: {
-                click: function($event) {
-                  return _vm.register()
-                }
-              }
+              on: { click: _vm.register }
             },
             [_vm._v("Register")]
           )

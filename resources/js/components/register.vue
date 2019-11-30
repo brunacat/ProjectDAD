@@ -72,10 +72,10 @@
                 ></b-form-input>
             </b-form-group>
 
-            <b-button type="reset" variant="danger" v-on:click="cancel()"
+            <b-button type="reset" variant="danger" v-on:click="cancel"
                 >Reset</b-button
             >
-            <b-button type="submit" variant="primary" v-on:click="register()"
+            <b-button type="submit" variant="primary" v-on:click="register"
                 >Register</b-button
             >
         </b-form>
@@ -86,7 +86,7 @@
 import PictureInput from "vue-picture-input";
 export default {
     name: "Register",
-    data() {
+    data: function() {
         return {
             input: {
                 name: "",
@@ -101,8 +101,10 @@ export default {
         PictureInput
     },
     methods: {
-        register() {},
-        cancel() {},
+        register: function() {
+            axios.post('api/user/register', this.input);
+        },
+        cancel: function() {},
         onChange(image) {
             console.log("New picture selected!");
             if (image) {
