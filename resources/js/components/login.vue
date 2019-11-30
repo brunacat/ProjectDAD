@@ -39,22 +39,24 @@
 <script>
 export default {
     name: "Login",
-    data() {
+    data: function() {
         return {
             input: {
                 email: "",
                 password: ""
             }
-        },
-        methods: {
-            login(email, password) {
-                axios.post('api/login', {'email':email, 'password':password})
-                .then(response=>{
+        };
+    },
+    methods: {
+        login: function(email, password) {
+            axios
+                .post("api/login", this.input)
+                .then(response => {
                     this.$root.token = response.data.access_token;
-                    this.$router.push({path: '/wallet'});
+                    this.$router.push({ path: "/wallet" });
                     document.getElementById("error").classList.add("hidden");
                 })
-                .catch(error=>{
+                .catch(error => {
                     this.errorMessage = error.response.data.msg;
                     this.showError = true;
                     document.getElementById("error").classList.remove("hidden");
@@ -68,8 +70,8 @@ export default {
 </script>
 
 <style lang="scss">
-     @import "./resources/sass/app.scss";
-     h4.hidden {
-         visibility: hidden;
-     }
+@import "./resources/sass/app.scss";
+h4.hidden {
+    visibility: hidden;
+}
 </style>

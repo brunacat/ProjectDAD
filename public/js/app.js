@@ -1895,25 +1895,53 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
+  name: "Login",
   data: function data() {
     return {
-      email: null,
-      password: null
+      input: {
+        email: "",
+        password: ""
+      }
     };
   },
   methods: {
     login: function login(email, password) {
       var _this = this;
 
-      axios.post('api/login', {
-        'email': email,
-        'password': password
-      }).then(function (response) {
+      axios.post("api/login", this.input).then(function (response) {
         _this.$root.token = response.data.access_token;
 
         _this.$router.push({
-          path: '/wallet'
+          path: "/wallet"
         });
 
         document.getElementById("error").classList.add("hidden");
@@ -30840,7 +30868,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "#login, #register {\n  width: auto;\n  border: 1px solid #cccccc;\n  background-color: #ffffff;\n  margin: auto;\n  padding: 20px;\n}\n#register {\n  height: 400px;\n}\n#register input, #register button {\n  margin-top: 50px;\n  float: center;\n}\n#picture-input {\n  float: center;\n  width: 200px;\n  height: 200px;\n}\nh4.hidden {\n  visibility: hidden;\n}", ""]);
+exports.push([module.i, "#login, #register {\n  width: auto;\n  border: 1px solid #cccccc;\n  background-color: #ffffff;\n  margin: auto;\n  padding: 20px;\n}\n#register {\n  height: 665px;\n}\n#register input, #register button {\n  float: center;\n}\n#picture-input {\n  float: center;\n  width: 200px;\n  height: 200px;\n}\nh4.hidden {\n  visibility: hidden;\n}", ""]);
 
 // exports
 
@@ -53451,68 +53479,91 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { attrs: { id: "login" } }, [
-    _c("h1", [_vm._v("Login")]),
-    _vm._v(" "),
-    _c("input", {
-      directives: [
-        {
-          name: "model",
-          rawName: "v-model",
-          value: _vm.email,
-          expression: "email"
-        }
-      ],
-      attrs: { type: "text", name: "email", placeholder: "Email" },
-      domProps: { value: _vm.email },
-      on: {
-        input: function($event) {
-          if ($event.target.composing) {
-            return
-          }
-          _vm.email = $event.target.value
-        }
-      }
-    }),
-    _vm._v(" "),
-    _c("input", {
-      directives: [
-        {
-          name: "model",
-          rawName: "v-model",
-          value: _vm.password,
-          expression: "password"
-        }
-      ],
-      attrs: { type: "password", name: "password", placeholder: "Password" },
-      domProps: { value: _vm.password },
-      on: {
-        input: function($event) {
-          if ($event.target.composing) {
-            return
-          }
-          _vm.password = $event.target.value
-        }
-      }
-    }),
-    _vm._v(" "),
-    _c(
-      "button",
-      {
-        attrs: { type: "button" },
-        on: {
-          click: function($event) {
-            return _vm.login(_vm.email, _vm.password)
-          }
-        }
-      },
-      [_vm._v("Login")]
-    ),
-    _vm._v(" "),
-    _c("h4", { staticClass: "hidden", attrs: { id: "error" } }, [
-      _vm._v("Wrong Email or Password")
-    ])
-  ])
+  return _c(
+    "div",
+    { attrs: { id: "login" } },
+    [
+      _c("h1", [_vm._v("Login")]),
+      _vm._v(" "),
+      _c(
+        "b-form",
+        [
+          _c(
+            "b-form-group",
+            {
+              attrs: {
+                id: "input-group-1",
+                label: "Email address:",
+                "label-for": "email"
+              }
+            },
+            [
+              _c("b-form-input", {
+                attrs: {
+                  id: "email",
+                  type: "email",
+                  required: "",
+                  placeholder: "Email"
+                },
+                model: {
+                  value: _vm.input.email,
+                  callback: function($$v) {
+                    _vm.$set(_vm.input, "email", $$v)
+                  },
+                  expression: "input.email"
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "b-form-group",
+            {
+              attrs: {
+                id: "input-group-2",
+                label: "Your Password:",
+                "label-for": "password"
+              }
+            },
+            [
+              _c("b-form-input", {
+                attrs: {
+                  id: "input-2",
+                  type: "password",
+                  required: "",
+                  placeholder: "Password"
+                },
+                model: {
+                  value: _vm.input.password,
+                  callback: function($$v) {
+                    _vm.$set(_vm.input, "password", $$v)
+                  },
+                  expression: "input.password"
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "b-button",
+            {
+              attrs: { type: "submit", variant: "primary" },
+              on: {
+                click: function($event) {
+                  return _vm.login()
+                }
+              }
+            },
+            [_vm._v("Login")]
+          )
+        ],
+        1
+      )
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -69483,8 +69534,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\laragon\www\ProjectDAD\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\laragon\www\ProjectDAD\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\DAD\www\ProjectDAD\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\DAD\www\ProjectDAD\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
