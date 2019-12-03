@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 class User extends Authenticatable
 {
     use HasApiTokens, Notifiable;
-    
+
 
     /**
      * The attributes that are mass assignable.
@@ -44,7 +44,7 @@ class User extends Authenticatable
 
     public function wallet()
     {
-        return $this->hasOne('App\Wallet');
+        return $this->hasOne('App\Wallet', 'id');
     }
 
 }

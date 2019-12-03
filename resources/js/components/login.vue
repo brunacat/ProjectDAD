@@ -52,7 +52,9 @@ export default {
             axios
                 .post("api/login", this.input)
                 .then(response => {
-                    this.$root.token = response.data.access_token;
+                    this.$root.$data.token = response.data.access_token;
+                    axios.get()
+
                     this.$router.push({ path: "/wallet" });
                 })
                 .catch(error => {
@@ -69,7 +71,4 @@ export default {
 
 <style lang="scss">
 @import "./resources/sass/app.scss";
-h4.hidden {
-    visibility: hidden;
-}
 </style>

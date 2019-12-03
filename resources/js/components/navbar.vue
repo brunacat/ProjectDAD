@@ -7,7 +7,7 @@
             </router-link>
             <b-navbar-nav class="ml-auto">
                 <b-nav-form>
-                    <div>
+                    <div v-if="this.$root.$data.token===''">
                         <router-link to="/login">
                             <b-button
                                 size="sm"

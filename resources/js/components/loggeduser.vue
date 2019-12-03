@@ -1,6 +1,6 @@
 <template>
     <div >
-        <h1>LOGGED, BITCH...</h1>
+        <h1>LOGGED</h1>
         <button type="button" v-on:click="logout()">Logout</button>
     </div>
 </template>
@@ -14,9 +14,11 @@
         },
         methods: {
             logout() {
-                axios.post('api/logout',{}, {headers:{'Authorization':"Bearer " + this.$root.token}})
+                axios.post('api/logout',{}, {headers:{'Authorization':"Bearer " + this.$root.$data.token}})
                     .then(response=>{
-                        this.$root.token = '';
+                        this.$root.$data.token = '';
+                        this.$root.$data.user=null;
+                        localStorage.clear();
                         this.$router.push({path: '/'})
                     })
                     .catch(error=>{

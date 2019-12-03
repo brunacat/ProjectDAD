@@ -20,7 +20,7 @@ import BootstrapVue from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
-Vue.use(BootstrapVue)
+Vue.use(BootstrapVue);
 
 import TotalComponent from "./components/total.vue";
 const total = Vue.component("total-component", TotalComponent);
@@ -36,6 +36,14 @@ const navbar = Vue.component("navbar-component", NavbarComponent);
 
 import LoggedUserComponent from "./components/loggeduser";
 const logged = Vue.component("logged-component", LoggedUserComponent);
+
+import Vuex from 'vuex'
+Vue.use(Vuex);
+import 'es6-promise/auto'
+
+import Toasted from 'vue-toasted';
+Vue.use(Toasted);
+
 
 const routes = [
     {
@@ -63,6 +71,26 @@ const router = new VueRouter({
 const app = new Vue({
     el: "#app",
     router,
-    data: {},
-    methods: {}
-}).$mount('#app')
+    data: {
+        user:null,
+        token:''
+    },
+    methods: {
+        persist() {
+            localStorage.user = this.user;
+            localStorage.token = this.token;
+
+            console.log(this.token);
+        }
+
+
+    },
+    mounted() {
+        if (localStorage.user) {
+            this.user = localStorage.user;
+        }
+        if (localStorage.token) {
+            this.token = localStorage.token;
+        }
+    }
+}).$mount('#app');

@@ -22,4 +22,11 @@ class UserControllerAPI extends Controller
         $user->password = Hash::make($user->password);
         $user->save();
     }
+
+    public function getUser($email){
+
+        $user = User::where('email', $email)->first();
+
+        return response()->json($user);
+    }
 }

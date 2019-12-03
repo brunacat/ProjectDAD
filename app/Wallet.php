@@ -17,7 +17,7 @@ class Wallet extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\User', 'id');
     }
 
     public function movements()
@@ -29,5 +29,5 @@ class Wallet extends Model
     {
         return $this->hasMany('App\Movement', 'transfer_wallet_id');
     }
-    
+
 }
