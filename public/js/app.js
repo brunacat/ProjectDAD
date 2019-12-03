@@ -1934,7 +1934,7 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    login: function login(email, password) {
+    login: function login() {
       var _this = this;
 
       axios.post("api/login", this.input).then(function (response) {
@@ -1943,12 +1943,9 @@ __webpack_require__.r(__webpack_exports__);
         _this.$router.push({
           path: "/wallet"
         });
-
-        document.getElementById("error").classList.add("hidden");
       })["catch"](function (error) {
         _this.errorMessage = error.response.data.msg;
         _this.showError = true;
-        document.getElementById("error").classList.remove("hidden");
       });
     }
   },
@@ -53599,7 +53596,7 @@ var render = function() {
           _c(
             "router-link",
             { attrs: { to: "/" } },
-            [_c("b-navbar-brand", [_vm._v("Welcome to iWallet")])],
+            [_c("b-navbar-brand", [_vm._v("iWallet")])],
             1
           ),
           _vm._v(" "),
@@ -69534,8 +69531,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\DAD\www\ProjectDAD\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\DAD\www\ProjectDAD\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\laragon\www\ProjectDAD\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\laragon\www\ProjectDAD\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

@@ -3,7 +3,7 @@
         <b-navbar toggleable="sm" type="light" variant="light">
             <b-navbar-toggle target="nav-text-collapse"></b-navbar-toggle>
             <router-link to="/">
-                <b-navbar-brand>Welcome to iWallet</b-navbar-brand>
+                <b-navbar-brand>iWallet</b-navbar-brand>
             </router-link>
             <b-navbar-nav class="ml-auto">
                 <b-nav-form>

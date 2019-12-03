@@ -48,18 +48,16 @@ export default {
         };
     },
     methods: {
-        login: function(email, password) {
+        login: function() {
             axios
                 .post("api/login", this.input)
                 .then(response => {
                     this.$root.token = response.data.access_token;
                     this.$router.push({ path: "/wallet" });
-                    document.getElementById("error").classList.add("hidden");
                 })
                 .catch(error => {
                     this.errorMessage = error.response.data.msg;
                     this.showError = true;
-                    document.getElementById("error").classList.remove("hidden");
                 });
         }
     },
