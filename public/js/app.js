@@ -2046,7 +2046,7 @@ __webpack_require__.r(__webpack_exports__);
         localStorage.clear();
 
         _this.$router.push({
-          path: "/login"
+          path: "/"
         });
       })["catch"](function (error) {
         _this.errorMessage = error.response.data.msg;
@@ -2180,14 +2180,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     cancel: function cancel() {},
     onChange: function onChange(photo) {
-      console.log("New picture selected!");
-
       if (photo) {
-        console.log("Picture loaded.");
-        this.input.photo = photo;
+        this.input.photo = this.$refs.photo.file.name;
         console.log(this.input.photo);
-      } else {
-        console.log("FileReader API not supported: use the <form>");
       }
     }
   },
@@ -55011,7 +55006,6 @@ var render = function() {
       _c("picture-input", {
         ref: "photo",
         attrs: {
-          enctype: "multipart/form-data",
           accept: "image/jpeg,image/png",
           size: "10",
           buttonClass: "btn",
@@ -55019,7 +55013,8 @@ var render = function() {
           hideChangeButton: true,
           customStrings: {
             upload: "<h1>Bummer!</h1>",
-            drag: "Click here to upload photo"
+            drag: "Click here to upload photo",
+            filename: "sdfsdf"
           }
         },
         on: { change: _vm.onChange }

@@ -59,7 +59,7 @@ export default {
                     this.$store.state.token = "";
                     this.$store.state.user = null;
                     localStorage.clear();
-                    this.$router.push({ path: "/login" });
+                    this.$router.push({ path: "/" });
                 })
                 .catch(error => {
                     this.errorMessage = error.response.data.msg;
