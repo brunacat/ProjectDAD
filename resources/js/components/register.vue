@@ -94,7 +94,7 @@ export default {
                 email: "",
                 password: "",
                 nif: "",
-                photo: ""
+                photo: null
             }
         };
     },

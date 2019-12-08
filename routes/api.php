@@ -18,6 +18,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('users', 'UserControllerAPI@index');
+
 Route::post('login', 'LoginControllerAPI@login');
 Route::middleware('auth:api')->post('logout', 'LoginControllerAPI@logout');
 
@@ -27,3 +29,7 @@ Route::get('user/mail/{email}', 'UserControllerAPI@getUser');
 
 Route::middleware('auth:api')->get('users/me', 'UserControllerAPI@myProfile');
 Route::middleware('auth:api')->get('wallet/me', 'WalletControllerAPI@myWallet');
+
+Route::get('users/{id}', 'UserControllerAPI@show');
+Route::put('users/{id}', 'UserControllerAPI@update');
+Route::delete('users/{id}', 'UserControllerAPI@destroy');
