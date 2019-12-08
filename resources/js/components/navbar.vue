@@ -7,7 +7,7 @@
             </router-link>
             <b-navbar-nav class="ml-auto">
                 <b-nav-form>
-                    <div v-if="this.$root.$data.token===''">
+                    <div v-if="this.$store.state.token === ''">
                         <router-link to="/login">
                             <b-button
                                 size="sm"
@@ -25,12 +25,56 @@
                             >
                         </router-link>
                     </div>
+                    <div v-if="this.$store.state.token !== ''">
+                        <b-button size="sm" class="my-2 my-sm-0" type="submit" v-on:click="logout()"
+                            >Logout</b-button
+                        >
+                    </div>
                 </b-nav-form>
             </b-navbar-nav>
         </b-navbar>
         <br />
     </div>
 </template>
+
+<script>
+export default {
+    data() {
+        return {
+            currentUser: "",
+        };
+    },
+    methods: {
+        logout() {
+            axios
+                .post(
+                    "api/logout",
+                    {
+                        headers: {
+                            Authorization: "Bearer " + this.$store.state.token
+                        }
+                    }
+                )
+                .then(response => {
+                    this.$store.state.token = "";
+                    this.$store.state.user = null;
+                    localStorage.clear();
+                    this.$router.push({ path: "/login" });
+                })
+                .catch(error => {
+                    this.errorMessage = error.response.data.msg;
+                    this.showError = true;
+                });
+        }
+    },
+    mounted() {
+        console.log("Component mounted.");
+    },
+    onChanged() {
+
+    }
+};
+</script>
 
 <style lang="scss">
 @import "./resources/sass/app.scss";

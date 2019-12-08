@@ -22,6 +22,8 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.use(BootstrapVue);
 
+import store from "./stores/global-store";
+
 import TotalComponent from "./components/total.vue";
 const total = Vue.component("total-component", TotalComponent);
 
@@ -71,6 +73,7 @@ const router = new VueRouter({
 const app = new Vue({
     el: "#app",
     router,
+    store,
     data: {
         user:null,
         token:''
@@ -92,5 +95,12 @@ const app = new Vue({
         if (localStorage.token) {
             this.token = localStorage.token;
         }
+    },
+    created() {
+        console.log("Starting APP");
+        console.log(this.$store.state.user);
+        //this.$store.commit("loadDepartments");
+        this.$store.commit("loadTokenAndUserFromSession");
+        console.log(this.$store.state.user);
     }
 }).$mount('#app');

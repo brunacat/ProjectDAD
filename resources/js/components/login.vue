@@ -13,7 +13,11 @@
                     type="email"
                     required
                     placeholder="Email"
+                    :state="isEmailValid"
                 ></b-form-input>
+
+                <b-form-invalid-feedback :state="isEmailValid">
+                </b-form-invalid-feedback>
             </b-form-group>
 
             <b-form-group
@@ -32,35 +36,58 @@
             <b-button type="submit" variant="primary" v-on:click="login()"
                 >Login</b-button
             >
+
+            <strong>{{ message }}</strong>
+
         </b-form>
+        
     </div>
 </template>
 
 <script>
 export default {
     name: "Login",
-    data: function() {
+    data() {
         return {
             input: {
                 email: "",
                 password: ""
-            }
+            },
+            typeofmsg: "alert-success",
+            showMessage: false,
+            message: "",
+            reg: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
         };
     },
     methods: {
-        login: function() {
+       login() {
+            this.showMessage = false;
             axios
                 .post("api/login", this.input)
                 .then(response => {
-                    this.$root.$data.token = response.data.access_token;
-                    axios.get()
-
-                    this.$router.push({ path: "/wallet" });
+                    this.$store.commit("setToken", response.data.access_token);
+                    return axios.get("api/users/me");
+                })
+                .then(response => {
+                    this.$store.commit("setUser", response.data.data);
+                    //this.$socket.emit("user_enter", response.data.data);
+                    this.typeofmsg = "alert-success";
+                    this.message = "User authenticated correctly";
+                    this.showMessage = true;
+                    this.$router.push({ path: '/wallet' });
                 })
                 .catch(error => {
-                    this.errorMessage = error.response.data.msg;
-                    this.showError = true;
+                    this.$store.commit("clearUserAndToken");
+                    this.typeofmsg = "alert-danger";
+                    this.message = "Invalid credentials";
+                    this.showMessage = true;
+                    console.log(error);
                 });
+        }
+    },
+    computed: {
+        isEmailValid() {
+            return this.reg.test(this.input.email);
         }
     },
     mounted() {

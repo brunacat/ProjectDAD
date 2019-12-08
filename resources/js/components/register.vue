@@ -2,6 +2,7 @@
     <div id="register">
         <h1>Register</h1>
         <picture-input
+            enctype="multipart/form-data"
             ref="photo"
             @change="onChange"
             accept="image/jpeg,image/png"
@@ -11,7 +12,7 @@
             :hideChangeButton="true"
             :customStrings="{
                 upload: '<h1>Bummer!</h1>',
-                drag: 'Optional'
+                drag: 'Click here to upload photo'
             }"
         ></picture-input>
 
@@ -105,11 +106,13 @@ export default {
             axios.post('api/user/register', this.input);
         },
         cancel: function() {},
-        onChange(image) {
+        onChange(photo) {
             console.log("New picture selected!");
-            if (image) {
+            if (photo) {
                 console.log("Picture loaded.");
-                this.image = image;
+                
+                this.input.photo = photo;
+                console.log(this.input.photo);
             } else {
                 console.log("FileReader API not supported: use the <form>");
             }
