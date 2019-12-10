@@ -2084,6 +2084,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2566,7 +2567,7 @@ __webpack_require__.r(__webpack_exports__);
               this.$set(this.users, idx, changedUser);
           }
       }
-       // user_changed (changedUser) {
+        // user_changed (changedUser) {
       //   let changedUserIdx = this.getChangedUserIdx(changedUser.id);
       //   if (changedUserIdx >= 0) {
       //     this.$set(this.users, changedUserIdx, changedUser);
@@ -31477,7 +31478,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\ntr.activerow[data-v-32d347d4] {\n    background: #123456 !important;\n    color: #fff !important;\n}\n", ""]);
+exports.push([module.i, "\ntr.activerow[data-v-32d347d4] {\r\n    background: #123456 !important;\r\n    color: #fff !important;\n}\r\n", ""]);
 
 // exports
 
@@ -55508,6 +55509,11 @@ var render = function() {
                   ? _c(
                       "div",
                       [
+                        _vm._v(
+                          "\n                    " +
+                            _vm._s(this.$store.state.user.name) +
+                            "\n                    "
+                        ),
                         _c(
                           "b-button",
                           {
@@ -73268,8 +73274,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! D:\DAD\www\ProjectDAD\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! D:\DAD\www\ProjectDAD\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\laragon\www\ProjectDAD\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\laragon\www\ProjectDAD\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
