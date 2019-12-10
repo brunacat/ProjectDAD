@@ -2002,7 +2002,6 @@ __webpack_require__.r(__webpack_exports__);
     login: function login() {
       var _this = this;
 
-      this.showMessage = false;
       axios.post("api/login", this.input).then(function (response) {
         _this.$store.commit("setToken", response.data.access_token);
 
@@ -31478,7 +31477,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\ntr.activerow[data-v-32d347d4] {\r\n    background: #123456 !important;\r\n    color: #fff !important;\n}\r\n", ""]);
+exports.push([module.i, "\ntr.activerow[data-v-32d347d4] {\n    background: #123456 !important;\n    color: #fff !important;\n}\n", ""]);
 
 // exports
 
@@ -55408,6 +55407,7 @@ var render = function() {
               attrs: { type: "submit", variant: "primary" },
               on: {
                 click: function($event) {
+                  $event.preventDefault()
                   return _vm.login()
                 }
               }
@@ -73267,8 +73267,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\laragon\www\ProjectDAD\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\laragon\www\ProjectDAD\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\DAD\www\ProjectDAD\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\DAD\www\ProjectDAD\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

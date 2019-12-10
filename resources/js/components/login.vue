@@ -33,7 +33,7 @@
                     placeholder="Password"
                 ></b-form-input>
             </b-form-group>
-            <b-button type="submit" variant="primary" v-on:click="login()"
+            <b-button type="submit" variant="primary" v-on:click.prevent="login()"
                 >Login</b-button
             >
         </b-form>
@@ -54,7 +54,6 @@ export default {
     },
     methods: {
        login() {
-            this.showMessage = false;
             axios
                 .post("api/login", this.input)
                 .then(response => {
