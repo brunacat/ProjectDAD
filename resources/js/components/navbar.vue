@@ -26,7 +26,7 @@
                         </router-link>
                     </div>
                     <div v-if="this.$store.state.token !== ''">
-                        <b-button size="sm" class="my-2 my-sm-0" type="submit" v-on:click="logout()"
+                        <b-button size="sm" class="my-2 my-sm-0" type="submit" v-on:click.prevent="logout()"
                             >Logout</b-button
                         >
                     </div>
@@ -75,5 +75,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import "./resources/sass/app.scss";
+    @import "./resources/sass/app.scss";
 </style>
