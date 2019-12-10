@@ -16,5 +16,4 @@ yarn-error.log
 /mysql
 .env.example
 /.idea
-
-public/js/app.js
+/public/js/app.js
