@@ -15,6 +15,7 @@ class Wallet extends JsonResource
     public function toArray($request)
     {
         return [
+
             'balance' => $this->balance
         ];
     }

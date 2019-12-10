@@ -20,6 +20,11 @@ class Movement extends Model
         'date' => 'datetime'
     ];
 
+    public function wallet()
+        {
+            return $this->belongsTo('App\Wallet');
+        }
+/*
     public function category()
     {
         return $this->belongsTo('App\Category');
@@ -28,5 +33,5 @@ class Movement extends Model
     public function par_movement()
     {
         return $this->hasOne('App\Movement', 'transfer_movement_id');
-    }
+    }*/
 }

@@ -33,3 +33,5 @@ Route::middleware('auth:api')->get('wallet/me', 'WalletControllerAPI@myWallet');
 Route::get('users/{id}', 'UserControllerAPI@show');
 Route::put('users/{id}', 'UserControllerAPI@update');
 Route::delete('users/{id}', 'UserControllerAPI@destroy');
+
+Route::middleware('auth:api')->get('wallet/me/movements', 'WalletControllerAPI@myMovements');
