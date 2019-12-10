@@ -15,19 +15,21 @@ class Wallet extends Model
         'updated_at' => 'datetime'
     ];
 
+        public function movements()
+        {
+            return $this->hasMany('App\Movement');
+        }
+/*
     public function user()
     {
         return $this->belongsTo('App\User', 'id');
     }
 
-    public function movements()
-    {
-        return $this->hasMany('App\Movement');
-    }
+
 
     public function transfers()
     {
         return $this->hasMany('App\Movement', 'transfer_wallet_id');
     }
-
+*/
 }

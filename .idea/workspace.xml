@@ -2,18 +2,32 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="00c4121c-8961-407d-9625-7b4413e3444f" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/resources/js/components/loggeduser.vue" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/Http/Resources/Movement.php" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/resources/js/components/movements.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/css/app.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/css/app.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Controllers/WalletControllerAPI.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Controllers/WalletControllerAPI.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Http/Resources/Wallet.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Http/Resources/Wallet.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Movement.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Movement.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/Wallet.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/Wallet.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/public/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/app.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/resources/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/js/components/login.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/login.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/components/loggeduser.vue" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/components/loggeduser.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/resources/js/stores/global-store.js" beforeDir="false" afterPath="$PROJECT_DIR$/resources/js/stores/global-store.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/routes/api.php" beforeDir="false" afterPath="$PROJECT_DIR$/routes/api.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Vue Single File Component" />
+      </list>
+    </option>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -25,6 +39,7 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$/../dad5" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="prettierjs.PrettierConfiguration.Package" value="C:\laragon\www\ProjectDAD\node_modules\prettier" />
+    <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\WebStorm\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -60,7 +75,10 @@
       <workItem from="1574185314245" duration="357000" />
       <workItem from="1574782892055" duration="4873000" />
       <workItem from="1574789913865" duration="600000" />
-      <workItem from="1575129824395" duration="10241000" />
+      <workItem from="1575129824395" duration="10839000" />
+      <workItem from="1575385870689" duration="7250000" />
+      <workItem from="1575822039496" duration="618000" />
+      <workItem from="1575990414809" duration="6460000" />
     </task>
     <servers />
   </component>

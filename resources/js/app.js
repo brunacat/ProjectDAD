@@ -42,6 +42,7 @@ const logged = Vue.component("logged-component", LoggedUserComponent);
 import UsersComponent from "./components/user";
 const users = Vue.component("users-component", UsersComponent);
 
+
 import Vuex from 'vuex'
 Vue.use(Vuex);
 import 'es6-promise/auto'

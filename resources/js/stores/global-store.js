@@ -9,6 +9,7 @@ export default new Vuex.Store({
     state: {
         token: "",
         user: null,
+        movements: null,
     },
     mutations: {
         clearUserAndToken: state => {
@@ -51,6 +52,6 @@ export default new Vuex.Store({
                 state.user = JSON.parse(user);
             }
         }
-       
+
     }
 });

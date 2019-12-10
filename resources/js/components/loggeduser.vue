@@ -1,15 +1,27 @@
 <template>
     <div>
+    <div>
         {{balance}}
     </div>
+
+    <Movements/>
+    </div>
+
 </template>
 
 <script>
+
+    import Movements from './Movements'
+
 export default {
     data() {
         return {
             balance: ""
+
         };
+    },
+    components: {
+        Movements
     },
     methods: {
         getBalance() {
