@@ -67,7 +67,7 @@ export default {
             );
         }*/
     },
-    sockets: {
+    /*sockets: {
         user_changed(changedUser) {
             let idx = this.users.findIndex(user => user.id == changedUser.id);
             if (idx >= 0) {
@@ -81,7 +81,7 @@ export default {
         //     this.$set(this.users, changedUserIdx, changedUser);
         //   }
         // }
-    }
+    }*/
 };
 </script>
 

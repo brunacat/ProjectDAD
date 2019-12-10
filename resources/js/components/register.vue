@@ -12,16 +12,11 @@
             :customStrings="{
                 upload: '<h1>Bummer!</h1>',
                 drag: 'Click here to upload photo',
-                filename: 'sdfsdf'
             }"
         ></picture-input>
 
         <b-form>
-            <b-form-group
-                id="input-group-1"
-                label="Name: "
-                label-for="name"
-            >
+            <b-form-group id="input-group-1" label="Name: " label-for="name">
                 <b-form-input
                     id="name"
                     v-model="input.name"
@@ -31,11 +26,7 @@
                 ></b-form-input>
             </b-form-group>
 
-            <b-form-group
-                id="input-group-2"
-                label="Email: "
-                label-for="email"
-            >
+            <b-form-group id="input-group-2" label="Email: " label-for="email">
                 <b-form-input
                     id="email"
                     v-model="input.email"
@@ -45,11 +36,7 @@
                 ></b-form-input>
             </b-form-group>
 
-            <b-form-group
-                id="input-group-4"
-                label="NIF: "
-                label-for="nif"
-            >
+            <b-form-group id="input-group-4" label="NIF: " label-for="nif">
                 <b-form-input
                     id="nif"
                     v-model="input.nif"
@@ -103,11 +90,20 @@ export default {
     },
     methods: {
         register: function() {
-            axios.post('api/user/register', this.input);
+            axios
+                .post("api/user/register", this.input)
+                .then(response => {
+                    this.$toasted.success("Register successful");
+                })
+                .catch(error => {
+                    this.$toasted.error(error.response.data.errors.email);
+                    this.$toasted.error(error.response.data.errors.nif);
+                    this.$toasted.error(error.response.data.errors.password);
+                });
         },
         cancel: function() {},
         onChange(photo) {
-            if(photo){
+            if (photo) {
                 this.input.photo = this.$refs.photo.file.name;
                 console.log(this.input.photo);
             }

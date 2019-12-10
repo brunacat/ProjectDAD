@@ -6,8 +6,9 @@ use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Http\Request;
 
 use App\Http\Resources\User as UserResource;
-
+use App\Http\Resources\Wallet as WalletResource;
 use App\User;
+use App\Wallet;
 use Hash;
 
 class UserControllerAPI extends Controller
@@ -37,7 +38,7 @@ class UserControllerAPI extends Controller
     {
         $request->validate([
             'name' => 'required|min:3|regex:/^[A-Za-záàâãéèêíóôõúçÁÀÂÃÉÈÍÓÔÕÚÇ ]+$/',
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email|unique:users,email,',
             'password' => 'required|min:3',
             'nif' => 'required|integer|between:100000000,999999999|unique:users',
         ]);
@@ -45,15 +46,20 @@ class UserControllerAPI extends Controller
         $user = new User();
         $user->fill($request->all());
         $user->password = Hash::make($user->password);
-        
         $user->save();
+
+        $wallet = new Wallet();
+        $wallet->id = $user->id;
+        $wallet->email = $user->email;
+        $wallet->balance = "0";
+        $wallet->save();
     }
 
     public function update(Request $request, $id)
     {
         $request->validate([
             'name' => 'required|min:3|regex:/^[A-Za-záàâãéèêíóôõúçÁÀÂÃÉÈÍÓÔÕÚÇ ]+$/',
-            'email' => 'required|email|unique:users',
+            'email' => 'required|email|unique:users,email,' . $id,
             'nif' => 'required|integer|between:100000000,999999999|unique:users',
         ]);
         $user = User::findOrFail($id);

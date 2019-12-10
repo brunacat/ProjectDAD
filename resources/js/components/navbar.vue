@@ -56,9 +56,7 @@ export default {
                     }
                 )
                 .then(response => {
-                    this.$store.state.token = "";
-                    this.$store.state.user = null;
-                    localStorage.clear();
+                    this.$store.commit("clearUserAndToken");
                     this.$router.push({ path: "/" });
                 })
                 .catch(error => {

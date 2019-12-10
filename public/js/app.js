@@ -1918,10 +1918,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Login",
   data: function data() {
@@ -1930,9 +1926,6 @@ __webpack_require__.r(__webpack_exports__);
         email: "",
         password: ""
       },
-      typeofmsg: "alert-success",
-      showMessage: false,
-      message: "",
       reg: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
     };
   },
@@ -1949,9 +1942,7 @@ __webpack_require__.r(__webpack_exports__);
         _this.$store.commit("setUser", response.data.data); //this.$socket.emit("user_enter", response.data.data);
 
 
-        _this.typeofmsg = "alert-success";
-        _this.message = "User authenticated correctly";
-        _this.showMessage = true;
+        _this.$toasted.success("Login successful");
 
         _this.$router.push({
           path: '/wallet'
@@ -1959,9 +1950,8 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (error) {
         _this.$store.commit("clearUserAndToken");
 
-        _this.typeofmsg = "alert-danger";
-        _this.message = "Invalid credentials";
-        _this.showMessage = true;
+        _this.$toasted.error("Invalid Credentials");
+
         console.log(error);
       });
     }
@@ -2041,9 +2031,7 @@ __webpack_require__.r(__webpack_exports__);
           Authorization: "Bearer " + this.$store.state.token
         }
       }).then(function (response) {
-        _this.$store.state.token = "";
-        _this.$store.state.user = null;
-        localStorage.clear();
+        _this.$store.commit("clearUserAndToken");
 
         _this.$router.push({
           path: "/"
@@ -2144,19 +2132,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Register",
@@ -2176,7 +2151,17 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     register: function register() {
-      axios.post('api/user/register', this.input);
+      var _this = this;
+
+      axios.post("api/user/register", this.input).then(function (response) {
+        _this.$toasted.success("Register successful");
+      })["catch"](function (error) {
+        _this.$toasted.error(error.response.data.errors.email);
+
+        _this.$toasted.error(error.response.data.errors.nif);
+
+        _this.$toasted.error(error.response.data.errors.password);
+      });
     },
     cancel: function cancel() {},
     onChange: function onChange(photo) {
@@ -2271,26 +2256,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       title: "List Users",
-      showSuccess: false,
-      successMessage: "",
       currentUser: null,
       users: []
     };
@@ -2298,14 +2269,14 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     editUser: function editUser(user) {
       this.currentUser = user;
-      this.showSuccess = false;
     },
     deleteUser: function deleteUser(user) {
       var _this = this;
 
       axios["delete"]("api/users/" + user.id).then(function (response) {
         _this.showSuccess = true;
-        _this.successMessage = "User Deleted";
+
+        _this.$toasted.success("User deleted");
 
         _this.getUsers();
       });
@@ -2313,14 +2284,11 @@ __webpack_require__.r(__webpack_exports__);
     savedUser: function savedUser(user) {
       this.currentUser = null;
       this.$refs.usersListRef.editingUser = null;
-      this.showSuccess = true;
-      this.successMessage = "User Saved";
-      this.$socket.emit("user_changed", user);
+      this.$toasted.success("User saved"); //this.$socket.emit("user_changed", user);
     },
     cancelEdit: function cancelEdit() {
       this.currentUser = null;
       this.$refs.usersListRef.editingUser = null;
-      this.showSuccess = false;
     },
     getUsers: function getUsers() {
       var _this2 = this;
@@ -2328,10 +2296,6 @@ __webpack_require__.r(__webpack_exports__);
       axios.get("api/users").then(function (response) {
         _this2.users = response.data.data;
       });
-    },
-    childMessage: function childMessage(message) {
-      this.showSuccess = true;
-      this.successMessage = message;
     }
   },
   components: {
@@ -2354,6 +2318,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var vue_picture_input__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-picture-input */ "./node_modules/vue-picture-input/PictureInput.vue");
 //
 //
 //
@@ -2389,8 +2354,37 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["user"],
+  components: {
+    PictureInput: vue_picture_input__WEBPACK_IMPORTED_MODULE_0__["default"]
+  },
   methods: {
     saveUser: function saveUser() {
       var _this = this;
@@ -2496,24 +2490,22 @@ __webpack_require__.r(__webpack_exports__);
         );
     }*/
 
-  },
-  sockets: {
-    user_changed: function user_changed(changedUser) {
-      var idx = this.users.findIndex(function (user) {
-        return user.id == changedUser.id;
-      });
-
-      if (idx >= 0) {
-        this.$set(this.users, idx, changedUser);
-      }
-    } // user_changed (changedUser) {
-    //   let changedUserIdx = this.getChangedUserIdx(changedUser.id);
-    //   if (changedUserIdx >= 0) {
-    //     this.$set(this.users, changedUserIdx, changedUser);
-    //   }
-    // }
-
   }
+  /*sockets: {
+      user_changed(changedUser) {
+          let idx = this.users.findIndex(user => user.id == changedUser.id);
+          if (idx >= 0) {
+              this.$set(this.users, idx, changedUser);
+          }
+      }
+       // user_changed (changedUser) {
+      //   let changedUserIdx = this.getChangedUserIdx(changedUser.id);
+      //   if (changedUserIdx >= 0) {
+      //     this.$set(this.users, changedUserIdx, changedUser);
+      //   }
+      // }
+  }*/
+
 });
 
 /***/ }),
@@ -55224,9 +55216,7 @@ var render = function() {
               }
             },
             [_vm._v("Login")]
-          ),
-          _vm._v(" "),
-          _c("strong", [_vm._v(_vm._s(_vm.message))])
+          )
         ],
         1
       )
@@ -55389,8 +55379,7 @@ var render = function() {
           hideChangeButton: true,
           customStrings: {
             upload: "<h1>Bummer!</h1>",
-            drag: "Click here to upload photo",
-            filename: "sdfsdf"
+            drag: "Click here to upload photo"
           }
         },
         on: { change: _vm.onChange }
@@ -55609,32 +55598,8 @@ var render = function() {
       _c("user-list", {
         ref: "usersListRef",
         attrs: { users: _vm.users },
-        on: {
-          "edit-click": _vm.editUser,
-          "delete-click": _vm.deleteUser,
-          message: _vm.childMessage
-        }
+        on: { "edit-click": _vm.editUser, "delete-click": _vm.deleteUser }
       }),
-      _vm._v(" "),
-      _vm.showSuccess
-        ? _c("div", { staticClass: "alert alert-success" }, [
-            _c(
-              "button",
-              {
-                staticClass: "close-btn",
-                attrs: { type: "button" },
-                on: {
-                  click: function($event) {
-                    _vm.showSuccess = false
-                  }
-                }
-              },
-              [_vm._v("\n            ×\n        ")]
-            ),
-            _vm._v(" "),
-            _c("strong", [_vm._v(_vm._s(_vm.successMessage))])
-          ])
-        : _vm._e(),
       _vm._v(" "),
       _vm.currentUser
         ? _c("user-edit", {
@@ -55668,101 +55633,159 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "jumbotron" }, [
-    _c("h2", [_vm._v("Edit User")]),
-    _vm._v(" "),
-    _c("div", { staticClass: "form-group" }, [
-      _c("label", { attrs: { for: "inputName" } }, [_vm._v("Name")]),
+  return _c(
+    "div",
+    { staticClass: "jumbotron" },
+    [
+      _c("h2", [_vm._v("Edit User")]),
       _vm._v(" "),
-      _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.user.name,
-            expression: "user.name"
-          }
-        ],
-        staticClass: "form-control",
+      _c("picture-input", {
+        ref: "photo",
         attrs: {
-          type: "text",
-          name: "name",
-          id: "inputName",
-          placeholder: "Fullname"
-        },
-        domProps: { value: _vm.user.name },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.$set(_vm.user, "name", $event.target.value)
+          accept: "image/jpeg,image/png",
+          size: "10",
+          buttonClass: "btn",
+          radius: "50",
+          hideChangeButton: true,
+          customStrings: {
+            upload: "<h1>Bummer!</h1>",
+            drag: "Click here to upload photo"
           }
+        },
+        model: {
+          value: _vm.user.photo,
+          callback: function($$v) {
+            _vm.$set(_vm.user, "photo", $$v)
+          },
+          expression: "user.photo"
         }
-      })
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "form-group" }, [
-      _c("label", { attrs: { for: "inputEmail" } }, [_vm._v("Email")]),
+      }),
       _vm._v(" "),
-      _c("input", {
-        directives: [
+      _c("div", { staticClass: "form-group" }, [
+        _c("label", { attrs: { for: "inputName" } }, [_vm._v("Name")]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.user.name,
+              expression: "user.name"
+            }
+          ],
+          staticClass: "form-control",
+          attrs: {
+            type: "text",
+            name: "name",
+            id: "inputName",
+            placeholder: "Fullname"
+          },
+          domProps: { value: _vm.user.name },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.user, "name", $event.target.value)
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-group" }, [
+        _c("label", { attrs: { for: "inputEmail" } }, [_vm._v("Email")]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.user.email,
+              expression: "user.email"
+            }
+          ],
+          staticClass: "form-control",
+          attrs: {
+            type: "email",
+            name: "email",
+            id: "inputEmail",
+            placeholder: "Email address"
+          },
+          domProps: { value: _vm.user.email },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.user, "email", $event.target.value)
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-group" }, [
+        _c("label", { attrs: { for: "inputNif" } }, [_vm._v("NIF")]),
+        _vm._v(" "),
+        _c("input", {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.user.nif,
+              expression: "user.nif"
+            }
+          ],
+          staticClass: "form-control",
+          attrs: {
+            type: "number",
+            name: "nif",
+            id: "inputNif",
+            placeholder: "NIF"
+          },
+          domProps: { value: _vm.user.nif },
+          on: {
+            input: function($event) {
+              if ($event.target.composing) {
+                return
+              }
+              _vm.$set(_vm.user, "nif", $event.target.value)
+            }
+          }
+        })
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "form-group" }, [
+        _c(
+          "a",
           {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.user.email,
-            expression: "user.email"
-          }
-        ],
-        staticClass: "form-control",
-        attrs: {
-          type: "email",
-          name: "email",
-          id: "inputEmail",
-          placeholder: "Email address"
-        },
-        domProps: { value: _vm.user.email },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
+            staticClass: "btn btn-primary",
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.saveUser()
+              }
             }
-            _vm.$set(_vm.user, "email", $event.target.value)
-          }
-        }
-      })
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "form-group" }, [
-      _c(
-        "a",
-        {
-          staticClass: "btn btn-primary",
-          on: {
-            click: function($event) {
-              $event.preventDefault()
-              return _vm.saveUser()
+          },
+          [_vm._v("Save")]
+        ),
+        _vm._v(" "),
+        _c(
+          "a",
+          {
+            staticClass: "btn btn-light",
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.cancelEdit()
+              }
             }
-          }
-        },
-        [_vm._v("Save")]
-      ),
-      _vm._v(" "),
-      _c(
-        "a",
-        {
-          staticClass: "btn btn-light",
-          on: {
-            click: function($event) {
-              $event.preventDefault()
-              return _vm.cancelEdit()
-            }
-          }
-        },
-        [_vm._v("Cancel")]
-      )
-    ])
-  ])
+          },
+          [_vm._v("Cancel")]
+        )
+      ])
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -72121,7 +72144,11 @@ var users = vue__WEBPACK_IMPORTED_MODULE_1___default.a.component("users-componen
 vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_12__["default"]);
 
 
-vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(vue_toasted__WEBPACK_IMPORTED_MODULE_14___default.a);
+vue__WEBPACK_IMPORTED_MODULE_1___default.a.use(vue_toasted__WEBPACK_IMPORTED_MODULE_14___default.a, {
+  position: "bottom-center",
+  duration: 5000,
+  type: "info"
+});
 var routes = [{
   path: "/",
   component: total

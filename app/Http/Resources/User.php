@@ -17,7 +17,9 @@ class User extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'email' => $this->email
+            'email' => $this->email,
+            'nif' => $this->nif,
+            'balance' => $this->wallet ? ($this->wallet->balance ? "> 0" : "0") : null
         ];
     }
 }

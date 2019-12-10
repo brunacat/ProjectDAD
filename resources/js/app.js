@@ -47,7 +47,11 @@ Vue.use(Vuex);
 import 'es6-promise/auto'
 
 import Toasted from 'vue-toasted';
-Vue.use(Toasted);
+Vue.use(Toasted, {
+    position: "bottom-center",
+    duration: 5000,
+    type: "info"
+});
 
 
 const routes = [

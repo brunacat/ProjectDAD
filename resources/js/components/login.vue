@@ -36,11 +36,7 @@
             <b-button type="submit" variant="primary" v-on:click="login()"
                 >Login</b-button
             >
-
-            <strong>{{ message }}</strong>
-
         </b-form>
-        
     </div>
 </template>
 
@@ -53,9 +49,6 @@ export default {
                 email: "",
                 password: ""
             },
-            typeofmsg: "alert-success",
-            showMessage: false,
-            message: "",
             reg: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
         };
     },
@@ -71,16 +64,12 @@ export default {
                 .then(response => {
                     this.$store.commit("setUser", response.data.data);
                     //this.$socket.emit("user_enter", response.data.data);
-                    this.typeofmsg = "alert-success";
-                    this.message = "User authenticated correctly";
-                    this.showMessage = true;
+                    this.$toasted.success("Login successful");
                     this.$router.push({ path: '/wallet' });
                 })
                 .catch(error => {
                     this.$store.commit("clearUserAndToken");
-                    this.typeofmsg = "alert-danger";
-                    this.message = "Invalid credentials";
-                    this.showMessage = true;
+                    this.$toasted.error("Invalid Credentials");
                     console.log(error);
                 });
         }
@@ -97,5 +86,5 @@ export default {
 </script>
 
 <style lang="scss">
-@import "./resources/sass/app.scss";
+    @import "./resources/sass/app.scss";
 </style>

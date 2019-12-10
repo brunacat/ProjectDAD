@@ -1,6 +1,19 @@
 <template>
     <div class="jumbotron">
         <h2>Edit User</h2>
+        <picture-input
+            v-model="user.photo"
+            ref="photo"
+            accept="image/jpeg,image/png"
+            size="10"
+            buttonClass="btn"
+            radius="50"
+            :hideChangeButton="true"
+            :customStrings="{
+                upload: '<h1>Bummer!</h1>',
+                drag: 'Click here to upload photo',
+            }"
+        ></picture-input>
         <div class="form-group">
             <label for="inputName">Name</label>
             <input
@@ -25,6 +38,18 @@
         </div>
 
         <div class="form-group">
+            <label for="inputNif">NIF</label>
+            <input
+                type="number"
+                class="form-control"
+                v-model="user.nif"
+                name="nif"
+                id="inputNif"
+                placeholder="NIF"
+            />
+        </div>
+
+        <div class="form-group">
             <a class="btn btn-primary" v-on:click.prevent="saveUser()">Save</a>
             <a class="btn btn-light" v-on:click.prevent="cancelEdit()"
                 >Cancel</a
@@ -34,8 +59,12 @@
 </template>
 
 <script type="text/javascript">
+import PictureInput from "vue-picture-input";
 export default {
     props: ["user"],
+    components: {
+        PictureInput
+    },
     methods: {
         saveUser: function() {
             axios.put("api/users/" + this.user.id, this.user).then(response => {
