@@ -74,8 +74,8 @@ class UserControllerAPI extends Controller
         return response()->json(null, 204);
     }
 
-    public function getUser($email){
-
+    public function getUser($email)
+    {
         $user = User::where('email', $email)->first();
 
         return response()->json($user);
@@ -84,5 +84,10 @@ class UserControllerAPI extends Controller
     public function myProfile(Request $request)
     {
         return new UserResource($request->user());
+    }
+
+    public function uploadImage(Request $request)
+    {
+        $request->photo->storeAs('public/fotos', $request->photo->getClientOriginalName());
     }
 }

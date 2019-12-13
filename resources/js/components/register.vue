@@ -11,7 +11,7 @@
             :hideChangeButton="true"
             :customStrings="{
                 upload: '<h1>Bummer!</h1>',
-                drag: 'Click here to upload photo',
+                drag: 'Click here to upload photo'
             }"
         ></picture-input>
 
@@ -93,6 +93,9 @@ export default {
             axios
                 .post("api/user/register", this.input)
                 .then(response => {
+                    if (this.input.photo != null) {
+                        this.submitFile();
+                    }
                     this.$toasted.success("Register successful");
                 })
                 .catch(error => {
@@ -102,6 +105,22 @@ export default {
                 });
         },
         cancel: function() {},
+        submitFile() {
+            let formData = new FormData();
+            formData.append("photo", this.$refs.photo.file);
+            axios
+                .post("api/upload-image", formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+                    }
+                })
+                .then(function() {
+                    console.log("SUCCESS!!");
+                })
+                .catch(function() {
+                    console.log("FAILURE!!");
+                });
+        },
         onChange(photo) {
             if (photo) {
                 this.input.photo = this.$refs.photo.file.name;
