@@ -2786,7 +2786,7 @@ __webpack_require__.r(__webpack_exports__);
               this.$set(this.users, idx, changedUser);
           }
       }
-        // user_changed (changedUser) {
+       // user_changed (changedUser) {
       //   let changedUserIdx = this.getChangedUserIdx(changedUser.id);
       //   if (changedUserIdx >= 0) {
       //     this.$set(this.users, changedUserIdx, changedUser);
@@ -31716,7 +31716,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\ntr.activerow[data-v-32d347d4] {\r\n    background: #123456 !important;\r\n    color: #fff !important;\n}\r\n", ""]);
+exports.push([module.i, "\ntr.activerow[data-v-32d347d4] {\n    background: #123456 !important;\n    color: #fff !important;\n}\n", ""]);
 
 // exports
 
@@ -73707,7 +73707,7 @@ var render = function() {
               _vm._v(" "),
               _c("td", [_vm._v(_vm._s(movement.transfer))]),
               _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(movement.category_id))]),
+              _c("td", [_vm._v(_vm._s(movement.category))]),
               _vm._v(" "),
               _c("td", [_vm._v(_vm._s(_vm.formatDate(movement.date)))]),
               _vm._v(" "),
@@ -92098,8 +92098,8 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vuex__WEBPACK_IMPORTED_MODULE_1__
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\laragon\www\ProjectDAD\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\laragon\www\ProjectDAD\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! D:\DAD\www\ProjectDAD\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! D:\DAD\www\ProjectDAD\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

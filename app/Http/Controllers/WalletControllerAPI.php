@@ -12,10 +12,10 @@ use App\Http\Resources\Movement as MovementResource;
 
 class WalletControllerAPI extends Controller
 {
-	public function total()
+    public function total()
     {
-     $total = Wallet::count();
-     return response()->json($total);
+        $total = Wallet::count();
+        return response()->json($total);
     }
 
     public function myWallet(Request $request)

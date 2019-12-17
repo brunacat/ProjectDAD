@@ -21,10 +21,20 @@ class Movement extends Model
     ];
 
     public function wallet()
-        {
-            return $this->belongsTo('App\Wallet');
+    {
+        return $this->belongsTo('App\Wallet');
+    }
+
+    public function getType() 
+    {
+        switch($this->type){
+            case "e":
+                return "Expense";
+            case "i":
+                return "Income";
         }
-/*
+    }
+
     public function category()
     {
         return $this->belongsTo('App\Category');
@@ -33,5 +43,5 @@ class Movement extends Model
     public function par_movement()
     {
         return $this->hasOne('App\Movement', 'transfer_movement_id');
-    }*/
+    }
 }

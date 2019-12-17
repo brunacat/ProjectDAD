@@ -16,7 +16,7 @@
             <tr v-for="movement in movements.data" :key="movement.id">
                 <td>{{ movement.type }}</td>
                 <td>{{ movement.transfer }}</td>
-                <td>{{ movement.category_id }}</td>
+                <td>{{ movement.category }}</td>
                 <td>{{ formatDate(movement.date) }}</td>
                 <td>{{ movement.start_balance }}</td>
                 <td>{{ movement.end_balance }}</td>
