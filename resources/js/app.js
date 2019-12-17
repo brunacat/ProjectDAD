@@ -42,6 +42,9 @@ const logged = Vue.component("logged-component", LoggedUserComponent);
 import UsersComponent from "./components/user";
 const users = Vue.component("users-component", UsersComponent);
 
+require('moment/moment.js');
+
+Vue.component('pagination', require('laravel-vue-pagination'));
 
 import Vuex from 'vuex'
 Vue.use(Vuex);
