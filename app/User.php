@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 
+use function PHPSTORM_META\type;
+
 class User extends Authenticatable
 {
     use HasApiTokens, Notifiable;
@@ -45,6 +47,18 @@ class User extends Authenticatable
     public function wallet()
     {
         return $this->hasOne('App\Wallet', 'id');
+    }
+
+    public function getType() 
+    {
+        switch($this->type){
+            case "o":
+                return "Operator";
+            case "a":
+                return "Admin";
+            case "u":
+                return "User";
+        }
     }
 
 }

@@ -1,6 +1,6 @@
 <template>
     <div id="register">
-        <h1>Register</h1>
+        <h1>Register New Admin Or Operator</h1>
         <picture-input
             ref="photo"
             @change="onChange"
@@ -60,7 +60,7 @@
             </b-form-group>
 
             <b-button type="reset" variant="danger" v-on:click="cancel"
-                >Reset</b-button
+                >Cancel</b-button
             >
             <b-button type="submit" variant="primary" v-on:click="register"
                 >Register</b-button
@@ -72,7 +72,7 @@
 <script>
 import PictureInput from "vue-picture-input";
 export default {
-    name: "Register",
+    name: "Create AO",
     data: function() {
         return {
             input: {
@@ -103,7 +103,9 @@ export default {
                     this.$toasted.error(error.response.data.errors.password);
                 });
         },
-        cancel: function() {},
+        cancel: function() {
+            this.$emit("create-canceled");
+        },
         submitFile() {
             let formData = new FormData();
             formData.append("photo", this.$refs.photo.file);

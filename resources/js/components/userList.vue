@@ -2,8 +2,12 @@
     <table class="table table-striped">
         <thead>
             <tr>
+                <th>Photo</th>
                 <th>Name</th>
                 <th>Email</th>
+                <th>Type</th>
+                <th>Balance</th>
+                <th>Status</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -13,23 +17,38 @@
                 :key="user.id"
                 :class="{ activerow: editingUser === user }"
             >
+                <td>
+                    <img
+                        :src="'storage/fotos/' + user.photo"
+                        contain
+                        height="51px"
+                        width="50px"
+                    />
+                </td>
                 <td>{{ user.name }}</td>
                 <td>{{ user.email }}</td>
+                <td>{{ user.type }}</td>
+                <td>{{ user.balance }}</td>
+                <td>{{ user.active }}</td>
                 <td>
                     <!-- <a
                         class="btn btn-sm btn-success"
                         v-on:click.prevent="sendMessageTo(user)"
                         >Msg</a
                     > -->
-                    <a
-                        class="btn btn-sm btn-primary"
+                    <b-button
+                        size="sm"
+                        type="edit"
+                        variant="primary"
                         v-on:click.prevent="editUser(user)"
-                        >Edit</a
+                        >Edit</b-button
                     >
-                    <a
-                        class="btn btn-sm btn-danger"
+                    <b-button
+                        size="sm"
+                        type="delete"
+                        variant="danger"
                         v-on:click.prevent="deleteUser(user)"
-                        >Delete</a
+                        >Delete</b-button
                     >
                 </td>
             </tr>
@@ -54,7 +73,7 @@ export default {
         deleteUser: function(user) {
             this.editingUser = null;
             this.$emit("delete-click", user);
-        },
+        }
         /*sendMessageTo: function(user) {
             let msg = window.prompt(
                 'What do you want to say to "' + user.name + '"'
@@ -66,7 +85,7 @@ export default {
                 user
             );
         }*/
-    },
+    }
     /*sockets: {
         user_changed(changedUser) {
             let idx = this.users.findIndex(user => user.id == changedUser.id);
