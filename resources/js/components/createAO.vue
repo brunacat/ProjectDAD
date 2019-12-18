@@ -99,7 +99,7 @@ export default {
                     if (this.input.photo != null) {
                         this.submitFile();
                     }
-                    this.$emit("ao-created");
+                    this.$emit("ao-created", this.input.type);
                 })
                 .catch(error => {
                     this.$toasted.error(error.response.data.errors.email);

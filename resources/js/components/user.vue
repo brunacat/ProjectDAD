@@ -61,8 +61,12 @@ export default {
             this.currentUser = null;
             this.$refs.usersListRef.editingUser = null;
         },
-        createdAO: function() {
-            this.$toasted.success("New admin or operator registered");
+        createdAO: function(type) {
+            if (type == "a") {
+                this.$toasted.success("New administrator registered");
+            } else {
+                this.$toasted.success("New operator registered");
+            }
             this.addingUser = false;
             this.getUsers();
         },

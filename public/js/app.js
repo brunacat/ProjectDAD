@@ -2015,7 +2015,7 @@ __webpack_require__.r(__webpack_exports__);
           _this.submitFile();
         }
 
-        _this.$emit("ao-created");
+        _this.$emit("ao-created", _this.input.type);
       })["catch"](function (error) {
         _this.$toasted.error(error.response.data.errors.email);
 
@@ -2549,8 +2549,13 @@ __webpack_require__.r(__webpack_exports__);
       this.currentUser = null;
       this.$refs.usersListRef.editingUser = null;
     },
-    createdAO: function createdAO() {
-      this.$toasted.success("New admin or operator registered");
+    createdAO: function createdAO(type) {
+      if (type == "a") {
+        this.$toasted.success("New administrator registered");
+      } else {
+        this.$toasted.success("New operator registered");
+      }
+
       this.addingUser = false;
       this.getUsers();
     },
