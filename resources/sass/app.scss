@@ -1,5 +1,7 @@
 //
-#login, #register {
+#login,
+#register,
+#register-ao {
     width: auto;
     border: 1px solid #cccccc;
     background-color: #ffffff;
@@ -7,14 +9,23 @@
     padding: 20px;
 }
 
-#register{
-    height: 665px;
-    input, button {
+#register-ao {
+    height: 700px;
+    input,
+    button {
         float: center;
     }
 }
 
- #picture-input {
+#register {
+    height: 665px;
+    input,
+    button {
+        float: center;
+    }
+}
+
+#picture-input {
     float: center;
     width: 200px;
     height: 200px;

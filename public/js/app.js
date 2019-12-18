@@ -1985,17 +1985,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "Create AO",
+  name: "CreateAO",
   data: function data() {
     return {
       input: {
         name: "",
         email: "",
         password: "",
-        nif: "",
-        photo: null
+        photo: null,
+        type: ""
       }
     };
   },
@@ -2006,12 +2010,12 @@ __webpack_require__.r(__webpack_exports__);
     register: function register() {
       var _this = this;
 
-      axios.post("api/user/register", this.input).then(function (response) {
+      axios.post("api/user/register-ao", this.input).then(function (response) {
         if (_this.input.photo != null) {
           _this.submitFile();
         }
 
-        _this.$toasted.success("Register successful");
+        _this.$emit("ao-created");
       })["catch"](function (error) {
         _this.$toasted.error(error.response.data.errors.email);
 
@@ -2060,8 +2064,6 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Movements__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Movements */ "./resources/js/components/Movements.vue");
-//
-//
 //
 //
 //
@@ -2449,7 +2451,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2460,7 +2461,7 @@ __webpack_require__.r(__webpack_exports__);
     getWallets: function getWallets() {
       var _this = this;
 
-      axios.get('api/wallets/total').then(function (response) {
+      axios.get("api/wallets/total").then(function (response) {
         _this.totalWallets = response.data;
       });
     }
@@ -2484,8 +2485,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _userList_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./userList.vue */ "./resources/js/components/userList.vue");
 /* harmony import */ var _userEdit_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./userEdit.vue */ "./resources/js/components/userEdit.vue");
 /* harmony import */ var _createAO_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./createAO.vue */ "./resources/js/components/createAO.vue");
-//
-//
 //
 //
 //
@@ -2552,6 +2551,8 @@ __webpack_require__.r(__webpack_exports__);
     },
     createdAO: function createdAO() {
       this.$toasted.success("New admin or operator registered");
+      this.addingUser = false;
+      this.getUsers();
     },
     cancelCreate: function cancelCreate() {
       this.addingUser = false;
@@ -31526,7 +31527,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "#login, #register {\n  width: auto;\n  border: 1px solid #cccccc;\n  background-color: #ffffff;\n  margin: auto;\n  padding: 20px;\n}\n#register {\n  height: 665px;\n}\n#register input, #register button {\n  float: center;\n}\n#picture-input {\n  float: center;\n  width: 200px;\n  height: 200px;\n}", ""]);
+exports.push([module.i, "#login,\n#register,\n#register-ao {\n  width: auto;\n  border: 1px solid #cccccc;\n  background-color: #ffffff;\n  margin: auto;\n  padding: 20px;\n}\n#register-ao {\n  height: 700px;\n}\n#register-ao input,\n#register-ao button {\n  float: center;\n}\n#register {\n  height: 665px;\n}\n#register input,\n#register button {\n  float: center;\n}\n#picture-input {\n  float: center;\n  width: 200px;\n  height: 200px;\n}", ""]);
 
 // exports
 
@@ -31545,7 +31546,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "#login, #register {\n  width: auto;\n  border: 1px solid #cccccc;\n  background-color: #ffffff;\n  margin: auto;\n  padding: 20px;\n}\n#register {\n  height: 665px;\n}\n#register input, #register button {\n  float: center;\n}\n#picture-input {\n  float: center;\n  width: 200px;\n  height: 200px;\n}", ""]);
+exports.push([module.i, "#login,\n#register,\n#register-ao {\n  width: auto;\n  border: 1px solid #cccccc;\n  background-color: #ffffff;\n  margin: auto;\n  padding: 20px;\n}\n#register-ao {\n  height: 700px;\n}\n#register-ao input,\n#register-ao button {\n  float: center;\n}\n#register {\n  height: 665px;\n}\n#register input,\n#register button {\n  float: center;\n}\n#picture-input {\n  float: center;\n  width: 200px;\n  height: 200px;\n}", ""]);
 
 // exports
 
@@ -31564,7 +31565,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "#login, #register {\n  width: auto;\n  border: 1px solid #cccccc;\n  background-color: #ffffff;\n  margin: auto;\n  padding: 20px;\n}\n#register {\n  height: 665px;\n}\n#register input, #register button {\n  float: center;\n}\n#picture-input {\n  float: center;\n  width: 200px;\n  height: 200px;\n}", ""]);
+exports.push([module.i, "#login,\n#register,\n#register-ao {\n  width: auto;\n  border: 1px solid #cccccc;\n  background-color: #ffffff;\n  margin: auto;\n  padding: 20px;\n}\n#register-ao {\n  height: 700px;\n}\n#register-ao input,\n#register-ao button {\n  float: center;\n}\n#register {\n  height: 665px;\n}\n#register input,\n#register button {\n  float: center;\n}\n#picture-input {\n  float: center;\n  width: 200px;\n  height: 200px;\n}", ""]);
 
 // exports
 
@@ -31583,7 +31584,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "#login, #register {\n  width: auto;\n  border: 1px solid #cccccc;\n  background-color: #ffffff;\n  margin: auto;\n  padding: 20px;\n}\n#register {\n  height: 665px;\n}\n#register input, #register button {\n  float: center;\n}\n#picture-input {\n  float: center;\n  width: 200px;\n  height: 200px;\n}", ""]);
+exports.push([module.i, "#login,\n#register,\n#register-ao {\n  width: auto;\n  border: 1px solid #cccccc;\n  background-color: #ffffff;\n  margin: auto;\n  padding: 20px;\n}\n#register-ao {\n  height: 700px;\n}\n#register-ao input,\n#register-ao button {\n  float: center;\n}\n#register {\n  height: 665px;\n}\n#register input,\n#register button {\n  float: center;\n}\n#picture-input {\n  float: center;\n  width: 200px;\n  height: 200px;\n}", ""]);
 
 // exports
 
@@ -31602,7 +31603,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "#login, #register {\n  width: auto;\n  border: 1px solid #cccccc;\n  background-color: #ffffff;\n  margin: auto;\n  padding: 20px;\n}\n#register {\n  height: 665px;\n}\n#register input, #register button {\n  float: center;\n}\n#picture-input {\n  float: center;\n  width: 200px;\n  height: 200px;\n}", ""]);
+exports.push([module.i, "#login,\n#register,\n#register-ao {\n  width: auto;\n  border: 1px solid #cccccc;\n  background-color: #ffffff;\n  margin: auto;\n  padding: 20px;\n}\n#register-ao {\n  height: 700px;\n}\n#register-ao input,\n#register-ao button {\n  float: center;\n}\n#register {\n  height: 665px;\n}\n#register input,\n#register button {\n  float: center;\n}\n#picture-input {\n  float: center;\n  width: 200px;\n  height: 200px;\n}", ""]);
 
 // exports
 
@@ -31621,7 +31622,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "#login, #register {\n  width: auto;\n  border: 1px solid #cccccc;\n  background-color: #ffffff;\n  margin: auto;\n  padding: 20px;\n}\n#register {\n  height: 665px;\n}\n#register input, #register button {\n  float: center;\n}\n#picture-input {\n  float: center;\n  width: 200px;\n  height: 200px;\n}", ""]);
+exports.push([module.i, "#login,\n#register,\n#register-ao {\n  width: auto;\n  border: 1px solid #cccccc;\n  background-color: #ffffff;\n  margin: auto;\n  padding: 20px;\n}\n#register-ao {\n  height: 700px;\n}\n#register-ao input,\n#register-ao button {\n  float: center;\n}\n#register {\n  height: 665px;\n}\n#register input,\n#register button {\n  float: center;\n}\n#picture-input {\n  float: center;\n  width: 200px;\n  height: 200px;\n}", ""]);
 
 // exports
 
@@ -73777,24 +73778,67 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    { attrs: { id: "register" } },
+    { attrs: { id: "register-ao" } },
     [
       _c("h1", [_vm._v("Register New Admin Or Operator")]),
       _vm._v(" "),
-      _c("picture-input", {
-        ref: "photo",
-        attrs: {
-          accept: "image/jpeg,image/png",
-          size: "5",
-          buttonClass: "btn",
-          radius: "50",
-          hideChangeButton: true,
-          customStrings: {
-            drag: "Click here to upload photo"
-          }
-        },
-        on: { change: _vm.onChange }
-      }),
+      _c(
+        "div",
+        [
+          _c("picture-input", {
+            ref: "photo",
+            attrs: {
+              accept: "image/jpeg,image/png",
+              size: "5",
+              buttonClass: "btn",
+              radius: "50",
+              hideChangeButton: true,
+              customStrings: {
+                drag: "Click here to upload photo"
+              }
+            },
+            on: { change: _vm.onChange }
+          }),
+          _vm._v(" "),
+          _c(
+            "b-form-group",
+            { attrs: { label: "Type of User" } },
+            [
+              _c(
+                "b-form-radio",
+                {
+                  attrs: { name: "some-radios", value: "a" },
+                  model: {
+                    value: _vm.input.type,
+                    callback: function($$v) {
+                      _vm.$set(_vm.input, "type", $$v)
+                    },
+                    expression: "input.type"
+                  }
+                },
+                [_vm._v("Administrator")]
+              ),
+              _vm._v(" "),
+              _c(
+                "b-form-radio",
+                {
+                  attrs: { name: "some-radios", value: "o" },
+                  model: {
+                    value: _vm.input.type,
+                    callback: function($$v) {
+                      _vm.$set(_vm.input, "type", $$v)
+                    },
+                    expression: "input.type"
+                  }
+                },
+                [_vm._v("Operator")]
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
       _vm._v(" "),
       _c(
         "b-form",
@@ -73860,31 +73904,6 @@ var render = function() {
           _c(
             "b-form-group",
             {
-              attrs: { id: "input-group-4", label: "NIF: ", "label-for": "nif" }
-            },
-            [
-              _c("b-form-input", {
-                attrs: {
-                  id: "nif",
-                  type: "number",
-                  required: "",
-                  placeholder: "NIF"
-                },
-                model: {
-                  value: _vm.input.nif,
-                  callback: function($$v) {
-                    _vm.$set(_vm.input, "nif", $$v)
-                  },
-                  expression: "input.nif"
-                }
-              })
-            ],
-            1
-          ),
-          _vm._v(" "),
-          _c(
-            "b-form-group",
-            {
               attrs: {
                 id: "input-group-4",
                 label: "Password:",
@@ -73915,7 +73934,12 @@ var render = function() {
             "b-button",
             {
               attrs: { type: "reset", variant: "danger" },
-              on: { click: _vm.cancel }
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.cancel($event)
+                }
+              }
             },
             [_vm._v("Cancel")]
           ),
@@ -73924,7 +73948,12 @@ var render = function() {
             "b-button",
             {
               attrs: { type: "submit", variant: "primary" },
-              on: { click: _vm.register }
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.register($event)
+                }
+              }
             },
             [_vm._v("Register")]
           )
@@ -73960,7 +73989,7 @@ var render = function() {
   return _c(
     "div",
     [
-      _c("div", [_vm._v("\n    " + _vm._s(_vm.balance) + "\n")]),
+      _c("div", [_vm._v("\n        " + _vm._s(_vm.balance) + "\n    ")]),
       _vm._v(" "),
       _c("Movements")
     ],
@@ -74366,7 +74395,12 @@ var render = function() {
             "b-button",
             {
               attrs: { type: "reset", variant: "danger" },
-              on: { click: _vm.cancel }
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.cancel($event)
+                }
+              }
             },
             [_vm._v("Reset")]
           ),
@@ -74375,7 +74409,12 @@ var render = function() {
             "b-button",
             {
               attrs: { type: "submit", variant: "primary" },
-              on: { click: _vm.register }
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.register($event)
+                }
+              }
             },
             [_vm._v("Register")]
           )
@@ -74453,9 +74492,17 @@ var render = function() {
   return _c(
     "div",
     [
-      _c("div", { staticClass: "jumbotron" }, [
-        _c("h1", [_vm._v(_vm._s(_vm.title))])
-      ]),
+      _c("b-jumbotron", {
+        scopedSlots: _vm._u([
+          {
+            key: "header",
+            fn: function() {
+              return [_vm._v(_vm._s(_vm.title))]
+            },
+            proxy: true
+          }
+        ])
+      }),
       _vm._v(" "),
       !_vm.addingUser
         ? _c(
@@ -74468,7 +74515,7 @@ var render = function() {
                 }
               }
             },
-            [_vm._v("Add admin or operator")]
+            [_vm._v("Add New Admin Or Operator")]
           )
         : _vm._e(),
       _vm._v(" "),

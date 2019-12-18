@@ -1,18 +1,29 @@
 <template>
-    <div id="register">
+    <div id="register-ao">
         <h1>Register New Admin Or Operator</h1>
-        <picture-input
-            ref="photo"
-            @change="onChange"
-            accept="image/jpeg,image/png"
-            size="5"
-            buttonClass="btn"
-            radius="50"
-            :hideChangeButton="true"
-            :customStrings="{
-                drag: 'Click here to upload photo'
-            }"
-        ></picture-input>
+
+        <div>
+            <picture-input
+                ref="photo"
+                @change="onChange"
+                accept="image/jpeg,image/png"
+                size="5"
+                buttonClass="btn"
+                radius="50"
+                :hideChangeButton="true"
+                :customStrings="{
+                    drag: 'Click here to upload photo'
+                }"
+            ></picture-input>
+            <b-form-group label="Type of User">
+                <b-form-radio v-model="input.type" name="some-radios" value="a"
+                    >Administrator</b-form-radio
+                >
+                <b-form-radio v-model="input.type" name="some-radios" value="o"
+                    >Operator</b-form-radio
+                >
+            </b-form-group>
+        </div>
 
         <b-form>
             <b-form-group id="input-group-1" label="Name: " label-for="name">
@@ -35,16 +46,6 @@
                 ></b-form-input>
             </b-form-group>
 
-            <b-form-group id="input-group-4" label="NIF: " label-for="nif">
-                <b-form-input
-                    id="nif"
-                    v-model="input.nif"
-                    type="number"
-                    required
-                    placeholder="NIF"
-                ></b-form-input>
-            </b-form-group>
-
             <b-form-group
                 id="input-group-4"
                 label="Password:"
@@ -59,10 +60,13 @@
                 ></b-form-input>
             </b-form-group>
 
-            <b-button type="reset" variant="danger" v-on:click="cancel"
+            <b-button type="reset" variant="danger" v-on:click.prevent="cancel"
                 >Cancel</b-button
             >
-            <b-button type="submit" variant="primary" v-on:click="register"
+            <b-button
+                type="submit"
+                variant="primary"
+                v-on:click.prevent="register"
                 >Register</b-button
             >
         </b-form>
@@ -72,15 +76,15 @@
 <script>
 import PictureInput from "vue-picture-input";
 export default {
-    name: "Create AO",
+    name: "CreateAO",
     data: function() {
         return {
             input: {
                 name: "",
                 email: "",
                 password: "",
-                nif: "",
-                photo: null
+                photo: null,
+                type: ""
             }
         };
     },
@@ -90,12 +94,12 @@ export default {
     methods: {
         register: function() {
             axios
-                .post("api/user/register", this.input)
+                .post("api/user/register-ao", this.input)
                 .then(response => {
                     if (this.input.photo != null) {
                         this.submitFile();
                     }
-                    this.$toasted.success("Register successful");
+                    this.$emit("ao-created");
                 })
                 .catch(error => {
                     this.$toasted.error(error.response.data.errors.email);

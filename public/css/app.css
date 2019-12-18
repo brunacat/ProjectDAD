@@ -1,10 +1,20 @@
 #login,
-#register {
+#register,
+#register-ao {
   width: auto;
   border: 1px solid #cccccc;
   background-color: #ffffff;
   margin: auto;
   padding: 20px;
+}
+
+#register-ao {
+  height: 700px;
+}
+
+#register-ao input,
+#register-ao button {
+  float: center;
 }
 
 #register {

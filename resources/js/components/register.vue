@@ -59,10 +59,10 @@
                 ></b-form-input>
             </b-form-group>
 
-            <b-button type="reset" variant="danger" v-on:click="cancel"
+            <b-button type="reset" variant="danger" v-on:click.prevent="cancel"
                 >Reset</b-button
             >
-            <b-button type="submit" variant="primary" v-on:click="register"
+            <b-button type="submit" variant="primary" v-on:click.prevent="register"
                 >Register</b-button
             >
         </b-form>

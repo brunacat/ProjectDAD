@@ -46,6 +46,7 @@ class UserControllerAPI extends Controller
         $user = new User();
         $user->fill($request->all());
         $user->password = Hash::make($user->password);
+        $user->type = "u";
         $user->save();
 
         $wallet = new Wallet();
@@ -53,6 +54,21 @@ class UserControllerAPI extends Controller
         $wallet->email = $user->email;
         $wallet->balance = "0";
         $wallet->save();
+    }
+
+    public function registerAO(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|min:3|regex:/^[A-Za-záàâãéèêíóôõúçÁÀÂÃÉÈÍÓÔÕÚÇ ]+$/',
+            'email' => 'required|email|unique:users,email,',
+            'password' => 'required|min:3',
+            'type' => 'required'
+        ]);
+
+        $user = new User();
+        $user->fill($request->all());
+        $user->password = Hash::make($user->password);
+        $user->save();
     }
 
     public function update(Request $request, $id)

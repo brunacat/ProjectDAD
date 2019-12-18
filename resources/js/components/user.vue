@@ -1,12 +1,10 @@
 <template>
     <div>
-        <div class="jumbotron">
-            <h1>{{ title }}</h1>
-        </div>
-        <b-button
-            v-if="!addingUser"
-            v-on:click.prevent="addingUser = true"
-            >Add admin or operator</b-button
+        <b-jumbotron>
+            <template v-slot:header>{{ title }}</template>
+        </b-jumbotron>
+        <b-button v-if="!addingUser" v-on:click.prevent="addingUser = true"
+            >Add New Admin Or Operator</b-button
         >
         <create-ao
             v-if="addingUser"
@@ -65,6 +63,8 @@ export default {
         },
         createdAO: function() {
             this.$toasted.success("New admin or operator registered");
+            this.addingUser = false;
+            this.getUsers();
         },
         cancelCreate: function() {
             this.addingUser = false;

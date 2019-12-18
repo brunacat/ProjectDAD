@@ -25,6 +25,7 @@ Route::middleware('auth:api')->post('logout', 'LoginControllerAPI@logout');
 
 Route::get('wallets/total', 'WalletControllerAPI@total');
 Route::post('user/register', 'UserControllerAPI@register');
+Route::post('user/register-ao', 'UserControllerAPI@registerAO');
 Route::get('user/mail/{email}', 'UserControllerAPI@getUser');
 
 Route::middleware('auth:api')->get('users/me', 'UserControllerAPI@myProfile');
