@@ -36,13 +36,13 @@
                         v-on:click.prevent="sendMessageTo(user)"
                         >Msg</a
                     > -->
-                    <b-button
+                    <!-- <b-button
                         size="sm"
                         type="edit"
                         variant="primary"
                         v-on:click.prevent="editUser(user)"
                         >Edit</b-button
-                    >
+                    > -->
                     <b-button
                         size="sm"
                         type="delete"
@@ -66,10 +66,10 @@ export default {
         };
     },
     methods: {
-        editUser: function(user) {
+        /*editUser: function(user) {
             this.editingUser = user;
             this.$emit("edit-click", user);
-        },
+        },*/
         deleteUser: function(user) {
             this.editingUser = null;
             this.$emit("delete-click", user);

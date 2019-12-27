@@ -17,3 +17,5 @@ yarn-error.log
 .env.example
 /.idea
 /public/js/app.js
+
+.vscode/launch.json

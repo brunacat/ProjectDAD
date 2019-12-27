@@ -13,11 +13,7 @@
                     type="email"
                     required
                     placeholder="Email"
-                    :state="isEmailValid"
                 ></b-form-input>
-
-                <b-form-invalid-feedback :state="isEmailValid">
-                </b-form-invalid-feedback>
             </b-form-group>
 
             <b-form-group

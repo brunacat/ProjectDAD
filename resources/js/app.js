@@ -57,6 +57,8 @@ Vue.use(Toasted, {
     type: "info"
 });
 
+import { BImg } from 'bootstrap-vue'
+Vue.component('b-img', BImg)
 
 const routes = [
     {

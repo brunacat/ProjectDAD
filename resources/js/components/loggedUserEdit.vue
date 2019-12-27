@@ -4,16 +4,16 @@
         <picture-input
             v-model="user.photo"
             ref="photo"
-            accept="image/jpeg,image/png"
             size="10"
             buttonClass="btn"
             radius="50"
+            :prefill="'storage/fotos/' + user.photo"
             :hideChangeButton="true"
             :customStrings="{
-                upload: '<h1>Bummer!</h1>',
                 drag: 'Click here to upload photo'
             }"
         ></picture-input>
+
         <div class="form-group">
             <label for="inputName">Name</label>
             <input
@@ -23,17 +23,6 @@
                 name="name"
                 id="inputName"
                 placeholder="Fullname"
-            />
-        </div>
-        <div class="form-group">
-            <label for="inputEmail">Email</label>
-            <input
-                type="email"
-                class="form-control"
-                v-model="user.email"
-                name="email"
-                id="inputEmail"
-                placeholder="Email address"
             />
         </div>
 
@@ -68,6 +57,7 @@
 
 <script type="text/javascript">
 import PictureInput from "vue-picture-input";
+
 export default {
     props: ["user"],
     components: {
@@ -75,22 +65,21 @@ export default {
     },
     methods: {
         saveUser: function() {
-            axios.put("api/users/" + this.user.id, this.user).then(response => {
-                // Copy object properties from response.data.data to this.user
-                // without creating a new reference
-                Object.assign(this.user, response.data.data);
-                this.$emit("user-saved", this.user);
-            });
+            console.log(this.user);
+            axios
+                .put("api/users/" + this.user.id, this.user)
+                .then(response => {
+                    // Copy object properties from response.data.data to this.user
+                    // without creating a new reference
+                    Object.assign(this.user, response.data.data);
+                    this.$emit("user-saved", this.user);
+                });
         },
         cancelEdit: function() {
-            axios.get("api/users/" + this.user.id).then(response => {
-                // Copy object properties from response.data.data to this.user
-                // without creating a new reference
-                Object.assign(this.user, response.data.data);
-                this.$emit("user-canceled", this.user);
-            });
+            this.$emit("user-canceled");
         }
-    }
+    },
+    mounted() {}
 };
 </script>
 
