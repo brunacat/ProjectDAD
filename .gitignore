@@ -17,3 +17,6 @@ yarn-error.log
 .env.example
 /.idea
 /public/js/app.js
+/database
+
+composer.lock
