@@ -13,6 +13,9 @@
             <b-button v-if="!changePass" v-on:click.prevent="changePass = true"
                 >Change Password</b-button
             >
+            <b-button v-if="!addingExpense" v-on:click.prevent="addingExpense = true"
+                >Add Expense</b-button
+            >
         </b-jumbotron>
         <user-edit
             :user="user"
@@ -28,6 +31,13 @@
             v-if="changePass"
         >
         </change-pass>
+        <expense
+            :user="user"
+            @expense-added="addExpense"
+            @expense-canceled="cancelExpense"
+            v-if="addingExpense"
+        >
+        </expense>
         <movements />
     </div>
 </template>
@@ -36,6 +46,7 @@
 import Movements from "./movements";
 import UserEdit from "./loggedUserEdit";
 import ChangePass from "./changePass";
+import Expense from "./expense";
 
 export default {
     data() {
@@ -48,13 +59,15 @@ export default {
                 photo: null
             },
             editingUser: null,
-            changePass: null
+            changePass: null,
+            addingExpense: null,
         };
     },
     components: {
         movements: Movements,
         "user-edit": UserEdit,
-        "change-pass": ChangePass
+        "change-pass": ChangePass,
+        "expense": Expense
     },
     methods: {
         savedUser: function() {
@@ -70,6 +83,13 @@ export default {
         },
         cancelPass: function() {
             this.changePass = null;
+        },
+        addExpense: function() {
+            this.addingExpense = null;
+            this.$toasted.success("Expense added");
+        },
+        cancelExpense: function() {
+            this.addingExpense = null;
         }
     },
     mounted() {

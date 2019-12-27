@@ -77,7 +77,7 @@ class UserControllerAPI extends Controller
     {
         $request->validate([
             'name' => 'required|min:3|regex:/^[A-Za-záàâãéèêíóôõúçÁÀÂÃÉÈÍÓÔÕÚÇ ]+$/',
-            'nif' => 'required|integer|between:100000000,999999999|unique:users'
+            'nif' => 'required|integer|between:100000000,999999999|unique:users,nif,' .$id
         ]);
         $user = User::findOrFail($id);
         $user->update($request->all());
