@@ -20,3 +20,5 @@ yarn-error.log
 /database
 
 .vscode/launch.json
+
+composer.lock
