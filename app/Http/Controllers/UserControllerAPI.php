@@ -6,10 +6,12 @@ use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Http\Request;
 
 use App\Http\Resources\User as UserResource;
+use App\Http\Resources\UserSelf as UserSelfResource;
 use App\Http\Resources\Wallet as WalletResource;
 use App\User;
 use App\Wallet;
 use Hash;
+use Illuminate\Support\Facades\Hash as FacadesHash;
 
 class UserControllerAPI extends Controller
 {
@@ -75,12 +77,26 @@ class UserControllerAPI extends Controller
     {
         $request->validate([
             'name' => 'required|min:3|regex:/^[A-Za-záàâãéèêíóôõúçÁÀÂÃÉÈÍÓÔÕÚÇ ]+$/',
-            'email' => 'required|email|unique:users,email,' . $id,
-            'nif' => 'required|integer|between:100000000,999999999|unique:users',
+            'nif' => 'required|integer|between:100000000,999999999|unique:users'
         ]);
         $user = User::findOrFail($id);
         $user->update($request->all());
-        return new UserResource($user);
+        return new UserSelfResource($user);
+    }
+
+    public function updatePass(Request $request, $id)
+    {
+        $request->validate([
+            'oldPass' => 'required|min:3',
+            'newPass' => 'required|min:3'
+        ]);
+        $user = User::findOrFail($id);
+
+        if (Hash::check($request->oldPass, $user->password)) {
+            $user->update([
+                'password' => Hash::make($request->newPass)
+            ]);
+        }
     }
 
     public function destroy($id)
@@ -99,7 +115,7 @@ class UserControllerAPI extends Controller
 
     public function myProfile(Request $request)
     {
-        return new UserResource($request->user());
+        return new UserSelfResource($request->user());
     }
 
     public function uploadImage(Request $request)

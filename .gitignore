@@ -19,4 +19,4 @@ yarn-error.log
 /public/js/app.js
 /database
 
-composer.lock
+.vscode/launch.json
