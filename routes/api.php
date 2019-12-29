@@ -19,6 +19,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('users', 'UserControllerAPI@index');
+Route::get('categories', 'CategoryControllerAPI@list');
 
 Route::post('login', 'LoginControllerAPI@login');
 Route::middleware('auth:api')->post('logout', 'LoginControllerAPI@logout');
@@ -33,6 +34,13 @@ Route::middleware('auth:api')->get('wallet/me', 'WalletControllerAPI@myWallet');
 
 Route::get('users/{id}', 'UserControllerAPI@show');
 Route::put('users/{id}', 'UserControllerAPI@update');
+Route::post('transfer/{id}', 'UserControllerAPI@addTransfer');
+Route::post('paymentMB/{id}', 'UserControllerAPI@addPaymentMB');
+Route::post('paymentBT/{id}', 'UserControllerAPI@addPaymentBT');
+
+Route::post('incomeBT', 'MovementControllerAPI@addIncomeBT');
+Route::post('incomeC', 'MovementControllerAPI@addIncomeC');
+
 Route::put('users/pass/{id}', 'UserControllerAPI@updatePass');
 Route::delete('users/{id}', 'UserControllerAPI@destroy');
 

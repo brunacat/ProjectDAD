@@ -38,7 +38,7 @@
             v-if="addingExpense"
         >
         </expense>
-        <movements />
+        <movements :key="key" />
     </div>
 </template>
 
@@ -61,6 +61,7 @@ export default {
             editingUser: null,
             changePass: null,
             addingExpense: null,
+            key: 0,
         };
     },
     components: {
@@ -87,6 +88,8 @@ export default {
         addExpense: function() {
             this.addingExpense = null;
             this.$toasted.success("Expense added");
+            this.$store.commit("setUser", this.user);
+            this.key += 1;
         },
         cancelExpense: function() {
             this.addingExpense = null;

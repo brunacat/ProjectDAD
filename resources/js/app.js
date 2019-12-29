@@ -42,6 +42,9 @@ const logged = Vue.component("logged-component", LoggedUserComponent);
 import UsersComponent from "./components/user";
 const users = Vue.component("users-component", UsersComponent);
 
+import OperatorComponent from "./components/operator";
+const operator = Vue.component("operator-component", OperatorComponent);
+
 require('moment/moment.js');
 
 Vue.component('pagination', require('laravel-vue-pagination'));
@@ -80,6 +83,10 @@ const routes = [
     {
         path: "/users",
         component: users
+    },
+    {
+        path: "/operator",
+        component: operator
     }
 ];
 
@@ -116,7 +123,6 @@ const app = new Vue({
     created() {
         console.log("Starting APP");
         console.log(this.$store.state.user);
-        //this.$store.commit("loadDepartments");
         this.$store.commit("loadTokenAndUserFromSession");
         console.log(this.$store.state.user);
     }

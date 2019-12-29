@@ -59,7 +59,7 @@
                 ></b-form-input>
             </b-form-group>
 
-            <b-button type="reset" variant="danger" v-on:click.prevent="cancel"
+            <b-button type="reset" variant="danger"
                 >Reset</b-button
             >
             <b-button type="submit" variant="primary" v-on:click.prevent="register"
@@ -96,6 +96,8 @@ export default {
                         this.submitFile();
                     }
                     this.$toasted.success("Register successful");
+                    this.$router.push({ path: "/login" });
+
                 })
                 .catch(error => {
                     this.$toasted.error(error.response.data.errors.email);
@@ -103,7 +105,6 @@ export default {
                     this.$toasted.error(error.response.data.errors.password);
                 });
         },
-        cancel: function() {},
         submitFile() {
             let formData = new FormData();
             formData.append("photo", this.$refs.photo.file);

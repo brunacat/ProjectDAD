@@ -61,4 +61,16 @@ class User extends Authenticatable
         }
     }
 
+    public function isAdministrator() {
+        return $this->type == "a" ? true : false;
+    }
+
+    public function isOperator() {
+        return $this->type == "o" ? true : false;
+    }
+
+    public function isUser() {
+        return $this->type == "u" ? true : false;
+    }
+
 }

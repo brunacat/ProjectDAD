@@ -6,20 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Movement extends Model
 {
+    public $timestamps = false;
     protected $fillable = [
         'wallet_id', 'transfer', 'transfer_movement_id', 'transfer_wallet_id', 'type_payment', 'category_id', 'iban',
-        'mb_entity_code', 'mb_payment_reference', 'description', 'source_description', 'start_balance', 'end_balance', 'value'
+        'mb_entity_code', 'mb_payment_reference', 'description', 'source_description', 'start_balance', 'end_balance', 'value', 'date'
     ];
 
-    /**
-     * The attributes that should be cast to native types.
-     *
-     * @var array
-     */
-    protected $casts = [
-        'date' => 'datetime'
-    ];
 
+    
     public function wallet()
     {
         return $this->belongsTo('App\Wallet');
