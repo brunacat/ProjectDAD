@@ -3,6 +3,7 @@
         <h2>Edit User</h2>
         <picture-input
             v-model="user.photo"
+            @change="onChange"
             ref="photo"
             size="10"
             buttonClass="btn"
@@ -69,6 +70,9 @@ export default {
             axios
                 .put("api/users/" + this.user.id, this.user)
                 .then(response => {
+                    if (this.user.photo == this.$refs.photo.file.name) {
+                        this.submitFile();
+                    }
                     // Copy object properties from response.data.data to this.user
                     // without creating a new reference
                     Object.assign(this.user, response.data.data);
@@ -77,6 +81,27 @@ export default {
         },
         cancelEdit: function() {
             this.$emit("user-canceled");
+        },
+        submitFile() {
+            let formData = new FormData();
+            formData.append("photo", this.$refs.photo.file);
+            axios
+                .post("api/upload-image", formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data"
+                    }
+                })
+                .then(function() {
+                    console.log("SUCCESS!!");
+                })
+                .catch(function() {
+                    console.log("FAILURE!!");
+                });
+        },
+        onChange(photo) {
+            if (photo) {
+                this.user.photo = this.$refs.photo.file.name;
+            }
         }
     },
     mounted() {}
