@@ -70,7 +70,7 @@
       <b-col sm="7" md="6" class="my-1">
           <b-pagination
             v-model="currentPage"
-            :total-rows="totalRows"
+            :total-rows="users.length"
             :per-page="perPage"
             align="fill"
             size="sm"
@@ -98,7 +98,6 @@ export default {
         { key: "active", sortable: true, label: "Status" },
         { key: "actions", label: "Actions" }
       ],
-      totalRows: 300,
       currentPage: 1,
       perPage: 5,
       pageOptions: [5, 10, 15, 100],
