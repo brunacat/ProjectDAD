@@ -16,6 +16,15 @@ Vue.use(VueRouter);
 import Vue from 'vue'
 import BootstrapVue from 'bootstrap-vue'
 
+import VueSocketIO from "vue-socket.io";
+
+Vue.use(
+    new VueSocketIO({
+        debug: true,
+        connection: "http://127.0.0.1:8080"
+    })
+);
+
 // app.js
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'

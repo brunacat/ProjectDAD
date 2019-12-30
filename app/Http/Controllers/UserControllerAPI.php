@@ -16,13 +16,9 @@ use Illuminate\Support\Facades\Hash as FacadesHash;
 
 class UserControllerAPI extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        if ($request->has('page')) {
-            return UserResource::collection(User::paginate(5));
-        } else {
-            return UserResource::collection(User::all());
-        }
+    return UserResource::collection(User::all());   
     }
 
     public function show($id)
