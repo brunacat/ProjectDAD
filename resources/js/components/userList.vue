@@ -1,5 +1,4 @@
 <template>
-  <div>
     <b-container fluid>
       <!-- User Interface controls -->
       <b-row>
@@ -41,16 +40,6 @@
           </b-form-group>
         </b-col>
 
-        <b-col sm="7" md="6" class="my-1">
-          <b-pagination
-            v-model="currentPage"
-            :total-rows="totalRows"
-            :per-page="perPage"
-            align="fill"
-            size="sm"
-            class="my-0"
-          ></b-pagination>
-        </b-col>
       </b-row>
 
       <!-- Main table element -->
@@ -69,57 +58,26 @@
         :sort-direction="sortDirection"
         @filtered="onFiltered"
       >
+    
+      
+      <template v-slot:cell(photo)="row">
+        <img :src="'storage/fotos/' + row.item.photo" alt="" width="50" height="50">
+      </template>
         <template v-slot:cell(actions)="row">
           <b-button size="sm" @click="deleteUser(row.item)">Delete/Deactivate</b-button>
         </template>
       </b-table>
+      <b-col sm="7" md="6" class="my-1">
+          <b-pagination
+            v-model="currentPage"
+            :total-rows="totalRows"
+            :per-page="perPage"
+            align="fill"
+            size="sm"
+            class="my-0"
+          ></b-pagination>
+        </b-col>
     </b-container>
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th>Photo</th>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Type</th>
-          <th>Balance</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="user in users" :key="user.id" :class="{ activerow: editingUser === user }">
-          <td>
-            <img :src="'storage/fotos/' + user.photo" contain height="51px" width="50px" />
-          </td>
-          <td>{{ user.name }}</td>
-          <td>{{ user.email }}</td>
-          <td>{{ user.type }}</td>
-          <td>{{ user.balance }}</td>
-          <td>{{ user.active }}</td>
-          <td>
-            <!-- <a
-                        class="btn btn-sm btn-success"
-                        v-on:click.prevent="sendMessageTo(user)"
-                        >Msg</a
-            >-->
-            <!-- <b-button
-                        size="sm"
-                        type="edit"
-                        variant="primary"
-                        v-on:click.prevent="editUser(user)"
-                        >Edit</b-button
-            >-->
-            <b-button
-              size="sm"
-              type="delete"
-              variant="danger"
-              v-on:click.prevent="deleteUser(user)"
-            >Delete</b-button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
 </template>
 
 <script type="text/javascript">
@@ -140,7 +98,7 @@ export default {
         { key: "active", sortable: true, label: "Status" },
         { key: "actions", label: "Actions" }
       ],
-      totalRows: 304,
+      totalRows: 300,
       currentPage: 1,
       perPage: 5,
       pageOptions: [5, 10, 15, 100],

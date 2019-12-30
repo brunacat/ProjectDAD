@@ -2,10 +2,11 @@
     <div>
         <b-jumbotron>
             <template v-slot:header>{{ title }}</template>
-        </b-jumbotron>
-        <b-button v-if="!addingUser" v-on:click.prevent="addingUser = true"
+             <b-button v-if="!addingUser" v-on:click.prevent="addingUser = true"
             >Add New Admin Or Operator</b-button
         >
+        </b-jumbotron>
+       
         <create-ao
             v-if="addingUser"
             @ao-created="createdAO"
