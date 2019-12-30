@@ -44,10 +44,9 @@ export default {
         editUser: function(user) {
             this.currentUser = user;
         },
-        deleteUser: function(user) {
-            axios.delete("api/users/" + user.id).then(response => {
-                this.showSuccess = true;
-                this.$toasted.success("User deleted");
+        deleteUser: function(id) {
+            axios.delete("api/users/" + id).then(response => {
+                this.$toasted.success(response.data);
                 this.getUsers();
             });
         },

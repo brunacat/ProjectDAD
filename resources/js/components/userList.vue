@@ -1,9 +1,8 @@
 <template>
   <div>
-       <b-container fluid>
+    <b-container fluid>
       <!-- User Interface controls -->
       <b-row>
-
         <b-col lg="6" class="my-1">
           <b-form-group
             label="Filter"
@@ -70,33 +69,10 @@
         :sort-direction="sortDirection"
         @filtered="onFiltered"
       >
-        <template v-slot:cell(name)="row">{{ row.value.first }} {{ row.value.last }}</template>
-
         <template v-slot:cell(actions)="row">
-          <b-button
-            size="sm"
-            @click="info(row.item, row.index, $event.target)"
-            class="mr-1"
-          >Info modal</b-button>
-          <b-button
-            size="sm"
-            @click="row.toggleDetails"
-          >{{ row.detailsShowing ? 'Hide' : 'Show' }} Details</b-button>
-        </template>
-
-        <template v-slot:row-details="row">
-          <b-card>
-            <ul>
-              <li v-for="(value, key) in row.item" :key="key">{{ key }}: {{ value }}</li>
-            </ul>
-          </b-card>
+          <b-button size="sm" @click="deleteUser(row.item)">Delete/Deactivate</b-button>
         </template>
       </b-table>
-
-      <!-- Info modal -->
-      <b-modal :id="infoModal.id" :title="infoModal.title" ok-only @hide="resetInfoModal">
-        <pre>{{ infoModal.content }}</pre>
-      </b-modal>
     </b-container>
     <table class="table table-striped">
       <thead>
@@ -143,8 +119,6 @@
         </tr>
       </tbody>
     </table>
-    
-   
   </div>
 </template>
 
@@ -164,7 +138,7 @@ export default {
         { key: "type", sortable: true },
         { key: "balance", sortable: true },
         { key: "active", sortable: true, label: "Status" },
-        { key: 'actions', label: 'Actions' }
+        { key: "actions", label: "Actions" }
       ],
       totalRows: 304,
       currentPage: 1,
@@ -183,34 +157,27 @@ export default {
     };
   },
   computed: {
-      sortOptions() {
-        // Create an options list from our fields
-        return this.fields
-          .filter(f => f.sortable)
-          .map(f => {
-            return { text: f.label, value: f.key }
-          })
-      }
-    },
-  mounted() {
-      this.getRows();
+    sortOptions() {
+      // Create an options list from our fields
+      return this.fields
+        .filter(f => f.sortable)
+        .map(f => {
+          return { text: f.label, value: f.key };
+        });
+    }
   },
+  mounted() {},
   methods: {
     deleteUser: function(user) {
-      this.editingUser = null;
-      this.$emit("delete-click", user);
-    },
-    getRows: async function(){
-
-    },
-    info(item, index, button) {
-      this.infoModal.title = `Row index: ${index}`;
-      this.infoModal.content = JSON.stringify(item, null, 2);
-      this.$root.$emit("bv::show::modal", this.infoModal.id, button);
-    },
-    resetInfoModal() {
-      this.infoModal.title = "";
-      this.infoModal.content = "";
+      if (user.balance != "Has money") {
+        this.$emit("delete-click", user.id);
+      } else {
+        if (user.id == this.$store.state.user.id) {
+          this.$toasted.error("Cant Delete your Self");
+        } else {
+          this.$toasted.error("Cant Deactivate users with balance");
+        }
+      }
     },
     onFiltered(filteredItems) {
       this.totalRows = filteredItems.length;

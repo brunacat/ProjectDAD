@@ -92,8 +92,26 @@ class UserControllerAPI extends Controller
     public function destroy($id)
     {
         $user = User::findOrFail($id);
+        if($user->wallet){
+            if($user->wallet->balance == 0){
+            if($user->active==1){
+                $user->active = 0;
+               $user->save();
+               return response('User Deactivated', 200);
+            }else{
+                $user->active = 1;
+                $user->save();
+                return response('User Activated', 200);
+            }
+               
+            }else{return response('Can not deactivate user with money', 400);
+            }
+            
+        }else{
         $user->delete();
-        return response()->json(null, 204);
+        return response('User Deleted', 200);
+        }
+       
     }
 
     public function getUser($email)
