@@ -1,4 +1,10 @@
 <template>
+<div>
+<div v-if="!this.$store.state.user" >
+        <b-jumbotron>
+        <h1>401 (Unauthorized)</h1>
+        </b-jumbotron>
+    </div>
     <div>
         <b-jumbotron>
             <template v-slot:header>{{ title }}</template>
@@ -15,36 +21,25 @@
         ></create-ao>
         <user-list
             :users="users"
-            @edit-click="editUser"
             @delete-click="deleteUser"
             ref="usersListRef"
         ></user-list>
-        <user-edit
-            :user="currentUser"
-            @user-saved="savedUser"
-            @user-canceled="cancelEdit"
-            v-if="currentUser"
-        ></user-edit>
+    </div>
     </div>
 </template>
 <script type="text/javascript">
 import UserList from "./userList.vue";
-import UserEdit from "./userEdit.vue";
 import CreateAO from "./createAO.vue";
 
 export default {
     data: function() {
         return {
             title: "List Users",
-            currentUser: null,
             addingUser: null,
             users: []
         };
     },
     methods: {
-        editUser: function(user) {
-            this.currentUser = user;
-        },
         deleteUser: function(id) {
             axios.delete("api/users/" + id).then(response => {
                 this.$toasted.success(response.data);
@@ -56,10 +51,6 @@ export default {
             this.$refs.usersListRef.editingUser = null;
             this.$toasted.success("User saved");
             //this.$socket.emit("user_changed", user);
-        },
-        cancelEdit: function() {
-            this.currentUser = null;
-            this.$refs.usersListRef.editingUser = null;
         },
         createdAO: function(type) {
             if (type == "a") {
@@ -82,8 +73,7 @@ export default {
     },
     components: {
         "create-ao": CreateAO,
-        "user-list": UserList,
-        "user-edit": UserEdit
+        "user-list": UserList
     },
     mounted() {
         this.getUsers();

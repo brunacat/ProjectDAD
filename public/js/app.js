@@ -2317,6 +2317,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["user"],
@@ -2329,15 +2330,38 @@ __webpack_require__.r(__webpack_exports__);
 
       console.log(this.user);
       axios.put("api/users/" + this.user.id, this.user).then(function (response) {
-        // Copy object properties from response.data.data to this.user
+        if (_this.user.photo == _this.$refs.photo.file.name) {
+          _this.submitFile();
+        } // Copy object properties from response.data.data to this.user
         // without creating a new reference
+
+
         Object.assign(_this.user, response.data.data);
+        _this.$store.state.user = response.data.data;
 
         _this.$emit("user-saved", _this.user);
       });
     },
     cancelEdit: function cancelEdit() {
       this.$emit("user-canceled");
+    },
+    submitFile: function submitFile() {
+      var formData = new FormData();
+      formData.append("photo", this.$refs.photo.file);
+      axios.post("api/upload-image", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data"
+        }
+      }).then(function () {
+        console.log("SUCCESS!!");
+      })["catch"](function () {
+        console.log("FAILURE!!");
+      });
+    },
+    onChange: function onChange(photo) {
+      if (photo) {
+        this.user.photo = this.$refs.photo.file.name;
+      }
     }
   },
   mounted: function mounted() {}
@@ -2402,6 +2426,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2416,6 +2448,7 @@ __webpack_require__.r(__webpack_exports__);
         nif: "",
         photo: null
       },
+      movements: [],
       editingUser: null,
       changePass: null,
       addingExpense: null,
@@ -2429,6 +2462,13 @@ __webpack_require__.r(__webpack_exports__);
     "expense": _expense__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
   methods: {
+    getMovements: function getMovements() {
+      var _this = this;
+
+      axios.get("api/wallet/me/movements").then(function (response) {
+        _this.movements = response.data.data;
+      });
+    },
     savedUser: function savedUser() {
       this.editingUser = null;
       this.$toasted.success("User saved");
@@ -2446,14 +2486,15 @@ __webpack_require__.r(__webpack_exports__);
     addExpense: function addExpense() {
       this.addingExpense = null;
       this.$toasted.success("Expense added");
-      this.$store.commit("setUser", this.user);
-      this.key += 1;
+      this.getMovements();
     },
     cancelExpense: function cancelExpense() {
       this.addingExpense = null;
     }
   },
   mounted: function mounted() {
+    console.log(this.$store.state.user);
+    this.getMovements();
     this.user = this.$store.state.user;
     console.log("Component mounted.");
   }
@@ -2515,8 +2556,7 @@ __webpack_require__.r(__webpack_exports__);
       input: {
         email: "",
         password: ""
-      },
-      reg: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
+      }
     };
   },
   methods: {
@@ -2528,14 +2568,25 @@ __webpack_require__.r(__webpack_exports__);
 
         return axios.get("api/users/me");
       }).then(function (response) {
-        _this.$store.commit("setUser", response.data.data); //this.$socket.emit("user_enter", response.data.data);
+        _this.$store.commit("setUser", response.data.data);
 
+        _this.$socket.emit("user_enter", response.data.data);
 
         _this.$toasted.success("Login successful");
 
-        _this.$router.push({
-          path: '/wallet'
-        });
+        if (response.data.data.type == "u") {
+          _this.$router.push({
+            path: '/wallet'
+          });
+        } else if (response.data.data.type == "a") {
+          _this.$router.push({
+            path: '/users'
+          });
+        } else if (response.data.data.type == "o") {
+          _this.$router.push({
+            path: '/operator'
+          });
+        }
       })["catch"](function (error) {
         _this.$store.commit("clearUserAndToken");
 
@@ -2543,11 +2594,6 @@ __webpack_require__.r(__webpack_exports__);
 
         console.log(error);
       });
-    }
-  },
-  computed: {
-    isEmailValid: function isEmailValid() {
-      return this.reg.test(this.input.email);
     }
   },
   mounted: function mounted() {
@@ -2597,35 +2643,127 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 // Component code (not registered)
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ["movements"],
   data: function data() {
     return {
-      movements: {}
+      fields: [{
+        key: "id"
+      }, {
+        key: "type"
+      }, //{ key: "email"}
+      {
+        key: 'type_payment'
+      }, {
+        key: "category"
+      }, {
+        key: "date"
+      }, {
+        key: "start_balance"
+      }, {
+        key: "end_balance"
+      }, {
+        key: "value"
+      }, {
+        key: "actions",
+        label: "Actions"
+      }],
+      totalRows: 1,
+      currentPage: 1,
+      perPage: 5,
+      pageOptions: [5, 10, 15],
+      sortBy: 'date',
+      sortDesc: true,
+      sortDirection: 'desc',
+      filter: null,
+      filterOn: [],
+      infoModal: {
+        id: 'info-modal',
+        title: '',
+        content: ''
+      }
     };
   },
   created: function created() {
-    this.getResults();
     this.formatDate();
   },
   methods: {
     formatDate: function formatDate(date) {
       var moment = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
 
-      return moment(date).format('llll');
+      return moment(date).format("llll");
     },
-    getResults: function getResults(page) {
-      var _this = this;
-
-      if (typeof page === 'undefined') {
-        page = 1;
-      }
-
-      axios.get('api/wallet/me/movements?page=' + page).then(function (response) {
-        _this.movements = response.data;
-      })["catch"](function (error) {
-        console.log(error);
-      });
+    onFiltered: function onFiltered(filteredItems) {
+      // Trigger pagination to update the number of buttons/pages due to filtering
+      this.totalRows = filteredItems.length;
+      this.currentPage = 1;
     }
   }
 });
@@ -2724,6 +2862,13 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -3008,8 +3153,7 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _userList_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./userList.vue */ "./resources/js/components/userList.vue");
-/* harmony import */ var _userEdit_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./userEdit.vue */ "./resources/js/components/userEdit.vue");
-/* harmony import */ var _createAO_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./createAO.vue */ "./resources/js/components/createAO.vue");
+/* harmony import */ var _createAO_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./createAO.vue */ "./resources/js/components/createAO.vue");
 //
 //
 //
@@ -3038,22 +3182,18 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
       title: "List Users",
-      currentUser: null,
       addingUser: null,
       users: []
     };
   },
   methods: {
-    editUser: function editUser(user) {
-      this.currentUser = user;
-    },
     deleteUser: function deleteUser(id) {
       var _this = this;
 
@@ -3067,10 +3207,6 @@ __webpack_require__.r(__webpack_exports__);
       this.currentUser = null;
       this.$refs.usersListRef.editingUser = null;
       this.$toasted.success("User saved"); //this.$socket.emit("user_changed", user);
-    },
-    cancelEdit: function cancelEdit() {
-      this.currentUser = null;
-      this.$refs.usersListRef.editingUser = null;
     },
     createdAO: function createdAO(type) {
       if (type == "a") {
@@ -3095,125 +3231,12 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   components: {
-    "create-ao": _createAO_vue__WEBPACK_IMPORTED_MODULE_2__["default"],
-    "user-list": _userList_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
-    "user-edit": _userEdit_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
+    "create-ao": _createAO_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
+    "user-list": _userList_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
   mounted: function mounted() {
     this.getUsers();
     this.addingUser = false;
-  }
-});
-
-/***/ }),
-
-/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/userEdit.vue?vue&type=script&lang=js&":
-/*!*******************************************************************************************************************************************************************!*\
-  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/userEdit.vue?vue&type=script&lang=js& ***!
-  \*******************************************************************************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var vue_picture_input__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue-picture-input */ "./node_modules/vue-picture-input/PictureInput.vue");
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  props: ["user"],
-  components: {
-    PictureInput: vue_picture_input__WEBPACK_IMPORTED_MODULE_0__["default"]
-  },
-  methods: {
-    saveUser: function saveUser() {
-      var _this = this;
-
-      axios.put("api/users/" + this.user.id, this.user).then(function (response) {
-        // Copy object properties from response.data.data to this.user
-        // without creating a new reference
-        Object.assign(_this.user, response.data.data);
-
-        _this.$emit("user-saved", _this.user);
-      });
-    },
-    cancelEdit: function cancelEdit() {
-      var _this2 = this;
-
-      axios.get("api/users/" + this.user.id).then(function (response) {
-        // Copy object properties from response.data.data to this.user
-        // without creating a new reference
-        Object.assign(_this2.user, response.data.data);
-
-        _this2.$emit("user-canceled", _this2.user);
-      });
-    }
   }
 });
 
@@ -3228,48 +3251,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -3380,7 +3361,7 @@ __webpack_require__.r(__webpack_exports__);
         key: "actions",
         label: "Actions"
       }],
-      totalRows: 304,
+      totalRows: 300,
       currentPage: 1,
       perPage: 5,
       pageOptions: [5, 10, 15, 100],
@@ -32330,7 +32311,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n/*\t  Specific style applied only on the component*/\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\n/*\t  Specific style applied only on the component*/\r\n", ""]);
 
 // exports
 
@@ -75096,6 +75077,7 @@ var render = function() {
             drag: "Click here to upload photo"
           }
         },
+        on: { change: _vm.onChange },
         model: {
           value: _vm.user.photo,
           callback: function($$v) {
@@ -75227,102 +75209,127 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c(
-        "b-jumbotron",
-        {
-          scopedSlots: _vm._u([
-            {
-              key: "header",
-              fn: function() {
-                return [_vm._v("Welcome!")]
+  return _c("div", [
+    !this.$store.state.user
+      ? _c(
+          "div",
+          [_c("b-jumbotron", [_c("h1", [_vm._v("401 (Unauthorized)")])])],
+          1
+        )
+      : _vm._e(),
+    _vm._v(" "),
+    this.$store.state.user
+      ? _c(
+          "div",
+          [
+            _c(
+              "b-jumbotron",
+              {
+                scopedSlots: _vm._u(
+                  [
+                    {
+                      key: "header",
+                      fn: function() {
+                        return [_vm._v("Welcome!")]
+                      },
+                      proxy: true
+                    }
+                  ],
+                  null,
+                  false,
+                  680147609
+                )
               },
-              proxy: true
-            }
-          ])
-        },
-        [
-          _vm._v(" "),
-          _c("p", [_vm._v("Current balance: " + _vm._s(_vm.user.balance))]),
-          _vm._v(" "),
-          !_vm.editingUser
-            ? _c(
-                "b-button",
-                {
+              [
+                _vm._v(" "),
+                _c("p", [
+                  _vm._v("Current balance: " + _vm._s(_vm.user.balance))
+                ]),
+                _vm._v(" "),
+                !_vm.editingUser
+                  ? _c(
+                      "b-button",
+                      {
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            _vm.editingUser = true
+                          }
+                        }
+                      },
+                      [_vm._v("Edit Profile")]
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                !_vm.changePass
+                  ? _c(
+                      "b-button",
+                      {
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            _vm.changePass = true
+                          }
+                        }
+                      },
+                      [_vm._v("Change Password")]
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                !_vm.addingExpense
+                  ? _c(
+                      "b-button",
+                      {
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            _vm.addingExpense = true
+                          }
+                        }
+                      },
+                      [_vm._v("Add Expense")]
+                    )
+                  : _vm._e()
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _vm.editingUser
+              ? _c("user-edit", {
+                  attrs: { user: _vm.user },
                   on: {
-                    click: function($event) {
-                      $event.preventDefault()
-                      _vm.editingUser = true
-                    }
+                    "user-saved": _vm.savedUser,
+                    "user-canceled": _vm.cancelEdit
                   }
-                },
-                [_vm._v("Edit Profile")]
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          !_vm.changePass
-            ? _c(
-                "b-button",
-                {
+                })
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.changePass
+              ? _c("change-pass", {
+                  attrs: { user: _vm.user },
                   on: {
-                    click: function($event) {
-                      $event.preventDefault()
-                      _vm.changePass = true
-                    }
+                    "pass-saved": _vm.savedPass,
+                    "pass-canceled": _vm.cancelPass
                   }
-                },
-                [_vm._v("Change Password")]
-              )
-            : _vm._e(),
-          _vm._v(" "),
-          !_vm.addingExpense
-            ? _c(
-                "b-button",
-                {
+                })
+              : _vm._e(),
+            _vm._v(" "),
+            _vm.addingExpense
+              ? _c("expense", {
+                  attrs: { user: _vm.user },
                   on: {
-                    click: function($event) {
-                      $event.preventDefault()
-                      _vm.addingExpense = true
-                    }
+                    "expense-added": _vm.addExpense,
+                    "expense-canceled": _vm.cancelExpense
                   }
-                },
-                [_vm._v("Add Expense")]
-              )
-            : _vm._e()
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _vm.editingUser
-        ? _c("user-edit", {
-            attrs: { user: _vm.user },
-            on: { "user-saved": _vm.savedUser, "user-canceled": _vm.cancelEdit }
-          })
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.changePass
-        ? _c("change-pass", {
-            attrs: { user: _vm.user },
-            on: { "pass-saved": _vm.savedPass, "pass-canceled": _vm.cancelPass }
-          })
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.addingExpense
-        ? _c("expense", {
-            attrs: { user: _vm.user },
-            on: {
-              "expense-added": _vm.addExpense,
-              "expense-canceled": _vm.cancelExpense
-            }
-          })
-        : _vm._e(),
-      _vm._v(" "),
-      _c("movements", { key: _vm.key })
-    ],
-    1
-  )
+                })
+              : _vm._e(),
+            _vm._v(" "),
+            _c("movements", { attrs: { movements: _vm.movements } })
+          ],
+          1
+        )
+      : _vm._e()
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -75456,66 +75463,235 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "div",
+    "b-container",
+    { attrs: { fluid: "" } },
     [
-      _c("table", { staticClass: "table table-striped" }, [
-        _vm._m(0),
-        _vm._v(" "),
-        _c(
-          "tbody",
-          _vm._l(_vm.movements.data, function(movement) {
-            return _c("tr", { key: movement.id }, [
-              _c("td", [_vm._v(_vm._s(movement.type))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(movement.transfer))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(movement.category))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(_vm.formatDate(movement.date)))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(movement.start_balance))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(movement.end_balance))]),
-              _vm._v(" "),
-              _c("td", [_vm._v(_vm._s(movement.value))])
-            ])
-          }),
-          0
-        )
-      ]),
+      _c(
+        "b-row",
+        [
+          _c(
+            "b-col",
+            { staticClass: "my-1", attrs: { lg: "6" } },
+            [
+              _c(
+                "b-form-group",
+                {
+                  staticClass: "mb-0",
+                  attrs: {
+                    label: "Filter",
+                    "label-cols-sm": "3",
+                    "label-align-sm": "right",
+                    "label-size": "sm",
+                    "label-for": "filterInput"
+                  }
+                },
+                [
+                  _c(
+                    "b-input-group",
+                    { attrs: { size: "sm" } },
+                    [
+                      _c("b-form-input", {
+                        attrs: {
+                          type: "search",
+                          id: "filterInput",
+                          placeholder: "Type to Search"
+                        },
+                        model: {
+                          value: _vm.filter,
+                          callback: function($$v) {
+                            _vm.filter = $$v
+                          },
+                          expression: "filter"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "b-input-group-append",
+                        [
+                          _c(
+                            "b-button",
+                            {
+                              attrs: { disabled: !_vm.filter },
+                              on: {
+                                click: function($event) {
+                                  _vm.filter = ""
+                                }
+                              }
+                            },
+                            [_vm._v("Clear")]
+                          )
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "b-col",
+            { staticClass: "my-1", attrs: { sm: "5", md: "6" } },
+            [
+              _c(
+                "b-form-group",
+                {
+                  staticClass: "mb-0",
+                  attrs: {
+                    label: "Per page",
+                    "label-cols-sm": "6",
+                    "label-cols-md": "4",
+                    "label-cols-lg": "3",
+                    "label-align-sm": "right",
+                    "label-size": "sm",
+                    "label-for": "perPageSelect"
+                  }
+                },
+                [
+                  _c("b-form-select", {
+                    attrs: {
+                      id: "perPageSelect",
+                      size: "sm",
+                      options: _vm.pageOptions
+                    },
+                    model: {
+                      value: _vm.perPage,
+                      callback: function($$v) {
+                        _vm.perPage = $$v
+                      },
+                      expression: "perPage"
+                    }
+                  })
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
       _vm._v(" "),
-      _c("pagination", {
-        attrs: { data: _vm.movements, limit: 6 },
-        on: { "pagination-change-page": _vm.getResults }
-      })
+      _c("b-table", {
+        attrs: {
+          "show-empty": "",
+          small: "",
+          stacked: "md",
+          items: _vm.movements,
+          fields: _vm.fields,
+          "current-page": _vm.currentPage,
+          "per-page": _vm.perPage,
+          filter: _vm.filter,
+          filterIncludedFields: _vm.filterOn,
+          "sort-by": _vm.sortBy,
+          "sort-desc": _vm.sortDesc,
+          "sort-direction": _vm.sortDirection
+        },
+        on: {
+          "update:sortBy": function($event) {
+            _vm.sortBy = $event
+          },
+          "update:sort-by": function($event) {
+            _vm.sortBy = $event
+          },
+          "update:sortDesc": function($event) {
+            _vm.sortDesc = $event
+          },
+          "update:sort-desc": function($event) {
+            _vm.sortDesc = $event
+          },
+          filtered: _vm.onFiltered
+        },
+        scopedSlots: _vm._u([
+          {
+            key: "cell(actions)",
+            fn: function(row) {
+              return [
+                _c(
+                  "b-button",
+                  {
+                    staticClass: "mr-1",
+                    attrs: { size: "sm" },
+                    on: {
+                      click: function($event) {
+                        return _vm.info(row.item, row.index, $event.target)
+                      }
+                    }
+                  },
+                  [_vm._v("Info modal")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "b-button",
+                  { attrs: { size: "sm" }, on: { click: row.toggleDetails } },
+                  [
+                    _vm._v(
+                      _vm._s(row.detailsShowing ? "Hide" : "Show") + " Details"
+                    )
+                  ]
+                )
+              ]
+            }
+          },
+          {
+            key: "row-details",
+            fn: function(row) {
+              return [
+                _c("b-card", [
+                  _c(
+                    "ul",
+                    _vm._l(row.item, function(value, key) {
+                      return _c("li", { key: key }, [
+                        _vm._v(_vm._s(key) + ": " + _vm._s(value))
+                      ])
+                    }),
+                    0
+                  )
+                ])
+              ]
+            }
+          }
+        ])
+      }),
+      _vm._v(" "),
+      _c(
+        "b-row",
+        [
+          _c(
+            "b-col",
+            { staticClass: "my-1", attrs: { sm: "7", md: "6" } },
+            [
+              _c("b-pagination", {
+                staticClass: "my-0",
+                attrs: {
+                  "total-rows": _vm.totalRows,
+                  "per-page": _vm.perPage,
+                  align: "fill",
+                  size: "sm"
+                },
+                model: {
+                  value: _vm.currentPage,
+                  callback: function($$v) {
+                    _vm.currentPage = $$v
+                  },
+                  expression: "currentPage"
+                }
+              })
+            ],
+            1
+          )
+        ],
+        1
+      )
     ],
     1
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", [_vm._v("Type")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Transfer")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Category")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Date")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("StartBalance")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("EndBalance")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Value")])
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -75558,7 +75734,7 @@ var render = function() {
             { staticClass: "ml-auto" },
             [
               _c("b-nav-form", [
-                this.$store.state.token === ""
+                !this.$store.state.user
                   ? _c(
                       "div",
                       [
@@ -75598,7 +75774,7 @@ var render = function() {
                     )
                   : _vm._e(),
                 _vm._v(" "),
-                this.$store.state.token !== ""
+                this.$store.state.user
                   ? _c(
                       "div",
                       [
@@ -75660,189 +75836,207 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "jumbotron" }, [
-    _c("h2", [_vm._v("Add Expense")]),
+  return _c("div", [
+    !this.$store.state.user
+      ? _c(
+          "div",
+          [_c("b-jumbotron", [_c("h1", [_vm._v("401 (Unauthorized)")])])],
+          1
+        )
+      : _vm._e(),
     _vm._v(" "),
-    _c("input", {
-      directives: [
-        {
-          name: "model",
-          rawName: "v-model",
-          value: _vm.income.type,
-          expression: "income.type"
-        }
-      ],
-      attrs: { type: "radio", id: "cash", value: "c" },
-      domProps: { checked: _vm._q(_vm.income.type, "c") },
-      on: {
-        change: function($event) {
-          return _vm.$set(_vm.income, "type", "c")
-        }
-      }
-    }),
-    _vm._v(" "),
-    _c("label", { attrs: { for: "one" } }, [_vm._v("Cash")]),
-    _vm._v(" "),
-    _c("br"),
-    _vm._v(" "),
-    _c("input", {
-      directives: [
-        {
-          name: "model",
-          rawName: "v-model",
-          value: _vm.income.type,
-          expression: "income.type"
-        }
-      ],
-      attrs: { type: "radio", id: "transfer", value: "bt" },
-      domProps: { checked: _vm._q(_vm.income.type, "bt") },
-      on: {
-        change: function($event) {
-          return _vm.$set(_vm.income, "type", "bt")
-        }
-      }
-    }),
-    _vm._v(" "),
-    _c("label", { attrs: { for: "two" } }, [_vm._v("Transfer")]),
-    _vm._v(" "),
-    _c("br"),
-    _vm._v(" "),
-    _c("p"),
-    _vm._v(" "),
-    _c("div", { staticClass: "form-group" }, [
-      _c("label", { attrs: { for: "valueCredit" } }, [
-        _vm._v("Value of the Credit")
-      ]),
-      _vm._v(" "),
-      _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.income.value,
-            expression: "income.value"
-          }
-        ],
-        staticClass: "form-control",
-        attrs: {
-          type: "number",
-          name: "valueCrd",
-          id: "valueCredit",
-          placeholder: "Value of the Credit"
-        },
-        domProps: { value: _vm.income.value },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.$set(_vm.income, "value", $event.target.value)
-          }
-        }
-      })
-    ]),
-    _vm._v(" "),
-    _c("div", { staticClass: "form-group" }, [
-      _c("label", { attrs: { for: "emailDestination" } }, [
-        _vm._v("Destination Email")
-      ]),
-      _vm._v(" "),
-      _c("input", {
-        directives: [
-          {
-            name: "model",
-            rawName: "v-model",
-            value: _vm.income.email,
-            expression: "income.email"
-          }
-        ],
-        staticClass: "form-control",
-        attrs: { type: "email", name: "valueExp", id: "emailDestination" },
-        domProps: { value: _vm.income.email },
-        on: {
-          input: function($event) {
-            if ($event.target.composing) {
-              return
-            }
-            _vm.$set(_vm.income, "email", $event.target.value)
-          }
-        }
-      })
-    ]),
-    _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "form-group" },
-      [
-        _c("label", { attrs: { for: "description" } }, [_vm._v("Description")]),
-        _vm._v(" "),
-        _c("b-form-textarea", {
-          staticClass: "form-control",
-          attrs: { name: "desc", id: "description" },
-          model: {
-            value: _vm.income.description,
-            callback: function($$v) {
-              _vm.$set(_vm.income, "description", $$v)
-            },
-            expression: "income.description"
-          }
-        })
-      ],
-      1
-    ),
-    _vm._v(" "),
-    _vm.income.type == "bt"
-      ? _c("div", { staticClass: "form-group" }, [
-          _c("label", { attrs: { for: "iban" } }, [_vm._v("IBAN")]),
+    this.$store.state.user
+      ? _c("div", { staticClass: "jumbotron" }, [
+          _c("h2", [_vm._v("Add Expense")]),
           _vm._v(" "),
           _c("input", {
             directives: [
               {
                 name: "model",
                 rawName: "v-model",
-                value: _vm.income.iban,
-                expression: "income.iban"
+                value: _vm.income.type,
+                expression: "income.type"
               }
             ],
-            staticClass: "form-control",
-            attrs: { type: "text", name: "iban", id: "iban" },
-            domProps: { value: _vm.income.iban },
+            attrs: { type: "radio", id: "cash", value: "c" },
+            domProps: { checked: _vm._q(_vm.income.type, "c") },
             on: {
-              input: function($event) {
-                if ($event.target.composing) {
-                  return
+              change: function($event) {
+                return _vm.$set(_vm.income, "type", "c")
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("label", { attrs: { for: "one" } }, [_vm._v("Cash")]),
+          _vm._v(" "),
+          _c("br"),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.income.type,
+                expression: "income.type"
+              }
+            ],
+            attrs: { type: "radio", id: "transfer", value: "bt" },
+            domProps: { checked: _vm._q(_vm.income.type, "bt") },
+            on: {
+              change: function($event) {
+                return _vm.$set(_vm.income, "type", "bt")
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("label", { attrs: { for: "two" } }, [_vm._v("Transfer")]),
+          _vm._v(" "),
+          _c("br"),
+          _vm._v(" "),
+          _c("p"),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group" }, [
+            _c("label", { attrs: { for: "valueCredit" } }, [
+              _vm._v("Value of the Credit")
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.income.value,
+                  expression: "income.value"
                 }
-                _vm.$set(_vm.income, "iban", $event.target.value)
+              ],
+              staticClass: "form-control",
+              attrs: {
+                type: "number",
+                name: "valueCrd",
+                id: "valueCredit",
+                placeholder: "Value of the Credit"
+              },
+              domProps: { value: _vm.income.value },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.income, "value", $event.target.value)
+                }
               }
-            }
-          })
-        ])
-      : _vm._e(),
-    _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "form-group" },
-      [
-        _c(
-          "b-button",
-          {
-            attrs: { type: "save", variant: "primary" },
-            on: {
-              click: function($event) {
-                $event.preventDefault()
-                return _vm.addIncome()
+            })
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "form-group" }, [
+            _c("label", { attrs: { for: "emailDestination" } }, [
+              _vm._v("Destination Email")
+            ]),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.income.email,
+                  expression: "income.email"
+                }
+              ],
+              staticClass: "form-control",
+              attrs: {
+                type: "email",
+                name: "valueExp",
+                id: "emailDestination"
+              },
+              domProps: { value: _vm.income.email },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.income, "email", $event.target.value)
+                }
               }
-            }
-          },
-          [_vm._v("Save")]
-        ),
-        _vm._v(" "),
-        _c("b-button", { attrs: { type: "reset", variant: "light" } }, [
-          _vm._v("Reset")
+            })
+          ]),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "form-group" },
+            [
+              _c("label", { attrs: { for: "description" } }, [
+                _vm._v("Description")
+              ]),
+              _vm._v(" "),
+              _c("b-form-textarea", {
+                staticClass: "form-control",
+                attrs: { name: "desc", id: "description" },
+                model: {
+                  value: _vm.income.description,
+                  callback: function($$v) {
+                    _vm.$set(_vm.income, "description", $$v)
+                  },
+                  expression: "income.description"
+                }
+              })
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _vm.income.type == "bt"
+            ? _c("div", { staticClass: "form-group" }, [
+                _c("label", { attrs: { for: "iban" } }, [_vm._v("IBAN")]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.income.iban,
+                      expression: "income.iban"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { type: "text", name: "iban", id: "iban" },
+                  domProps: { value: _vm.income.iban },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.income, "iban", $event.target.value)
+                    }
+                  }
+                })
+              ])
+            : _vm._e(),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "form-group" },
+            [
+              _c(
+                "b-button",
+                {
+                  attrs: { type: "save", variant: "primary" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.addIncome()
+                    }
+                  }
+                },
+                [_vm._v("Save")]
+              ),
+              _vm._v(" "),
+              _c("b-button", { attrs: { type: "reset", variant: "light" } }, [
+                _vm._v("Reset")
+              ])
+            ],
+            1
+          )
         ])
-      ],
-      1
-    )
+      : _vm._e()
   ])
 }
 var staticRenderFns = []
@@ -76091,242 +76285,70 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c("b-jumbotron", {
-        scopedSlots: _vm._u([
+  return _c("div", [
+    !this.$store.state.user
+      ? _c(
+          "div",
+          [_c("b-jumbotron", [_c("h1", [_vm._v("401 (Unauthorized)")])])],
+          1
+        )
+      : _vm._e(),
+    _vm._v(" "),
+    _c(
+      "div",
+      [
+        _c(
+          "b-jumbotron",
           {
-            key: "header",
-            fn: function() {
-              return [_vm._v(_vm._s(_vm.title))]
-            },
-            proxy: true
-          }
-        ])
-      }),
-      _vm._v(" "),
-      !_vm.addingUser
-        ? _c(
-            "b-button",
-            {
-              on: {
-                click: function($event) {
-                  $event.preventDefault()
-                  _vm.addingUser = true
-                }
+            scopedSlots: _vm._u([
+              {
+                key: "header",
+                fn: function() {
+                  return [_vm._v(_vm._s(_vm.title))]
+                },
+                proxy: true
               }
-            },
-            [_vm._v("Add New Admin Or Operator")]
-          )
-        : _vm._e(),
-      _vm._v(" "),
-      _vm.addingUser
-        ? _c("create-ao", {
-            ref: "createAORef",
-            on: {
-              "ao-created": _vm.createdAO,
-              "create-canceled": _vm.cancelCreate
-            }
-          })
-        : _vm._e(),
-      _vm._v(" "),
-      _c("user-list", {
-        ref: "usersListRef",
-        attrs: { users: _vm.users },
-        on: { "edit-click": _vm.editUser, "delete-click": _vm.deleteUser }
-      }),
-      _vm._v(" "),
-      _vm.currentUser
-        ? _c("user-edit", {
-            attrs: { user: _vm.currentUser },
-            on: { "user-saved": _vm.savedUser, "user-canceled": _vm.cancelEdit }
-          })
-        : _vm._e()
-    ],
-    1
-  )
-}
-var staticRenderFns = []
-render._withStripped = true
-
-
-
-/***/ }),
-
-/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/userEdit.vue?vue&type=template&id=421b6f40&scoped=true&":
-/*!***********************************************************************************************************************************************************************************************************************!*\
-  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/userEdit.vue?vue&type=template&id=421b6f40&scoped=true& ***!
-  \***********************************************************************************************************************************************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
-var render = function() {
-  var _vm = this
-  var _h = _vm.$createElement
-  var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    { staticClass: "jumbotron" },
-    [
-      _c("h2", [_vm._v("Edit User")]),
-      _vm._v(" "),
-      _c("picture-input", {
-        ref: "photo",
-        attrs: {
-          accept: "image/jpeg,image/png",
-          size: "10",
-          buttonClass: "btn",
-          radius: "50",
-          hideChangeButton: true,
-          customStrings: {
-            upload: "<h1>Bummer!</h1>",
-            drag: "Click here to upload photo"
-          }
-        },
-        model: {
-          value: _vm.user.photo,
-          callback: function($$v) {
-            _vm.$set(_vm.user, "photo", $$v)
+            ])
           },
-          expression: "user.photo"
-        }
-      }),
-      _vm._v(" "),
-      _c("div", { staticClass: "form-group" }, [
-        _c("label", { attrs: { for: "inputName" } }, [_vm._v("Name")]),
-        _vm._v(" "),
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.user.name,
-              expression: "user.name"
-            }
+          [
+            _vm._v(" "),
+            !_vm.addingUser
+              ? _c(
+                  "b-button",
+                  {
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        _vm.addingUser = true
+                      }
+                    }
+                  },
+                  [_vm._v("Add New Admin Or Operator")]
+                )
+              : _vm._e()
           ],
-          staticClass: "form-control",
-          attrs: {
-            type: "text",
-            name: "name",
-            id: "inputName",
-            placeholder: "Fullname"
-          },
-          domProps: { value: _vm.user.name },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.$set(_vm.user, "name", $event.target.value)
-            }
-          }
-        })
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "form-group" }, [
-        _c("label", { attrs: { for: "inputEmail" } }, [_vm._v("Email")]),
+          1
+        ),
         _vm._v(" "),
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.user.email,
-              expression: "user.email"
-            }
-          ],
-          staticClass: "form-control",
-          attrs: {
-            type: "email",
-            name: "email",
-            id: "inputEmail",
-            placeholder: "Email address"
-          },
-          domProps: { value: _vm.user.email },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
+        _vm.addingUser
+          ? _c("create-ao", {
+              ref: "createAORef",
+              on: {
+                "ao-created": _vm.createdAO,
+                "create-canceled": _vm.cancelCreate
               }
-              _vm.$set(_vm.user, "email", $event.target.value)
-            }
-          }
-        })
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "form-group" }, [
-        _c("label", { attrs: { for: "inputNif" } }, [_vm._v("NIF")]),
+            })
+          : _vm._e(),
         _vm._v(" "),
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.user.nif,
-              expression: "user.nif"
-            }
-          ],
-          staticClass: "form-control",
-          attrs: {
-            type: "number",
-            name: "nif",
-            id: "inputNif",
-            placeholder: "NIF"
-          },
-          domProps: { value: _vm.user.nif },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
-              }
-              _vm.$set(_vm.user, "nif", $event.target.value)
-            }
-          }
+        _c("user-list", {
+          ref: "usersListRef",
+          attrs: { users: _vm.users },
+          on: { "delete-click": _vm.deleteUser }
         })
-      ]),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "form-group" },
-        [
-          _c(
-            "b-button",
-            {
-              attrs: { type: "save", variant: "primary" },
-              on: {
-                click: function($event) {
-                  $event.preventDefault()
-                  return _vm.saveUser()
-                }
-              }
-            },
-            [_vm._v("Save")]
-          ),
-          _vm._v(" "),
-          _c(
-            "b-button",
-            {
-              attrs: { type: "cancel", variant: "light" },
-              on: {
-                click: function($event) {
-                  $event.preventDefault()
-                  return _vm.cancelEdit()
-                }
-              }
-            },
-            [_vm._v("Cancel")]
-          )
-        ],
-        1
-      )
-    ],
-    1
-  )
+      ],
+      1
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -76351,68 +76373,62 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "div",
+    "b-container",
+    { attrs: { fluid: "" } },
     [
       _c(
-        "b-container",
-        { attrs: { fluid: "" } },
+        "b-row",
         [
           _c(
-            "b-row",
+            "b-col",
+            { staticClass: "my-1", attrs: { lg: "6" } },
             [
               _c(
-                "b-col",
-                { staticClass: "my-1", attrs: { lg: "6" } },
+                "b-form-group",
+                {
+                  staticClass: "mb-0",
+                  attrs: {
+                    label: "Filter",
+                    "label-cols-sm": "3",
+                    "label-align-sm": "right",
+                    "label-size": "sm",
+                    "label-for": "filterInput"
+                  }
+                },
                 [
                   _c(
-                    "b-form-group",
-                    {
-                      staticClass: "mb-0",
-                      attrs: {
-                        label: "Filter",
-                        "label-cols-sm": "3",
-                        "label-align-sm": "right",
-                        "label-size": "sm",
-                        "label-for": "filterInput"
-                      }
-                    },
+                    "b-input-group",
+                    { attrs: { size: "sm" } },
                     [
+                      _c("b-form-input", {
+                        attrs: {
+                          type: "search",
+                          id: "filterInput",
+                          placeholder: "Type to Search"
+                        },
+                        model: {
+                          value: _vm.filter,
+                          callback: function($$v) {
+                            _vm.filter = $$v
+                          },
+                          expression: "filter"
+                        }
+                      }),
+                      _vm._v(" "),
                       _c(
-                        "b-input-group",
-                        { attrs: { size: "sm" } },
+                        "b-input-group-append",
                         [
-                          _c("b-form-input", {
-                            attrs: {
-                              type: "search",
-                              id: "filterInput",
-                              placeholder: "Type to Search"
-                            },
-                            model: {
-                              value: _vm.filter,
-                              callback: function($$v) {
-                                _vm.filter = $$v
-                              },
-                              expression: "filter"
-                            }
-                          }),
-                          _vm._v(" "),
                           _c(
-                            "b-input-group-append",
-                            [
-                              _c(
-                                "b-button",
-                                {
-                                  attrs: { disabled: !_vm.filter },
-                                  on: {
-                                    click: function($event) {
-                                      _vm.filter = ""
-                                    }
-                                  }
-                                },
-                                [_vm._v("Clear")]
-                              )
-                            ],
-                            1
+                            "b-button",
+                            {
+                              attrs: { disabled: !_vm.filter },
+                              on: {
+                                click: function($event) {
+                                  _vm.filter = ""
+                                }
+                              }
+                            },
+                            [_vm._v("Clear")]
                           )
                         ],
                         1
@@ -76422,66 +76438,42 @@ var render = function() {
                   )
                 ],
                 1
-              ),
-              _vm._v(" "),
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "b-col",
+            { staticClass: "my-1", attrs: { sm: "5", md: "6" } },
+            [
               _c(
-                "b-col",
-                { staticClass: "my-1", attrs: { sm: "5", md: "6" } },
+                "b-form-group",
+                {
+                  staticClass: "mb-0",
+                  attrs: {
+                    label: "Per page",
+                    "label-cols-sm": "6",
+                    "label-cols-md": "4",
+                    "label-cols-lg": "3",
+                    "label-align-sm": "right",
+                    "label-size": "sm",
+                    "label-for": "perPageSelect"
+                  }
+                },
                 [
-                  _c(
-                    "b-form-group",
-                    {
-                      staticClass: "mb-0",
-                      attrs: {
-                        label: "Per page",
-                        "label-cols-sm": "6",
-                        "label-cols-md": "4",
-                        "label-cols-lg": "3",
-                        "label-align-sm": "right",
-                        "label-size": "sm",
-                        "label-for": "perPageSelect"
-                      }
-                    },
-                    [
-                      _c("b-form-select", {
-                        attrs: {
-                          id: "perPageSelect",
-                          size: "sm",
-                          options: _vm.pageOptions
-                        },
-                        model: {
-                          value: _vm.perPage,
-                          callback: function($$v) {
-                            _vm.perPage = $$v
-                          },
-                          expression: "perPage"
-                        }
-                      })
-                    ],
-                    1
-                  )
-                ],
-                1
-              ),
-              _vm._v(" "),
-              _c(
-                "b-col",
-                { staticClass: "my-1", attrs: { sm: "7", md: "6" } },
-                [
-                  _c("b-pagination", {
-                    staticClass: "my-0",
+                  _c("b-form-select", {
                     attrs: {
-                      "total-rows": _vm.totalRows,
-                      "per-page": _vm.perPage,
-                      align: "fill",
-                      size: "sm"
+                      id: "perPageSelect",
+                      size: "sm",
+                      options: _vm.pageOptions
                     },
                     model: {
-                      value: _vm.currentPage,
+                      value: _vm.perPage,
                       callback: function($$v) {
-                        _vm.currentPage = $$v
+                        _vm.perPage = $$v
                       },
-                      expression: "currentPage"
+                      expression: "perPage"
                     }
                   })
                 ],
@@ -76489,152 +76481,107 @@ var render = function() {
               )
             ],
             1
-          ),
-          _vm._v(" "),
-          _c("b-table", {
-            attrs: {
-              "show-empty": "",
-              small: "",
-              stacked: "md",
-              items: _vm.users,
-              fields: _vm.fields,
-              "current-page": _vm.currentPage,
-              "per-page": _vm.perPage,
-              filter: _vm.filter,
-              filterIncludedFields: _vm.filterOn,
-              "sort-by": _vm.sortBy,
-              "sort-desc": _vm.sortDesc,
-              "sort-direction": _vm.sortDirection
-            },
-            on: {
-              "update:sortBy": function($event) {
-                _vm.sortBy = $event
-              },
-              "update:sort-by": function($event) {
-                _vm.sortBy = $event
-              },
-              "update:sortDesc": function($event) {
-                _vm.sortDesc = $event
-              },
-              "update:sort-desc": function($event) {
-                _vm.sortDesc = $event
-              },
-              filtered: _vm.onFiltered
-            },
-            scopedSlots: _vm._u([
-              {
-                key: "cell(actions)",
-                fn: function(row) {
-                  return [
-                    _c(
-                      "b-button",
-                      {
-                        attrs: { size: "sm" },
-                        on: {
-                          click: function($event) {
-                            return _vm.deleteUser(row.item)
-                          }
-                        }
-                      },
-                      [_vm._v("Delete/Deactivate")]
-                    )
-                  ]
-                }
-              }
-            ])
-          })
+          )
         ],
         1
       ),
       _vm._v(" "),
-      _c("table", { staticClass: "table table-striped" }, [
-        _vm._m(0),
-        _vm._v(" "),
-        _c(
-          "tbody",
-          _vm._l(_vm.users, function(user) {
-            return _c(
-              "tr",
-              { key: user.id, class: { activerow: _vm.editingUser === user } },
-              [
-                _c("td", [
-                  _c("img", {
-                    attrs: {
-                      src: "storage/fotos/" + user.photo,
-                      contain: "",
-                      height: "51px",
-                      width: "50px"
-                    }
-                  })
-                ]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(user.name))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(user.email))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(user.type))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(user.balance))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(user.active))]),
-                _vm._v(" "),
+      _c("b-table", {
+        attrs: {
+          "show-empty": "",
+          small: "",
+          stacked: "md",
+          items: _vm.users,
+          fields: _vm.fields,
+          "current-page": _vm.currentPage,
+          "per-page": _vm.perPage,
+          filter: _vm.filter,
+          filterIncludedFields: _vm.filterOn,
+          "sort-by": _vm.sortBy,
+          "sort-desc": _vm.sortDesc,
+          "sort-direction": _vm.sortDirection
+        },
+        on: {
+          "update:sortBy": function($event) {
+            _vm.sortBy = $event
+          },
+          "update:sort-by": function($event) {
+            _vm.sortBy = $event
+          },
+          "update:sortDesc": function($event) {
+            _vm.sortDesc = $event
+          },
+          "update:sort-desc": function($event) {
+            _vm.sortDesc = $event
+          },
+          filtered: _vm.onFiltered
+        },
+        scopedSlots: _vm._u([
+          {
+            key: "cell(photo)",
+            fn: function(row) {
+              return [
+                _c("img", {
+                  attrs: {
+                    src: "storage/fotos/" + row.item.photo,
+                    alt: "",
+                    width: "50",
+                    height: "50"
+                  }
+                })
+              ]
+            }
+          },
+          {
+            key: "cell(actions)",
+            fn: function(row) {
+              return [
                 _c(
-                  "td",
-                  [
-                    _c(
-                      "b-button",
-                      {
-                        attrs: {
-                          size: "sm",
-                          type: "delete",
-                          variant: "danger"
-                        },
-                        on: {
-                          click: function($event) {
-                            $event.preventDefault()
-                            return _vm.deleteUser(user)
-                          }
-                        }
-                      },
-                      [_vm._v("Delete")]
-                    )
-                  ],
-                  1
+                  "b-button",
+                  {
+                    attrs: { size: "sm" },
+                    on: {
+                      click: function($event) {
+                        return _vm.deleteUser(row.item)
+                      }
+                    }
+                  },
+                  [_vm._v("Delete/Deactivate")]
                 )
               ]
-            )
-          }),
-          0
-        )
-      ])
+            }
+          }
+        ])
+      }),
+      _vm._v(" "),
+      _c(
+        "b-col",
+        { staticClass: "my-1", attrs: { sm: "7", md: "6" } },
+        [
+          _c("b-pagination", {
+            staticClass: "my-0",
+            attrs: {
+              "total-rows": _vm.totalRows,
+              "per-page": _vm.perPage,
+              align: "fill",
+              size: "sm"
+            },
+            model: {
+              value: _vm.currentPage,
+              callback: function($$v) {
+                _vm.currentPage = $$v
+              },
+              expression: "currentPage"
+            }
+          })
+        ],
+        1
+      )
     ],
     1
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("thead", [
-      _c("tr", [
-        _c("th", [_vm._v("Photo")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Name")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Email")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Type")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Balance")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Status")]),
-        _vm._v(" "),
-        _c("th", [_vm._v("Actions")])
-      ])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -94003,75 +93950,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_user_vue_vue_type_template_id_e039bdd4___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_user_vue_vue_type_template_id_e039bdd4___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
-
-
-
-/***/ }),
-
-/***/ "./resources/js/components/userEdit.vue":
-/*!**********************************************!*\
-  !*** ./resources/js/components/userEdit.vue ***!
-  \**********************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _userEdit_vue_vue_type_template_id_421b6f40_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./userEdit.vue?vue&type=template&id=421b6f40&scoped=true& */ "./resources/js/components/userEdit.vue?vue&type=template&id=421b6f40&scoped=true&");
-/* harmony import */ var _userEdit_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./userEdit.vue?vue&type=script&lang=js& */ "./resources/js/components/userEdit.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-
-
-
-
-
-/* normalize component */
-
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
-  _userEdit_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
-  _userEdit_vue_vue_type_template_id_421b6f40_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
-  _userEdit_vue_vue_type_template_id_421b6f40_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
-  false,
-  null,
-  "421b6f40",
-  null
-  
-)
-
-/* hot reload */
-if (false) { var api; }
-component.options.__file = "resources/js/components/userEdit.vue"
-/* harmony default export */ __webpack_exports__["default"] = (component.exports);
-
-/***/ }),
-
-/***/ "./resources/js/components/userEdit.vue?vue&type=script&lang=js&":
-/*!***********************************************************************!*\
-  !*** ./resources/js/components/userEdit.vue?vue&type=script&lang=js& ***!
-  \***********************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_userEdit_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./userEdit.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/userEdit.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_userEdit_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
-
-/***/ }),
-
-/***/ "./resources/js/components/userEdit.vue?vue&type=template&id=421b6f40&scoped=true&":
-/*!*****************************************************************************************!*\
-  !*** ./resources/js/components/userEdit.vue?vue&type=template&id=421b6f40&scoped=true& ***!
-  \*****************************************************************************************/
-/*! exports provided: render, staticRenderFns */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_userEdit_vue_vue_type_template_id_421b6f40_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./userEdit.vue?vue&type=template&id=421b6f40&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/userEdit.vue?vue&type=template&id=421b6f40&scoped=true&");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_userEdit_vue_vue_type_template_id_421b6f40_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_userEdit_vue_vue_type_template_id_421b6f40_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

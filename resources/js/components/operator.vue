@@ -1,5 +1,11 @@
 <template>
-  <div class="jumbotron">
+<div>
+<div v-if="!this.$store.state.user" >
+        <b-jumbotron>
+        <h1>401 (Unauthorized)</h1>
+        </b-jumbotron>
+    </div>
+  <div v-if="this.$store.state.user" class="jumbotron">
     <h2>Add Expense</h2>
 
     <input type="radio" id="cash" value="c" v-model="income.type" />
@@ -49,6 +55,7 @@
       <b-button type="save" variant="primary" v-on:click.prevent="addIncome()">Save</b-button>
       <b-button type="reset" variant="light">Reset</b-button>
     </div>
+  </div>
   </div>
 </template>
 

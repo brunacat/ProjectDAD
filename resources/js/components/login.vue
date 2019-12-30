@@ -45,8 +45,7 @@ export default {
                 email: "",
                 password: ""
             },
-            reg: /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,24}))$/
-        };
+            };
     },
     methods: {
        login() {
@@ -58,20 +57,21 @@ export default {
                 })
                 .then(response => {
                     this.$store.commit("setUser", response.data.data);
-                    //this.$socket.emit("user_enter", response.data.data);
+                    this.$socket.emit("user_enter", response.data.data);
                     this.$toasted.success("Login successful");
-                    this.$router.push({ path: '/wallet' });
+                    if (response.data.data.type =="u") {
+                        this.$router.push({ path: '/wallet' });
+                    }else if (response.data.data.type =="a") {
+                        this.$router.push({ path: '/users' });
+                    }else if (response.data.data.type =="o") {
+                        this.$router.push({ path: '/operator' });
+                    }
                 })
                 .catch(error => {
                     this.$store.commit("clearUserAndToken");
                     this.$toasted.error("Invalid Credentials");
                     console.log(error);
                 });
-        }
-    },
-    computed: {
-        isEmailValid() {
-            return this.reg.test(this.input.email);
         }
     },
     mounted() {

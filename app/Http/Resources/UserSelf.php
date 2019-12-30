@@ -21,7 +21,7 @@ class UserSelf extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'nif' => $this->nif,
-            'balance' => $this->wallet->balance,
+            'balance' => $this->wallet ? $this->wallet->balance : "No wallet" ,
             'photo' => $this->photo
         ];
     }

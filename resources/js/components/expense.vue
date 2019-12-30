@@ -126,6 +126,7 @@ export default {
           .then(response => {
             this.user.balance = response.data;
             this.$emit("expense-added");
+            
           });
       } else {
         this.payment.category = this.category;

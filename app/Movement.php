@@ -28,6 +28,18 @@ class Movement extends Model
                 return "Income";
         }
     }
+    public function getTypePayment() 
+    {
+        switch($this->type_payment){
+            case "c":
+                return "Cash";
+            case "mb":
+                return "MB Payment";
+            case "bt":
+                return "Bank Transfer";
+        }
+    }
+
 
 
     public function category()

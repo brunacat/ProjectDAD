@@ -18,31 +18,31 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::get('users', 'UserControllerAPI@index');
-Route::get('categories', 'CategoryControllerAPI@list');
+Route::middleware('auth:api')->get('users', 'UserControllerAPI@index');
+Route::middleware('auth:api')-> get('categories', 'CategoryControllerAPI@list');
 
 Route::post('login', 'LoginControllerAPI@login');
 Route::middleware('auth:api')->post('logout', 'LoginControllerAPI@logout');
 
 Route::get('wallets/total', 'WalletControllerAPI@total');
 Route::post('user/register', 'UserControllerAPI@register');
-Route::post('user/register-ao', 'UserControllerAPI@registerAO');
-Route::get('user/mail/{email}', 'UserControllerAPI@getUser');
+Route::middleware('auth:api')->post('user/register-ao', 'UserControllerAPI@registerAO');
+Route::middleware('auth:api')->get('user/mail/{email}', 'UserControllerAPI@getUser');
 
 Route::middleware('auth:api')->get('users/me', 'UserControllerAPI@myProfile');
 Route::middleware('auth:api')->get('wallet/me', 'WalletControllerAPI@myWallet');
 
-Route::get('users/{id}', 'UserControllerAPI@show');
-Route::put('users/{id}', 'UserControllerAPI@update');
-Route::post('transfer/{id}', 'UserControllerAPI@addTransfer');
-Route::post('paymentMB/{id}', 'UserControllerAPI@addPaymentMB');
-Route::post('paymentBT/{id}', 'UserControllerAPI@addPaymentBT');
+Route::middleware('auth:api')->get('users/{id}', 'UserControllerAPI@show');
+Route::middleware('auth:api')->put('users/{id}', 'UserControllerAPI@update');
+Route::middleware('auth:api')->post('transfer/{id}', 'UserControllerAPI@addTransfer');
+Route::middleware('auth:api')->post('paymentMB/{id}', 'UserControllerAPI@addPaymentMB');
+Route::middleware('auth:api')->post('paymentBT/{id}', 'UserControllerAPI@addPaymentBT');
 
-Route::post('incomeBT', 'MovementControllerAPI@addIncomeBT');
-Route::post('incomeC', 'MovementControllerAPI@addIncomeC');
+Route::middleware('auth:api')->post('incomeBT', 'MovementControllerAPI@addIncomeBT');
+Route::middleware('auth:api')->post('incomeC', 'MovementControllerAPI@addIncomeC');
 
-Route::put('users/pass/{id}', 'UserControllerAPI@updatePass');
-Route::delete('users/{id}', 'UserControllerAPI@destroy');
+Route::middleware('auth:api')->put('users/pass/{id}', 'UserControllerAPI@updatePass');
+Route::middleware('auth:api')->delete('users/{id}', 'UserControllerAPI@destroy');
 
 Route::middleware('auth:api')->get('wallet/me/movements', 'WalletControllerAPI@myMovements');
 

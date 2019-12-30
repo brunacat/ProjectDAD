@@ -25,8 +25,7 @@ class WalletControllerAPI extends Controller
 
     public function myMovements(Request $request)
     {
-        //dd($request->user()->wallet->movements());
-        //return $request->user()->wallet->movements;
-        return MovementResource::collection($request->user()->wallet->movements()->paginate(20));
+        
+        return MovementResource::collection($request->user()->wallet->movements);
     }
 }

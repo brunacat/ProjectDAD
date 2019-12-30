@@ -76,6 +76,7 @@ export default {
                     // Copy object properties from response.data.data to this.user
                     // without creating a new reference
                     Object.assign(this.user, response.data.data);
+                    this.$store.state.user = response.data.data;
                     this.$emit("user-saved", this.user);
                 });
         },

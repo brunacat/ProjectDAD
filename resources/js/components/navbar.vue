@@ -7,7 +7,7 @@
             </router-link>
             <b-navbar-nav class="ml-auto">
                 <b-nav-form>
-                    <div v-if="this.$store.state.token === ''">
+                    <div v-if="!this.$store.state.user">
                         <router-link to="/login">
                             <b-button
                                 size="sm"
@@ -25,7 +25,7 @@
                             >
                         </router-link>
                     </div>
-                    <div v-if="this.$store.state.token !== ''">
+                    <div v-if="this.$store.state.user">
                         {{ this.$store.state.user.name }}
                         <b-button size="sm" class="my-2 my-sm-0" type="submit" v-on:click.prevent="logout()"
                         >Logout</b-button

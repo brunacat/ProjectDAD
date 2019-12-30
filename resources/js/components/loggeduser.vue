@@ -1,5 +1,11 @@
 <template>
-    <div>
+<div>
+    <div v-if="!this.$store.state.user" >
+        <b-jumbotron>
+        <h1>401 (Unauthorized)</h1>
+        </b-jumbotron>
+    </div>
+    <div v-if="this.$store.state.user">
         <b-jumbotron>
             <template v-slot:header>Welcome!</template>
 
@@ -38,7 +44,9 @@
             v-if="addingExpense"
         >
         </expense>
-        <movements :key="key" />
+        <movements :movements="movements" />
+        
+    </div>
     </div>
 </template>
 
@@ -58,6 +66,7 @@ export default {
                 nif: "",
                 photo: null
             },
+            movements:[],
             editingUser: null,
             changePass: null,
             addingExpense: null,
@@ -71,6 +80,13 @@ export default {
         "expense": Expense
     },
     methods: {
+        getMovements() {
+      axios
+        .get("api/wallet/me/movements")
+        .then(response => {
+          this.movements = response.data.data;
+        });
+    },
         savedUser: function() {
             this.editingUser = null;
             this.$toasted.success("User saved");
@@ -88,14 +104,15 @@ export default {
         addExpense: function() {
             this.addingExpense = null;
             this.$toasted.success("Expense added");
-            this.$store.commit("setUser", this.user);
-            this.key += 1;
+            this.getMovements();
         },
         cancelExpense: function() {
             this.addingExpense = null;
         }
     },
     mounted() {
+        console.log(this.$store.state.user)
+        this.getMovements();
         this.user = this.$store.state.user;
         console.log("Component mounted.");
     }
