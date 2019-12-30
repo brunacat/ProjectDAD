@@ -22,7 +22,7 @@ class Movement extends JsonResource
             'transfer' => $this->transfer ? "Tranfer" : "Other",
             'transfer_movement_id' => $this->transfer_movement_id,
             'transfer_wallet_id' => $this->transfer_wallet_id,
-            'type_payment' => $this->transfer ? $this->getTypePayment($this->type_payment) : "Not a Payment",
+            'type_payment' => $this->transfer ?  "Not a Payment" : $this->getTypePayment($this->type_payment),
             'category' => $this->category ? $this->category->name : "No category",
             'date' => $this->date,
             'start_balance' => $this->start_balance,
