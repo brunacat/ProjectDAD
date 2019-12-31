@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Wallet;
 
 class Movement extends Model
 {
@@ -12,25 +13,23 @@ class Movement extends Model
         'mb_entity_code', 'mb_payment_reference', 'description', 'source_description', 'start_balance', 'end_balance', 'value', 'date'
     ];
 
-
-    
     public function wallet()
     {
         return $this->belongsTo('App\Wallet');
     }
 
-    public function getType() 
+    public function getType()
     {
-        switch($this->type){
+        switch ($this->type) {
             case "e":
                 return "Expense";
             case "i":
                 return "Income";
         }
     }
-    public function getTypePayment() 
+    public function getTypePayment()
     {
-        switch($this->type_payment){
+        switch ($this->type_payment) {
             case "c":
                 return "Cash";
             case "mb":
@@ -40,8 +39,6 @@ class Movement extends Model
         }
     }
 
-
-
     public function category()
     {
         return $this->belongsTo('App\Category');
@@ -50,5 +47,10 @@ class Movement extends Model
     public function par_movement()
     {
         return $this->hasOne('App\Movement', 'transfer_movement_id');
+    }
+
+    public function getWalletEmail(int $id)
+    {
+       return Wallet::where('id', $id)->firstOrFail()->email;
     }
 }

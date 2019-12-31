@@ -15,11 +15,11 @@ class Movement extends JsonResource
      */
     public function toArray($request)
     {
-       
         return [
             'id' =>$this->id,
             'type' => $this->getType($this->type),
-            'transfer' => $this->transfer ? "Tranfer" : "Other",
+            'transfer' => $this->transfer ? "Transfer" : "Other",
+            'email' => $this->transfer_movement_id ? $this->getWalletEmail($this->transfer_wallet_id) : "Not a transfer",
             'transfer_movement_id' => $this->transfer_movement_id,
             'transfer_wallet_id' => $this->transfer_wallet_id,
             'type_payment' => $this->transfer ?  "Not a Payment" : $this->getTypePayment($this->type_payment),

@@ -65,12 +65,6 @@
             @filtered="onFiltered"
         >
             <template v-slot:cell(actions)="row">
-                <b-button
-                    size="sm"
-                    @click="info(row.item, row.index, $event.target)"
-                    class="mr-1"
-                    >Info modal</b-button
-                >
                 <b-button size="sm" @click="row.toggleDetails"
                     >{{
                         row.detailsShowing ? "Hide" : "Show"
@@ -113,7 +107,7 @@ export default {
             fields: [
                 { key: "id" },
                 { key: "type" },
-                //{ key: "email"}
+                { key: "email"},
                 { key: "type_payment" },
                 { key: "category" },
                 { key: "date" },
