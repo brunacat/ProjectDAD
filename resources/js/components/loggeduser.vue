@@ -1,52 +1,56 @@
 <template>
-<div>
-    <div v-if="!this.$store.state.user" >
-        <b-jumbotron>
-        <h1>401 (Unauthorized)</h1>
-        </b-jumbotron>
-    </div>
-    <div v-if="this.$store.state.user">
-        <b-jumbotron>
-            <template v-slot:header>Welcome!</template>
+    <div>
+        <div v-if="!this.$store.state.user">
+            <b-jumbotron>
+                <h1>401 (Unauthorized)</h1>
+            </b-jumbotron>
+        </div>
+        <div v-if="this.$store.state.user">
+            <b-jumbotron>
+                <template v-slot:header>Welcome!</template>
 
-            <p>Current balance: {{ user.balance }}</p>
+                <p>Current balance: {{ user.balance }}</p>
 
-            <b-button
-                v-if="!editingUser"
-                v-on:click.prevent="editingUser = true"
-                >Edit Profile</b-button
+                <b-button
+                    v-if="!editingUser"
+                    v-on:click.prevent="editingUser = true"
+                    >Edit Profile</b-button
+                >
+                <b-button
+                    v-if="!changePass"
+                    v-on:click.prevent="changePass = true"
+                    >Change Password</b-button
+                >
+                <b-button
+                    v-if="!addingExpense"
+                    v-on:click.prevent="addingExpense = true"
+                    >Add Expense</b-button
+                >
+
+                <movements :movements="movements" />
+            </b-jumbotron>
+            <user-edit
+                :user="user"
+                @user-saved="savedUser"
+                @user-canceled="cancelEdit"
+                v-if="editingUser"
             >
-            <b-button v-if="!changePass" v-on:click.prevent="changePass = true"
-                >Change Password</b-button
+            </user-edit>
+            <change-pass
+                :user="user"
+                @pass-saved="savedPass"
+                @pass-canceled="cancelPass"
+                v-if="changePass"
             >
-            <b-button v-if="!addingExpense" v-on:click.prevent="addingExpense = true"
-                >Add Expense</b-button
+            </change-pass>
+            <expense
+                :user="user"
+                @expense-added="addExpense"
+                @expense-canceled="cancelExpense"
+                v-if="addingExpense"
             >
-        </b-jumbotron>
-        <user-edit
-            :user="user"
-            @user-saved="savedUser"
-            @user-canceled="cancelEdit"
-            v-if="editingUser"
-        >
-        </user-edit>
-        <change-pass
-            :user="user"
-            @pass-saved="savedPass"
-            @pass-canceled="cancelPass"
-            v-if="changePass"
-        >
-        </change-pass>
-        <expense
-            :user="user"
-            @expense-added="addExpense"
-            @expense-canceled="cancelExpense"
-            v-if="addingExpense"
-        >
-        </expense>
-        <movements :movements="movements" />
-        
-    </div>
+            </expense>
+        </div>
     </div>
 </template>
 
@@ -66,27 +70,25 @@ export default {
                 nif: "",
                 photo: null
             },
-            movements:[],
+            movements: [],
             editingUser: null,
             changePass: null,
             addingExpense: null,
-            key: 0,
+            key: 0
         };
     },
     components: {
         movements: Movements,
         "user-edit": UserEdit,
         "change-pass": ChangePass,
-        "expense": Expense
+        expense: Expense
     },
     methods: {
         getMovements() {
-      axios
-        .get("api/wallet/me/movements")
-        .then(response => {
-          this.movements = response.data.data;
-        });
-    },
+            axios.get("api/wallet/me/movements").then(response => {
+                this.movements = response.data.data;
+            });
+        },
         savedUser: function() {
             this.editingUser = null;
             this.$toasted.success("User saved");
@@ -111,7 +113,7 @@ export default {
         }
     },
     mounted() {
-        console.log(this.$store.state.user)
+        console.log(this.$store.state.user);
         this.getMovements();
         this.user = this.$store.state.user;
         console.log("Component mounted.");

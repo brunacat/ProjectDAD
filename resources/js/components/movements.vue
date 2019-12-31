@@ -6,7 +6,7 @@
                 <b-form-group
                     label="Filter"
                     label-cols-sm="3"
-                    label-align-sm="right"
+                    label-align-sm="left"
                     label-size="sm"
                     label-for="filterInput"
                     class="mb-0"
@@ -26,14 +26,15 @@
                     </b-input-group>
                 </b-form-group>
             </b-col>
-
+        </b-row>
+        <b-row>
             <b-col sm="5" md="6" class="my-1">
                 <b-form-group
                     label="Per page"
                     label-cols-sm="6"
                     label-cols-md="4"
                     label-cols-lg="3"
-                    label-align-sm="right"
+                    label-align-sm="left"
                     label-size="sm"
                     label-for="perPageSelect"
                     class="mb-0"
@@ -47,7 +48,32 @@
                 </b-form-group>
             </b-col>
         </b-row>
-
+        <b-row>
+            <b-col lg="9" class="my-1">
+                <b-form-group
+                    label="Filter On"
+                    label-cols-sm="3"
+                    label-align-sm="left"
+                    label-size="sm"
+                    description="Leave all unchecked to filter on all data"
+                    class="mb-0"
+                >
+                    <b-form-checkbox-group v-model="filterOn" class="mt-1">
+                        <b-form-checkbox value="id">ID</b-form-checkbox>
+                        <b-form-checkbox value="type">Type</b-form-checkbox>
+                        <b-form-checkbox value="category"
+                            >Category</b-form-checkbox
+                        >
+                        <b-form-checkbox value="type_payment"
+                            >Type Of Payment</b-form-checkbox
+                        >
+                        <b-form-checkbox value="email"
+                            >Transfer Email</b-form-checkbox
+                        >
+                    </b-form-checkbox-group>
+                </b-form-group>
+            </b-col>
+        </b-row>
         <!-- Main table element -->
         <b-table
             show-empty
@@ -77,7 +103,17 @@
                 <b-card>
                     <ul>
                         <li v-for="(value, key) in row.item" :key="key">
-                            {{ key }}: {{ value }}
+                            {{ key }} : {{ value }}
+                            <img
+                                v-if="
+                                    key == 'photo' &&
+                                        value != 'Not a transfer' &&
+                                        value != 'No image'
+                                "
+                                :src="'storage/fotos/' + value"
+                                width="50"
+                                height="50"
+                            />
                         </li>
                     </ul>
                 </b-card>
@@ -107,7 +143,7 @@ export default {
             fields: [
                 { key: "id" },
                 { key: "type" },
-                { key: "email"},
+                { key: "email" },
                 { key: "type_payment" },
                 { key: "category" },
                 { key: "date" },
@@ -143,8 +179,6 @@ export default {
             // Trigger pagination to update the number of buttons/pages due to filtering
             this.totalRows = filteredItems.length;
             this.currentPage = 1;
-            console.log(this.movements);
-            console.log(this.movements.length);
         }
     }
 };

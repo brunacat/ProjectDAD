@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Wallet;
+use App\User;
 
 class Movement extends Model
 {
@@ -52,5 +53,11 @@ class Movement extends Model
     public function getWalletEmail(int $id)
     {
        return Wallet::where('id', $id)->firstOrFail()->email;
+    }
+
+    public function getPhoto(int $id)
+    {
+       $email = Wallet::where('id', $id)->firstOrFail()->email;
+       return User::where('email', $email)->firstOrFail()->photo;
     }
 }

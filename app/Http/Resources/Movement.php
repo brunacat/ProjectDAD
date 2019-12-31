@@ -28,11 +28,12 @@ class Movement extends JsonResource
             'start_balance' => $this->start_balance,
             'end_balance' => $this->end_balance,
             'value' => $this->value,
-            'iban' => $this->iban,
-            'mb_entity_code' => $this->mb_entity_code,
-            'mb_payment_reference' => $this->mb_payment_reference,
-            'description' => $this->description,
-            'source_description' => $this->source_description
+            'iban' => $this->when($this->iban, $this->iban),
+            'mb_entity_code' => $this->when($this->mb_entity_code,$this->mb_entity_code),
+            'mb_payment_reference' => $this->when($this->mb_payment_reference,$this->mb_payment_reference),
+            'description' => $this->when($this->description,$this->description),
+            'source_description' => $this->when($this->source_description,$this->source_description),
+            'photo' => $this->transfer_movement_id ? ($this->getPhoto($this->transfer_wallet_id) ? $this->getPhoto($this->transfer_wallet_id) : "No image"): "Not a transfer"
         ];
     }
 }
