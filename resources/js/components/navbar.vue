@@ -42,11 +42,11 @@
 export default {
     data() {
         return {
-            currentUser: "",
         };
     },
     methods: {
         logout() {
+            
             axios
                 .post(
                     "api/logout",
@@ -57,21 +57,24 @@ export default {
                     }
                 )
                 .then(response => {
+                    this.$socket.emit("user_exit", this.$store.state.user);
                     this.$store.commit("clearUserAndToken");
+                    this.$store.commit("clearUserAndToken");  
                     this.$router.push({ path: "/" });
+
                 })
                 .catch(error => {
-                    this.errorMessage = error.response.data.msg;
-                    this.showError = true;
+                    this.$socket.emit("user_exit", this.$store.state.user);
+                    this.$store.commit("clearUserAndToken");
+                    this.typeofmsg = "alert-danger";
+                    this.message = "Logout incorrect. But local credentials were discarded";
+                    this.showMessage = true;
                 });
         }
     },
     mounted() {
         console.log("Component mounted.");
     },
-    onChanged() {
-
-    }
 };
 </script>
 

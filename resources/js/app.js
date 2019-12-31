@@ -107,27 +107,28 @@ const app = new Vue({
     el: "#app",
     router,
     store,
-    data: {
-        user:null,
-        token:''
-    },
-    methods: {
-        persist() {
-            localStorage.user = this.user;
-            localStorage.token = this.token;
-
-            console.log(this.token);
-        }
-
-
-    },
-    mounted() {
-        if (localStorage.user) {
-            this.user = localStorage.user;
-        }
-        if (localStorage.token) {
-            this.token = localStorage.token;
-        }
+    sockets: {
+        privateMessage(dataFromServer) {
+            let name =
+                dataFromServer[1] === null ? "Unknown" : dataFromServer[1].name;
+            this.$toasted.show(
+                'Message "' + dataFromServer[0] + '" sent from "' + name + '"'
+            );
+        },
+        privateMessage_unavailable(destUser) {
+            this.$toasted.error(
+                'User "' + destUser.name + '" is not available'
+            );
+        },
+        privateMessage_sent(dataFromServer) {
+            this.$toasted.success(
+                'Message "' +
+                    dataFromServer[0] +
+                    '" was sent to "' +
+                    dataFromServer[1].name +
+                    '"'
+            );
+        },
     },
     created() {
         console.log("Starting APP");

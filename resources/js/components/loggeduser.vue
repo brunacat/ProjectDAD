@@ -112,11 +112,22 @@ export default {
             this.addingExpense = null;
             this.$toasted.success("Expense added");
             this.getMovements();
+            this.$store.commit("setUser", this.user);
         },
         cancelExpense: function() {
             this.addingExpense = null;
         }
     },
+    sockets: {
+    privateMessage () {
+      this.$toasted.success("Recived moviment! moviments are beeing updated");
+      this.getMovements();
+    },
+     privateMessage_unavailable () {
+      this.sentmail();
+    }
+
+  },
     mounted() {
         console.log(this.$store.state.user);
         this.getMovements();

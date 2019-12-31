@@ -27,6 +27,18 @@ class UserControllerAPI extends Controller
 
      
     }
+    public function findUserByEmail($email)
+    {
+        if (Auth::user() && (Auth::user()->type == "o" || Auth::user()->type == "u")) {
+            $user = User::where('email', $email)->firstOrFail();
+            return $user->id;
+        }else{
+            return response()->json(['msg' => 'Unouthorized'], 401);
+        }
+
+     
+    }
+    
 
     public function register(Request $request)
     {

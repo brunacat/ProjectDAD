@@ -112,6 +112,15 @@ export default {
     };
   },
   methods: {
+    messageUser: function(){
+      axios.get("api/userByEmail/" + this.transfer.email).
+      then(response => {
+      console.log(response);
+      this.$socket.emit('privateMessage', "A movement was added to your wallet", this.$store.state.user, response.data);
+    })
+    },
+    
+            
     getCategories: function() {
       axios.get("api/categories").then(response => {
         this.categories = response.data.data;
@@ -126,8 +135,8 @@ export default {
           .then(response => {
             this.user.balance = response.data;
             this.$emit("expense-added");
-            
           });
+          this.messageUser();
       } else {
         this.payment.category = this.category;
         this.payment.value = this.value;

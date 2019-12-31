@@ -53,7 +53,7 @@
     </div>
     <div class="form-group">
       <b-button type="save" variant="primary" v-on:click.prevent="addIncome()">Save</b-button>
-      <b-button type="reset" variant="light">Reset</b-button>
+      <b-button type="reset" variant="light" v-on:click.prevent="reset()">Reset</b-button>
     </div>
   </div>
   <div v-else >
@@ -79,23 +79,44 @@ export default {
     };
   },
   methods: {
+      messageUser: function() {
+      axios.get("api/userByEmail/" + this.income.email).
+      then(response => {
+      this.$socket.emit('privateMessage', "A movement was added to your wallet", this.$store.state.user, response.data);
+    })
+    },
+
+    reset: function() {
+      this.income.value=0
+      this.income.email=""
+      this.income.description=""
+      this.income.iban=""
+    },
     addIncome: function() {
       if (this.income.type == "c") {
         axios
           .post("api/incomeC", this.income)
           .then(response => {
-
+          this.messageUser();
+          this.$toasted.success("Income added");
+          this.reset();
           });
       } else {
           axios
           .post("api/incomeBT", this.income)
           .then(response => {
-
+          this.messageUser();
+          this.$toasted.success("Income added");
+          this.reset();
           });
       }
     }
   },
-  mounted() {
+  sockets: {
+    privateMessage_unavailable () {
+      this.sentmail();
+    }
+
   }
 };
 </script>

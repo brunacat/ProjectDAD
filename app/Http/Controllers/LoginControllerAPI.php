@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 define('YOUR_SERVER_URL', 'http://projectdad.test');
 // Check "oauth_clients" table for next 2 values:
