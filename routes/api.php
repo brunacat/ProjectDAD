@@ -45,6 +45,7 @@ Route::middleware('auth:api')->post('incomeC', 'MovementControllerAPI@addIncomeC
 Route::middleware('auth:api')->put('users/pass/{id}', 'UserControllerAPI@updatePass');
 Route::middleware('auth:api')->delete('users/{id}', 'UserControllerAPI@destroy');
 
+Route::middleware('auth:api')->put('movementsEdit', 'MovementControllerAPI@edit');
 Route::middleware('auth:api')->get('wallet/me/movements', 'WalletControllerAPI@myMovements');
 
 Route::post('upload-image', 'UserControllerAPI@uploadImage');

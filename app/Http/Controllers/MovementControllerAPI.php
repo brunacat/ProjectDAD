@@ -19,9 +19,9 @@ class MovementControllerAPI extends Controller
                 'iban' =>           'required|regex:/[A-Z]{2}[0-9]{23}/',
                 'email' =>          'required|exists:wallets'
             ]);
-    
+
             $wallet = Wallet::where('email', $request->email)->firstOrFail();
-    
+
             $movement = new Movement();
             $movement->wallet_id = $wallet->id;
             $movement->transfer = 0;
@@ -33,13 +33,13 @@ class MovementControllerAPI extends Controller
             $movement->type_payment = $request->type;
             $movement->iban = $request->iban;
             $wallet->balance += $request->value;
-    
+
             $wallet->save();
             $movement->save();
-        }else{
-            return response()->json(['msg' => 'Unouthorized'], 401);
+
+        } else {
+            return response()->json(['msg' => 'Unauthorized'], 401);
         }
-        
     }
 
     public function addIncomeC(Request $request)
@@ -50,9 +50,9 @@ class MovementControllerAPI extends Controller
                 'description' =>    'max:256',
                 'email' =>          'required|exists:wallets'
             ]);
-    
+
             $wallet = Wallet::where('email', $request->email)->firstOrFail();
-    
+
             $movement = new Movement();
             $movement->wallet_id = $wallet->id;
             $movement->transfer = 0;
@@ -63,13 +63,30 @@ class MovementControllerAPI extends Controller
             $movement->end_balance = $wallet->balance + $request->value;
             $movement->type_payment = $request->type;
             $wallet->balance += $request->value;
-    
+
             $wallet->save();
             $movement->save();
-        }else{
-            return response()->json(['msg' => 'Unouthorized'], 401);
+
+        } else {
+            return response()->json(['msg' => 'Unauthorized'], 401);
         }
-        
-      
+    }
+
+    public function edit(Request $request, $id)
+    {
+        if (Auth::user() && Auth::user()->type == "u") {
+            $request->validate([
+                'description' => 'max:256'
+            ]);
+
+            $movement = Movement::findOrFail($id);
+            $movement->description = $request->description;
+            $movement->category = $request->category;
+
+            $movement->save();
+
+        } else {
+            return response()->json(['msg' => 'Unauthorized'], 401);
+        }
     }
 }

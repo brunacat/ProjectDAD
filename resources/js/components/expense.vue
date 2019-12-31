@@ -25,8 +25,9 @@
         <option disabled value>Category</option>
         <option
           v-for="category in categories"
-          v-bind:value="category.id"
+          :value="category.id"
           v-if="category.type=='e'"
+          :key="category"
         >{{category.name}}</option>
       </select>
     </div>

@@ -25,7 +25,7 @@ class WalletControllerAPI extends Controller
         if (Auth::user() &&  Auth::user()->type == "u") {
             return new WalletResource($request->user()->wallet);
         }else{
-            return response()->json(['msg' => 'Unouthorized'], 401);
+            return response()->json(['msg' => 'Unauthorized'], 401);
         }
 
     }
@@ -35,7 +35,7 @@ class WalletControllerAPI extends Controller
         if (Auth::user() &&  Auth::user()->type == "u") {
             return MovementResource::collection($request->user()->wallet->movements);
         }else{
-            return response()->json(['msg' => 'Unouthorized'], 401);
+            return response()->json(['msg' => 'Unauthorized'], 401);
         }
 
         

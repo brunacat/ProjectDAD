@@ -22,7 +22,7 @@ class UserControllerAPI extends Controller
         if (Auth::user() &&  Auth::user()->type == "a") {
             return UserResource::collection(User::all());  
         }else{
-            return response()->json(['msg' => 'Unouthorized'], 401);
+            return response()->json(['msg' => 'Unauthorized'], 401);
         }
 
      
@@ -77,7 +77,7 @@ class UserControllerAPI extends Controller
             $user->password = Hash::make($user->password);
             $user->save();
         }else{
-            return response()->json(['msg' => 'Unouthorized'], 401);
+            return response()->json(['msg' => 'Unauthorized'], 401);
         }
         
     }
@@ -93,7 +93,7 @@ class UserControllerAPI extends Controller
             $user->update($request->all());
             return new UserSelfResource($user);
         }else{
-            return response()->json(['msg' => 'Unouthorized'], 401);
+            return response()->json(['msg' => 'Unauthorized'], 401);
         }
     }
 
@@ -112,7 +112,7 @@ class UserControllerAPI extends Controller
                 ]);
             }
         }else{
-            return response()->json(['msg' => 'Unouthorized'], 401);
+            return response()->json(['msg' => 'Unauthorized'], 401);
         }
       
     }
@@ -141,7 +141,7 @@ class UserControllerAPI extends Controller
             return response('User Deleted', 200);
             }
         }else{
-            return response()->json(['msg' => 'Unouthorized'], 401);
+            return response()->json(['msg' => 'Unauthorized'], 401);
         }
         
        
@@ -152,7 +152,7 @@ class UserControllerAPI extends Controller
         if (Auth::user()) {
             return new UserSelfResource($request->user());
         }else{
-            return response()->json(['msg' => 'Unouthorized'], 401);
+            return response()->json(['msg' => 'Unauthorized'], 401);
         }
     }
 
@@ -207,7 +207,7 @@ class UserControllerAPI extends Controller
     
             return $wallet->balance;
         }else{
-            return response()->json(['msg' => 'Unouthorized'], 401);
+            return response()->json(['msg' => 'Unauthorized'], 401);
         }
     }
         
@@ -244,7 +244,7 @@ class UserControllerAPI extends Controller
 
         return $wallet->balance;
         }else{
-            return response()->json(['msg' => 'Unouthorized'], 401);
+            return response()->json(['msg' => 'Unauthorized'], 401);
         }
         
     }
@@ -279,7 +279,7 @@ class UserControllerAPI extends Controller
     
             return $wallet->balance;
         }else{
-            return response()->json(['msg' => 'Unouthorized'], 401);
+            return response()->json(['msg' => 'Unauthorized'], 401);
         }
        
     }

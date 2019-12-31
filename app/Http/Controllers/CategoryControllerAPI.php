@@ -15,7 +15,7 @@ class CategoryControllerAPI extends Controller
         if (Auth::user() &&  Auth::user()->type == "u") {
             return CategoryResource::collection(Category::all());   
         }else{
-            return response()->json(['msg' => 'Unouthorized'], 401);
+            return response()->json(['msg' => 'Unauthorized'], 401);
         }
         
     }

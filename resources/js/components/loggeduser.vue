@@ -5,7 +5,7 @@
                 <h1>401 (Unauthorized)</h1>
             </b-jumbotron>
         </div>
-        <div v-else-if="this.$store.state.user.type =='u'">
+        <div v-else-if="this.$store.state.user.type == 'u'">
             <b-jumbotron>
                 <template v-slot:header>Welcome!</template>
 
@@ -27,7 +27,10 @@
                     >Add Expense</b-button
                 >
 
-                <movements :movements="movements" />
+                <movements
+                    :movements="movements"
+                    @get-movements="getMovements"
+                />
             </b-jumbotron>
             <user-edit
                 :user="user"
