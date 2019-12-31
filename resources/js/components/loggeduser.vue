@@ -5,7 +5,7 @@
                 <h1>401 (Unauthorized)</h1>
             </b-jumbotron>
         </div>
-        <div v-if="this.$store.state.user">
+        <div v-else-if="this.$store.state.user.type =='u'">
             <b-jumbotron>
                 <template v-slot:header>Welcome!</template>
 
@@ -50,6 +50,11 @@
                 v-if="addingExpense"
             >
             </expense>
+        </div>
+        <div v-else>
+            <b-jumbotron>
+                <h1>401 (Unauthorized)</h1>
+            </b-jumbotron>
         </div>
     </div>
 </template>

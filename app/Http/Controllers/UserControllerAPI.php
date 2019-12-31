@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 use App\Http\Resources\User as UserResource;
 use App\Http\Resources\UserSelf as UserSelfResource;
@@ -18,12 +19,13 @@ class UserControllerAPI extends Controller
 {
     public function index()
     {
-    return UserResource::collection(User::all());   
-    }
+        if (Auth::user() &&  Auth::user()->type == "a") {
+            return UserResource::collection(User::all());  
+        }else{
+            return response()->json(['msg' => 'Unouthorized'], 401);
+        }
 
-    public function show($id)
-    {
-        return new UserResource(User::find($id));
+     
     }
 
     public function register(Request $request)
@@ -50,135 +52,158 @@ class UserControllerAPI extends Controller
 
     public function registerAO(Request $request)
     {
-        $request->validate([
-            'name' => 'required|min:3|regex:/^[A-Za-záàâãéèêíóôõúçÁÀÂÃÉÈÍÓÔÕÚÇ ]+$/',
-            'email' => 'required|email|unique:users,email,',
-            'password' => 'required|min:3',
-            'type' => 'required'
-        ]);
-
-        $user = new User();
-        $user->fill($request->all());
-        $user->password = Hash::make($user->password);
-        $user->save();
+        if (Auth::user() &&  Auth::user()->type == "a") {
+            $request->validate([
+                'name' => 'required|min:3|regex:/^[A-Za-záàâãéèêíóôõúçÁÀÂÃÉÈÍÓÔÕÚÇ ]+$/',
+                'email' => 'required|email|unique:users,email,',
+                'password' => 'required|min:3',
+                'type' => 'required'
+            ]);
+    
+            $user = new User();
+            $user->fill($request->all());
+            $user->password = Hash::make($user->password);
+            $user->save();
+        }else{
+            return response()->json(['msg' => 'Unouthorized'], 401);
+        }
+        
     }
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'required|min:3|regex:/^[A-Za-záàâãéèêíóôõúçÁÀÂÃÉÈÍÓÔÕÚÇ ]+$/',
-            'nif' => 'required|integer|between:100000000,999999999|unique:users,nif,' . $id
-        ]);
-        $user = User::findOrFail($id);
-        $user->update($request->all());
-        return new UserSelfResource($user);
+        if (Auth::user() &&  Auth::user()->type == "u") {
+            $request->validate([
+                'name' => 'required|min:3|regex:/^[A-Za-záàâãéèêíóôõúçÁÀÂÃÉÈÍÓÔÕÚÇ ]+$/',
+                'nif' => 'required|integer|between:100000000,999999999|unique:users,nif,' . $id
+            ]);
+            $user = User::findOrFail($id);
+            $user->update($request->all());
+            return new UserSelfResource($user);
+        }else{
+            return response()->json(['msg' => 'Unouthorized'], 401);
+        }
     }
 
     public function updatePass(Request $request, $id)
     {
-        $request->validate([
-            'oldPass' => 'required|min:3',
-            'newPass' => 'required|min:3'
-        ]);
-        $user = User::findOrFail($id);
-
-        if (Hash::check($request->oldPass, $user->password)) {
-            $user->update([
-                'password' => Hash::make($request->newPass)
+        if (Auth::user() &&  Auth::user()->type == "u") {
+            $request->validate([
+                'oldPass' => 'required|min:3',
+                'newPass' => 'required|min:3'
             ]);
+            $user = User::findOrFail($id);
+    
+            if (Hash::check($request->oldPass, $user->password)) {
+                $user->update([
+                    'password' => Hash::make($request->newPass)
+                ]);
+            }
+        }else{
+            return response()->json(['msg' => 'Unouthorized'], 401);
         }
+      
     }
 
     public function destroy($id)
     {
-        $user = User::findOrFail($id);
-        if($user->wallet){
-            if($user->wallet->balance == 0){
-            if($user->active==1){
-                $user->active = 0;
-               $user->save();
-               return response('User Deactivated', 200);
+        if (Auth::user() &&  Auth::user()->type == "a") {
+            $user = User::findOrFail($id);
+            if($user->wallet){
+                if($user->wallet->balance == 0){
+                if($user->active==1){
+                    $user->active = 0;
+                   $user->save();
+                   return response('User Deactivated', 200);
+                }else{
+                    $user->active = 1;
+                    $user->save();
+                    return response('User Activated', 200);
+                }
+                   
+                }else{return response('Can not deactivate user with money', 400);
+                }
+                
             }else{
-                $user->active = 1;
-                $user->save();
-                return response('User Activated', 200);
+            $user->delete();
+            return response('User Deleted', 200);
             }
-               
-            }else{return response('Can not deactivate user with money', 400);
-            }
-            
         }else{
-        $user->delete();
-        return response('User Deleted', 200);
+            return response()->json(['msg' => 'Unouthorized'], 401);
         }
+        
        
-    }
-
-    public function getUser($email)
-    {
-        $user = User::where('email', $email)->first();
-
-        return response()->json($user);
     }
 
     public function myProfile(Request $request)
     {
-        return new UserSelfResource($request->user());
+        if (Auth::user()) {
+            return new UserSelfResource($request->user());
+        }else{
+            return response()->json(['msg' => 'Unouthorized'], 401);
+        }
     }
 
     public function addTransfer(Request $request, $id)
     {
-        $request->validate([
-            'value' => 'required|between:0,5000',
-            'email' => 'required|exists:wallets',
-            'description' => 'max:256'
-        ]);
-
-        $user = User::findOrFail($id);
-        $wallet = Wallet::where('email', $user->email)->firstOrFail();
-        $wallet2 = Wallet::where('email', $request->email)->firstOrFail();
-
-        $movement1 = new Movement();
-        $movement1->wallet_id = $wallet->id;
-        $movement1->transfer = 1;
-        $movement1->type = "e";
-        $movement1->transfer_wallet_id = $wallet2->id;
-        $movement1->category_id = $request->category;
-        $movement1->source_description = $request->description;
-        $movement1->value = $request->value;
-        $movement1->date = now();
-        $movement1->start_balance = $wallet->balance;
-        $movement1->end_balance = $wallet->balance - $request->value;
-        $wallet->balance -= $request->value;
-
-        $movement2 = new Movement();
-        $movement2->wallet_id = $wallet2->id;
-        $movement2->transfer = 1;
-        $movement2->type = "i";
-        $movement2->transfer_wallet_id = $wallet->id;
-        $movement2->category_id = $request->category;
-        $movement2->source_description = $request->description;
-        $movement2->value = $request->value;
-        $movement2->date = now();
-        $movement2->start_balance = $wallet2->balance;
-        $movement2->end_balance = $wallet2->balance + $request->value;
-        $wallet2->balance += $request->value;
-
-        $movement1->save();
-        $movement2->save();
-        $movement1->transfer_movement_id = $movement2->id;
-        $movement2->transfer_movement_id = $movement1->id;
-        $movement1->save();
-        $movement2->save();
-
-        $wallet->save();
-        $wallet2->save();
-
-        return $wallet->balance;
+        if (Auth::user() &&  Auth::user()->type == "u") {
+            $request->validate([
+                'value' => 'required|between:0,5000',
+                'email' => 'required|exists:wallets',
+                'description' => 'max:256'
+            ]);
+    
+            $user = User::findOrFail($id);
+            $wallet = Wallet::where('email', $user->email)->firstOrFail();
+            $wallet2 = Wallet::where('email', $request->email)->firstOrFail();
+    
+            $movement1 = new Movement();
+            $movement1->wallet_id = $wallet->id;
+            $movement1->transfer = 1;
+            $movement1->type = "e";
+            $movement1->transfer_wallet_id = $wallet2->id;
+            $movement1->category_id = $request->category;
+            $movement1->source_description = $request->description;
+            $movement1->value = $request->value;
+            $movement1->date = now();
+            $movement1->start_balance = $wallet->balance;
+            $movement1->end_balance = $wallet->balance - $request->value;
+            $wallet->balance -= $request->value;
+    
+            $movement2 = new Movement();
+            $movement2->wallet_id = $wallet2->id;
+            $movement2->transfer = 1;
+            $movement2->type = "i";
+            $movement2->transfer_wallet_id = $wallet->id;
+            $movement2->category_id = $request->category;
+            $movement2->source_description = $request->description;
+            $movement2->value = $request->value;
+            $movement2->date = now();
+            $movement2->start_balance = $wallet2->balance;
+            $movement2->end_balance = $wallet2->balance + $request->value;
+            $wallet2->balance += $request->value;
+    
+            $movement1->save();
+            $movement2->save();
+            $movement1->transfer_movement_id = $movement2->id;
+            $movement2->transfer_movement_id = $movement1->id;
+            $movement1->save();
+            $movement2->save();
+    
+            $wallet->save();
+            $wallet2->save();
+    
+            return $wallet->balance;
+        }else{
+            return response()->json(['msg' => 'Unouthorized'], 401);
+        }
     }
+        
+    
     public function addPaymentMB(Request $request, $id)
     {
-        $request->validate([
+        if (Auth::user() &&  Auth::user()->type == "u") {
+            $request->validate([
             'value' =>          'required|between:0,5000',
             'description' =>    'max:256',
             'mbECode' =>        'required|regex:/[0-9]{5}/',
@@ -206,36 +231,45 @@ class UserControllerAPI extends Controller
         $movement->save();
 
         return $wallet->balance;
+        }else{
+            return response()->json(['msg' => 'Unouthorized'], 401);
+        }
+        
     }
 
     public function addPaymentBT(Request $request, $id)
     {
-        $request->validate([
-            'value' =>          'required|between:0,5000',
-            'description' =>    'max:256',
-            'iban' =>           'required|regex:/[A-Z]{2}[0-9]{23}/',
-        ]);
-
-        $user = User::findOrFail($id);
-        $wallet = Wallet::where('email', $user->email)->firstOrFail();
-
-        $movement = new Movement();
-        $movement->wallet_id = $wallet->id;
-        $movement->transfer = 0;
-        $movement->type = "e";
-        $movement->category_id = $request->category;
-        $movement->value = $request->value;
-        $movement->date = now();
-        $movement->start_balance = $wallet->balance;
-        $movement->end_balance = $wallet->balance - $request->value;
-        $movement->type_payment = $request->type;
-        $movement->iban = $request->iban;
-        $wallet->balance -= $request->value;
-
-        $wallet->save();
-        $movement->save();
-
-        return $wallet->balance;
+        if (Auth::user() &&  Auth::user()->type == "u") {
+            $request->validate([
+                'value' =>          'required|between:0,5000',
+                'description' =>    'max:256',
+                'iban' =>           'required|regex:/[A-Z]{2}[0-9]{23}/',
+            ]);
+    
+            $user = User::findOrFail($id);
+            $wallet = Wallet::where('email', $user->email)->firstOrFail();
+    
+            $movement = new Movement();
+            $movement->wallet_id = $wallet->id;
+            $movement->transfer = 0;
+            $movement->type = "e";
+            $movement->category_id = $request->category;
+            $movement->value = $request->value;
+            $movement->date = now();
+            $movement->start_balance = $wallet->balance;
+            $movement->end_balance = $wallet->balance - $request->value;
+            $movement->type_payment = $request->type;
+            $movement->iban = $request->iban;
+            $wallet->balance -= $request->value;
+    
+            $wallet->save();
+            $movement->save();
+    
+            return $wallet->balance;
+        }else{
+            return response()->json(['msg' => 'Unouthorized'], 401);
+        }
+       
     }
 
     public function uploadImage(Request $request)

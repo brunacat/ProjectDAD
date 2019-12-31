@@ -1,11 +1,11 @@
 <template>
 <div>
-<div v-if="!this.$store.state.user" >
+    <div v-if="!this.$store.state.user" >
         <b-jumbotron>
         <h1>401 (Unauthorized)</h1>
         </b-jumbotron>
     </div>
-    <div>
+    <div v-else-if="this.$store.state.user.type=='a'">
         <b-jumbotron>
             <template v-slot:header>{{ title }}</template>
              <b-button v-if="!addingUser" v-on:click.prevent="addingUser = true"
@@ -24,6 +24,11 @@
             @delete-click="deleteUser"
             ref="usersListRef"
         ></user-list>
+    </div>
+    <div v-else>
+        <b-jumbotron>
+        <h1>401 (Unauthorized)</h1>
+        </b-jumbotron>
     </div>
     </div>
 </template>

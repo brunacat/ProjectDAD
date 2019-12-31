@@ -32,7 +32,6 @@ Route::middleware('auth:api')->get('user/mail/{email}', 'UserControllerAPI@getUs
 Route::middleware('auth:api')->get('users/me', 'UserControllerAPI@myProfile');
 Route::middleware('auth:api')->get('wallet/me', 'WalletControllerAPI@myWallet');
 
-Route::middleware('auth:api')->get('users/{id}', 'UserControllerAPI@show');
 Route::middleware('auth:api')->put('users/{id}', 'UserControllerAPI@update');
 Route::middleware('auth:api')->post('transfer/{id}', 'UserControllerAPI@addTransfer');
 Route::middleware('auth:api')->post('paymentMB/{id}', 'UserControllerAPI@addPaymentMB');

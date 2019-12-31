@@ -2434,6 +2434,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2459,7 +2468,7 @@ __webpack_require__.r(__webpack_exports__);
     movements: _movements__WEBPACK_IMPORTED_MODULE_0__["default"],
     "user-edit": _loggedUserEdit__WEBPACK_IMPORTED_MODULE_1__["default"],
     "change-pass": _changePass__WEBPACK_IMPORTED_MODULE_2__["default"],
-    "expense": _expense__WEBPACK_IMPORTED_MODULE_3__["default"]
+    expense: _expense__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
   methods: {
     getMovements: function getMovements() {
@@ -2709,6 +2718,45 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 // Component code (not registered)
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["movements"],
@@ -2718,9 +2766,10 @@ __webpack_require__.r(__webpack_exports__);
         key: "id"
       }, {
         key: "type"
-      }, //{ key: "email"}
-      {
-        key: 'type_payment'
+      }, {
+        key: "email"
+      }, {
+        key: "type_payment"
       }, {
         key: "category"
       }, {
@@ -2735,19 +2784,18 @@ __webpack_require__.r(__webpack_exports__);
         key: "actions",
         label: "Actions"
       }],
-      totalRows: 1,
       currentPage: 1,
       perPage: 5,
       pageOptions: [5, 10, 15],
-      sortBy: 'date',
+      sortBy: "date",
       sortDesc: true,
-      sortDirection: 'desc',
+      sortDirection: "desc",
       filter: null,
       filterOn: [],
       infoModal: {
-        id: 'info-modal',
-        title: '',
-        content: ''
+        id: "info-modal",
+        title: "",
+        content: ""
       }
     };
   },
@@ -2862,6 +2910,11 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
 //
 //
 //
@@ -3183,6 +3236,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -3361,7 +3419,6 @@ __webpack_require__.r(__webpack_exports__);
         key: "actions",
         label: "Actions"
       }],
-      totalRows: 300,
       currentPage: 1,
       perPage: 5,
       pageOptions: [5, 10, 15, 100],
@@ -32311,7 +32368,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\n/*\t  Specific style applied only on the component*/\r\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\n/*\t  Specific style applied only on the component*/\r\n", ""]);
 
 // exports
 
@@ -75216,29 +75273,22 @@ var render = function() {
           [_c("b-jumbotron", [_c("h1", [_vm._v("401 (Unauthorized)")])])],
           1
         )
-      : _vm._e(),
-    _vm._v(" "),
-    this.$store.state.user
+      : this.$store.state.user.type == "u"
       ? _c(
           "div",
           [
             _c(
               "b-jumbotron",
               {
-                scopedSlots: _vm._u(
-                  [
-                    {
-                      key: "header",
-                      fn: function() {
-                        return [_vm._v("Welcome!")]
-                      },
-                      proxy: true
-                    }
-                  ],
-                  null,
-                  false,
-                  680147609
-                )
+                scopedSlots: _vm._u([
+                  {
+                    key: "header",
+                    fn: function() {
+                      return [_vm._v("Welcome!")]
+                    },
+                    proxy: true
+                  }
+                ])
               },
               [
                 _vm._v(" "),
@@ -75289,7 +75339,9 @@ var render = function() {
                       },
                       [_vm._v("Add Expense")]
                     )
-                  : _vm._e()
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("movements", { attrs: { movements: _vm.movements } })
               ],
               1
             ),
@@ -75322,13 +75374,15 @@ var render = function() {
                     "expense-canceled": _vm.cancelExpense
                   }
                 })
-              : _vm._e(),
-            _vm._v(" "),
-            _c("movements", { attrs: { movements: _vm.movements } })
+              : _vm._e()
           ],
           1
         )
-      : _vm._e()
+      : _c(
+          "div",
+          [_c("b-jumbotron", [_c("h1", [_vm._v("401 (Unauthorized)")])])],
+          1
+        )
   ])
 }
 var staticRenderFns = []
@@ -75480,7 +75534,7 @@ var render = function() {
                   attrs: {
                     label: "Filter",
                     "label-cols-sm": "3",
-                    "label-align-sm": "right",
+                    "label-align-sm": "left",
                     "label-size": "sm",
                     "label-for": "filterInput"
                   }
@@ -75531,8 +75585,14 @@ var render = function() {
               )
             ],
             1
-          ),
-          _vm._v(" "),
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "b-row",
+        [
           _c(
             "b-col",
             { staticClass: "my-1", attrs: { sm: "5", md: "6" } },
@@ -75546,7 +75606,7 @@ var render = function() {
                     "label-cols-sm": "6",
                     "label-cols-md": "4",
                     "label-cols-lg": "3",
-                    "label-align-sm": "right",
+                    "label-align-sm": "left",
                     "label-size": "sm",
                     "label-for": "perPageSelect"
                   }
@@ -75566,6 +75626,73 @@ var render = function() {
                       expression: "perPage"
                     }
                   })
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "b-row",
+        [
+          _c(
+            "b-col",
+            { staticClass: "my-1", attrs: { lg: "9" } },
+            [
+              _c(
+                "b-form-group",
+                {
+                  staticClass: "mb-0",
+                  attrs: {
+                    label: "Filter On",
+                    "label-cols-sm": "3",
+                    "label-align-sm": "left",
+                    "label-size": "sm",
+                    description: "Leave all unchecked to filter on all data"
+                  }
+                },
+                [
+                  _c(
+                    "b-form-checkbox-group",
+                    {
+                      staticClass: "mt-1",
+                      model: {
+                        value: _vm.filterOn,
+                        callback: function($$v) {
+                          _vm.filterOn = $$v
+                        },
+                        expression: "filterOn"
+                      }
+                    },
+                    [
+                      _c("b-form-checkbox", { attrs: { value: "id" } }, [
+                        _vm._v("ID")
+                      ]),
+                      _vm._v(" "),
+                      _c("b-form-checkbox", { attrs: { value: "type" } }, [
+                        _vm._v("Type")
+                      ]),
+                      _vm._v(" "),
+                      _c("b-form-checkbox", { attrs: { value: "category" } }, [
+                        _vm._v("Category")
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "b-form-checkbox",
+                        { attrs: { value: "type_payment" } },
+                        [_vm._v("Type Of Payment")]
+                      ),
+                      _vm._v(" "),
+                      _c("b-form-checkbox", { attrs: { value: "email" } }, [
+                        _vm._v("Transfer Email")
+                      ])
+                    ],
+                    1
+                  )
                 ],
                 1
               )
@@ -75613,24 +75740,11 @@ var render = function() {
               return [
                 _c(
                   "b-button",
-                  {
-                    staticClass: "mr-1",
-                    attrs: { size: "sm" },
-                    on: {
-                      click: function($event) {
-                        return _vm.info(row.item, row.index, $event.target)
-                      }
-                    }
-                  },
-                  [_vm._v("Info modal")]
-                ),
-                _vm._v(" "),
-                _c(
-                  "b-button",
                   { attrs: { size: "sm" }, on: { click: row.toggleDetails } },
                   [
                     _vm._v(
-                      _vm._s(row.detailsShowing ? "Hide" : "Show") + " Details"
+                      _vm._s(row.detailsShowing ? "Hide" : "Show") +
+                        "\n                Details"
                     )
                   ]
                 )
@@ -75646,7 +75760,24 @@ var render = function() {
                     "ul",
                     _vm._l(row.item, function(value, key) {
                       return _c("li", { key: key }, [
-                        _vm._v(_vm._s(key) + ": " + _vm._s(value))
+                        _vm._v(
+                          "\n                        " +
+                            _vm._s(key) +
+                            " : " +
+                            _vm._s(value) +
+                            "\n                        "
+                        ),
+                        key == "photo" &&
+                        value != "Not a transfer" &&
+                        value != "No image"
+                          ? _c("img", {
+                              attrs: {
+                                src: "storage/fotos/" + value,
+                                width: "50",
+                                height: "50"
+                              }
+                            })
+                          : _vm._e()
                       ])
                     }),
                     0
@@ -75668,7 +75799,7 @@ var render = function() {
               _c("b-pagination", {
                 staticClass: "my-0",
                 attrs: {
-                  "total-rows": _vm.totalRows,
+                  "total-rows": _vm.movements.length,
                   "per-page": _vm.perPage,
                   align: "fill",
                   size: "sm"
@@ -75843,9 +75974,7 @@ var render = function() {
           [_c("b-jumbotron", [_c("h1", [_vm._v("401 (Unauthorized)")])])],
           1
         )
-      : _vm._e(),
-    _vm._v(" "),
-    this.$store.state.user
+      : this.$store.state.user.type == "o"
       ? _c("div", { staticClass: "jumbotron" }, [
           _c("h2", [_vm._v("Add Expense")]),
           _vm._v(" "),
@@ -76036,7 +76165,11 @@ var render = function() {
             1
           )
         ])
-      : _vm._e()
+      : _c(
+          "div",
+          [_c("b-jumbotron", [_c("h1", [_vm._v("401 (Unauthorized)")])])],
+          1
+        )
   ])
 }
 var staticRenderFns = []
@@ -76292,62 +76425,66 @@ var render = function() {
           [_c("b-jumbotron", [_c("h1", [_vm._v("401 (Unauthorized)")])])],
           1
         )
-      : _vm._e(),
-    _vm._v(" "),
-    _c(
-      "div",
-      [
-        _c(
-          "b-jumbotron",
-          {
-            scopedSlots: _vm._u([
-              {
-                key: "header",
-                fn: function() {
-                  return [_vm._v(_vm._s(_vm.title))]
-                },
-                proxy: true
-              }
-            ])
-          },
+      : this.$store.state.user.type == "a"
+      ? _c(
+          "div",
           [
-            _vm._v(" "),
-            !_vm.addingUser
-              ? _c(
-                  "b-button",
+            _c(
+              "b-jumbotron",
+              {
+                scopedSlots: _vm._u([
                   {
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        _vm.addingUser = true
-                      }
-                    }
-                  },
-                  [_vm._v("Add New Admin Or Operator")]
-                )
-              : _vm._e()
+                    key: "header",
+                    fn: function() {
+                      return [_vm._v(_vm._s(_vm.title))]
+                    },
+                    proxy: true
+                  }
+                ])
+              },
+              [
+                _vm._v(" "),
+                !_vm.addingUser
+                  ? _c(
+                      "b-button",
+                      {
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            _vm.addingUser = true
+                          }
+                        }
+                      },
+                      [_vm._v("Add New Admin Or Operator")]
+                    )
+                  : _vm._e()
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _vm.addingUser
+              ? _c("create-ao", {
+                  ref: "createAORef",
+                  on: {
+                    "ao-created": _vm.createdAO,
+                    "create-canceled": _vm.cancelCreate
+                  }
+                })
+              : _vm._e(),
+            _vm._v(" "),
+            _c("user-list", {
+              ref: "usersListRef",
+              attrs: { users: _vm.users },
+              on: { "delete-click": _vm.deleteUser }
+            })
           ],
           1
-        ),
-        _vm._v(" "),
-        _vm.addingUser
-          ? _c("create-ao", {
-              ref: "createAORef",
-              on: {
-                "ao-created": _vm.createdAO,
-                "create-canceled": _vm.cancelCreate
-              }
-            })
-          : _vm._e(),
-        _vm._v(" "),
-        _c("user-list", {
-          ref: "usersListRef",
-          attrs: { users: _vm.users },
-          on: { "delete-click": _vm.deleteUser }
-        })
-      ],
-      1
-    )
+        )
+      : _c(
+          "div",
+          [_c("b-jumbotron", [_c("h1", [_vm._v("401 (Unauthorized)")])])],
+          1
+        )
   ])
 }
 var staticRenderFns = []
@@ -76561,7 +76698,7 @@ var render = function() {
           _c("b-pagination", {
             staticClass: "my-0",
             attrs: {
-              "total-rows": _vm.totalRows,
+              "total-rows": _vm.users.length,
               "per-page": _vm.perPage,
               align: "fill",
               size: "sm"

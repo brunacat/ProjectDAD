@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+use Illuminate\Support\Facades\Auth;
 
 use Illuminate\Contracts\Support\Jsonable;
 use Illuminate\Http\Request;
@@ -20,12 +21,23 @@ class WalletControllerAPI extends Controller
 
     public function myWallet(Request $request)
     {
-        return new WalletResource($request->user()->wallet);
+       
+        if (Auth::user() &&  Auth::user()->type == "u") {
+            return new WalletResource($request->user()->wallet);
+        }else{
+            return response()->json(['msg' => 'Unouthorized'], 401);
+        }
+
     }
 
     public function myMovements(Request $request)
     {
+        if (Auth::user() &&  Auth::user()->type == "u") {
+            return MovementResource::collection($request->user()->wallet->movements);
+        }else{
+            return response()->json(['msg' => 'Unouthorized'], 401);
+        }
+
         
-        return MovementResource::collection($request->user()->wallet->movements);
     }
 }
