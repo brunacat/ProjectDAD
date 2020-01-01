@@ -117,7 +117,7 @@ export default {
       axios.get("api/userByEmail/" + this.transfer.email).
       then(response => {
       console.log(response);
-      this.$socket.emit('privateMessage', "A movement was added to your wallet", this.$store.state.user, response.data);
+      this.$socket.emit('privateMessage', "A movement was added to your wallet", this.$store.state.user, response.data.id);
     })
     },
     

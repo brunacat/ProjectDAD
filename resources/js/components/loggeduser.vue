@@ -127,7 +127,7 @@ export default {
       this.getMovements();
     },
      privateMessage_unavailable () {
-      this.sentmail();
+      this.sendmail();
     }
 
   },

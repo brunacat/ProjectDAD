@@ -30,8 +30,7 @@ class UserControllerAPI extends Controller
     public function findUserByEmail($email)
     {
         if (Auth::user() && (Auth::user()->type == "o" || Auth::user()->type == "u")) {
-            $user = User::where('email', $email)->firstOrFail();
-            return $user->id;
+            return new UserResource(User::where('email', $email)->firstOrFail());
         }else{
             return response()->json(['msg' => 'Unouthorized'], 401);
         }

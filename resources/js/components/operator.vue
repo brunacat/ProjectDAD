@@ -82,7 +82,7 @@ export default {
       messageUser: function() {
       axios.get("api/userByEmail/" + this.income.email).
       then(response => {
-      this.$socket.emit('privateMessage', "A movement was added to your wallet", this.$store.state.user, response.data);
+      this.$socket.emit('privateMessage', "A movement was added to your wallet", this.$store.state.user, response.data.id);
     })
     },
 
@@ -114,7 +114,7 @@ export default {
   },
   sockets: {
     privateMessage_unavailable () {
-      this.sentmail();
+      this.sendmail();
     }
 
   }
