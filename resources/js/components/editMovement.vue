@@ -47,7 +47,7 @@ export default {
     },
     methods: {
         saveMovement: function() {
-            axios.put("movementsEdit", this.movement.id).then(response => {
+            axios.put("api/movementsEdit", this.movement).then(response => {
                 this.$emit("movement-saved");
             });
         },

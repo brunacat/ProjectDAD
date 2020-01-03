@@ -18,6 +18,8 @@ import BootstrapVue from 'bootstrap-vue'
 
 import VueSocketIO from "vue-socket.io";
 
+import { Bar } from 'vue-chartjs';
+
 Vue.use(
     new VueSocketIO({
         debug: true,

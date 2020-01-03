@@ -78,11 +78,11 @@ export default {
                 nif: "",
                 photo: null
             },
+            email: "",
             movements: [],
             editingUser: null,
             changePass: null,
-            addingExpense: null,
-            key: 0
+            addingExpense: null
         };
     },
     components: {
@@ -111,31 +111,45 @@ export default {
         cancelPass: function() {
             this.changePass = null;
         },
-        addExpense: function() {
+        addExpense: function(transfer) {
             this.addingExpense = null;
             this.$toasted.success("Expense added");
             this.getMovements();
             this.$store.commit("setUser", this.user);
+            this.email = transfer;
         },
         cancelExpense: function() {
             this.addingExpense = null;
+        },
+        sendmail: function() {
+            axios
+                .post("api/sendEmail", this.email)
+                .then(response => {
+                    console.log(this.email.email);
+                    this.$toasted.success(response.data.message);
+                })
+                .catch(error => {
+                    this.$toasted.error("Notification email failed");
+                });
         }
     },
     sockets: {
-    privateMessage () {
-      this.$toasted.success("Recived moviment! moviments are beeing updated");
-      this.getMovements();
+        privateMessage() {
+            this.$toasted.success(
+                "Movement received! Movements are being updated"
+            );
+            this.getMovements();
+        },
+        privateMessage_unavailable() {
+            this.sendmail();
+        }
     },
-     privateMessage_unavailable () {
-      this.sendmail();
-    }
-
-  },
     mounted() {
         console.log(this.$store.state.user);
         this.getMovements();
         this.user = this.$store.state.user;
         console.log("Component mounted.");
+        this.renderChart(this.chartdata, this.options)
     }
 };
 </script>

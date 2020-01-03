@@ -49,3 +49,4 @@ Route::middleware('auth:api')->put('movementsEdit', 'MovementControllerAPI@edit'
 Route::middleware('auth:api')->get('wallet/me/movements', 'WalletControllerAPI@myMovements');
 
 Route::post('upload-image', 'UserControllerAPI@uploadImage');
+Route::post('sendEmail', 'EmailControllerAPI@send');

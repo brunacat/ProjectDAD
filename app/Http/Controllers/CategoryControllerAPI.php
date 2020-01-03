@@ -11,12 +11,11 @@ class CategoryControllerAPI extends Controller
 {
     public function list()
     {
-        
+
         if (Auth::user() &&  Auth::user()->type == "u") {
-            return CategoryResource::collection(Category::all());   
-        }else{
+            return CategoryResource::collection(Category::all());
+        } else {
             return response()->json(['msg' => 'Unauthorized'], 401);
         }
-        
     }
 }

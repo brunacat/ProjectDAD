@@ -72,16 +72,16 @@ class MovementControllerAPI extends Controller
         }
     }
 
-    public function edit(Request $request, $id)
+    public function edit(Request $request)
     {
         if (Auth::user() && Auth::user()->type == "u") {
             $request->validate([
                 'description' => 'max:256'
             ]);
 
-            $movement = Movement::findOrFail($id);
+            $movement = Movement::findOrFail($request->id);
             $movement->description = $request->description;
-            $movement->category = $request->category;
+            $movement->category_id = $request->category;
 
             $movement->save();
 
