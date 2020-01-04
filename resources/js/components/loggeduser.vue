@@ -34,7 +34,14 @@
                     :movements="movements"
                     @get-movements="getMovements"
                 />
-                <pie-chart :pchart="pchart" v-if="showGraphs"></pie-chart>
+                <pie-chart-exp
+                    :pchart="pchart"
+                    v-if="showGraphs"
+                ></pie-chart-exp>
+                <pie-chart-inc
+                    :pchart="pchart"
+                    v-if="showGraphs"
+                ></pie-chart-inc>
             </b-jumbotron>
             <user-edit
                 :user="user"
@@ -71,7 +78,8 @@ import Movements from "./movements";
 import UserEdit from "./loggedUserEdit";
 import ChangePass from "./changePass";
 import Expense from "./expense";
-import PieChart from "./pieChart.vue";
+import PieChartExp from "./pieChartExp.vue";
+import PieChartInc from "./pieChartInc.vue";
 
 export default {
     data() {
@@ -94,10 +102,15 @@ export default {
             },
             showGraphs: false,
             categories: null,
-            pchart:{
-                series:null,
-                labels:null
-
+            pchart: {
+                seriesE: null,
+                labelsE: null,
+                seriesI: null,
+                labelsE: null,
+                otherE: null,
+                otherI: null,
+                countE: 0,
+                countI: 0
             }
         };
     },
@@ -106,7 +119,8 @@ export default {
         "user-edit": UserEdit,
         "change-pass": ChangePass,
         expense: Expense,
-        "pie-chart": PieChart
+        "pie-chart-exp": PieChartExp,
+        "pie-chart-inc": PieChartInc
     },
     methods: {
         getMovements() {
@@ -156,8 +170,8 @@ export default {
         cancelExpense: function() {
             this.addingExpense = null;
         },
-        getCategories: function(){
-             axios.get("api/categories").then(response => {
+        getCategories: function() {
+            axios.get("api/categories").then(response => {
                 this.categories = response.data.data;
             });
         },
@@ -172,42 +186,81 @@ export default {
                     this.$toasted.error("Notification email failed");
                 });
         },
-        showGraph: function() { 
-            console.log(this.categories);
-            let arrDate = [];
+        showGraph: function() {
+            let catNameE = [];
+            let catNameI = [];
             this.categories.forEach((value, index) => {
-                arrDate.push(value.name);
+                if (value.type == "e") {
+                    catNameE.push(value.name);
+                } else {
+                    catNameI.push(value.name);
+                }
             });
 
-            let arr = [];
+            let catTotalE = [];
+            let catTotalI = [];
+            let numMovE = 0;
+            let numMovI = 0;
             this.movements.forEach(m => {
                 this.categories.forEach(c => {
-                    if (c.name == m.category) {
-                        if (arr[c.id - 1]) {
-                            arr[c.id - 1] += parseInt(m.value);
+                    if (m.type == "Expense") {
+                        if (c.name == m.category && c.type == "e") {
+                            if (catTotalE[c.id - 1]) {
+                                catTotalE[c.id - 1] += parseInt(m.value);
+                            } else {
+                                catTotalE[c.id - 1] = parseInt(m.value);
+                            }
                         } else {
-                            arr[c.id - 1] = parseInt(m.value);
+                            if (catTotalE[19]) {
+                                catTotalE[19] += parseInt(m.value);
+                                numMovE++;
+                            } else {
+                                catTotalE[19] = parseInt(m.value);
+                                numMovE++;
+                            }
                         }
                     } else {
-                        if (arr[29]) {
-                            arr[29] += parseInt(m.value);
+                        if (c.name == m.category && c.type == "i") {
+                            if (catTotalI[c.id - 20]) {
+                                catTotalI[c.id - 20] += parseInt(m.value);
+                            } else {
+
+                                catTotalI[c.id - 20] = parseInt(m.value);
+                            }
                         } else {
-                            arr[29] = parseInt(m.value);
+                            if (catTotalI[10]) {
+                                catTotalI[10] += parseInt(m.value);
+                                numMovI++;
+                            } else {
+                                catTotalI[10] = parseInt(m.value);
+                                numMovI++;
+                            }
                         }
                     }
                 });
             });
-           /* let matrix = [];
-            arrDate.forEach((v,index)=>{
-                matrix[index]= [v,arr[index]];
+            /* let matrix = [];
+            catName.forEach((v,index)=>{
+                matrix[index]= [v,catTotal[index]];
             })
             this.pchart = matrix;
             */
-           this.pchart.series =arr;
-           this.pchart.labels =arrDate;
-           console.log(this.pchart);
+            this.pchart.countE = numMovE;
+            this.pchart.countI = numMovI;
 
+            this.pchart.otherE = catTotalE[19];
+            this.pchart.otherI = catTotalI[10];
 
+            catTotalE.splice(19);
+            catTotalI.splice(10);
+
+            this.pchart.seriesE = catTotalE;
+            this.pchart.labelsE = catNameE;
+
+            this.pchart.seriesI = catTotalI;
+            this.pchart.labelsI = catNameI;
+
+            console.log(this.pchart);
             this.showGraphs = true;
         }
     },
@@ -231,3 +284,7 @@ export default {
     }
 };
 </script>
+
+<style lang="scss">
+    @import "./resources/sass/app.scss";
+</style>

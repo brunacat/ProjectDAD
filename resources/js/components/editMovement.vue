@@ -56,7 +56,21 @@ export default {
         },
         getCategories: function() {
             axios.get("api/categories").then(response => {
-                this.categories = response.data.data;
+                let arrI = [];
+                let arrE = [];
+                response.data.data.forEach(element => {
+                    if (element.type == "i") {
+                        arrI.push(element);
+                    } else {
+                        arrE.push(element);
+                    }
+                });
+
+                if (this.movement.type == "Income") {
+                    this.categories = arrI;
+                } else {
+                    this.categories = arrE;
+                }
             });
         }
     },

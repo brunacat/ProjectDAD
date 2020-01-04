@@ -16,8 +16,8 @@ Vue.use(VueRouter);
 import Vue from 'vue'
 import BootstrapVue from 'bootstrap-vue'
 
-import VueGoogleCharts from 'vue-google-charts'
-Vue.use(VueGoogleCharts)
+import VueApexCharts from 'vue-apexcharts'
+Vue.component('apexchart', VueApexCharts)
 
 import VueSocketIO from "vue-socket.io";
 
@@ -71,9 +71,6 @@ Vue.use(Toasted, {
     duration: 5000,
     type: "info"
 });
-
-import { BImg } from 'bootstrap-vue'
-Vue.component('b-img', BImg)
 
 const routes = [
     {
