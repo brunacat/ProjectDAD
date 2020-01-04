@@ -2079,6 +2079,87 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/editMovement.vue?vue&type=script&lang=js&":
+/*!***********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/editMovement.vue?vue&type=script&lang=js& ***!
+  \***********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  props: ["movement"],
+  data: function data() {
+    return {
+      categories: []
+    };
+  },
+  methods: {
+    saveMovement: function saveMovement() {
+      var _this = this;
+
+      axios.put("movementsEdit", this.movement).then(function (response) {
+        _this.$emit("movement-saved");
+      });
+    },
+    cancelEdit: function cancelEdit() {
+      this.$emit("edit-canceled");
+    },
+    getCategories: function getCategories() {
+      var _this2 = this;
+
+      axios.get("api/categories").then(function (response) {
+        _this2.categories = response.data.data;
+      });
+    }
+  },
+  mounted: function mounted() {
+    this.getCategories();
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/expense.vue?vue&type=script&lang=js&":
 /*!******************************************************************************************************************************************************************!*\
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/expense.vue?vue&type=script&lang=js& ***!
@@ -2088,6 +2169,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
 //
 //
 //
@@ -2201,24 +2283,34 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
-    getCategories: function getCategories() {
+    messageUser: function messageUser() {
       var _this = this;
 
+      axios.get("api/userByEmail/" + this.transfer.email).then(function (response) {
+        console.log(response);
+
+        _this.$socket.emit('privateMessage', "A movement was added to your wallet", _this.$store.state.user, response.data.id);
+      });
+    },
+    getCategories: function getCategories() {
+      var _this2 = this;
+
       axios.get("api/categories").then(function (response) {
-        _this.categories = response.data.data;
+        _this2.categories = response.data.data;
       });
     },
     addExpense: function addExpense() {
-      var _this2 = this;
+      var _this3 = this;
 
       if (this.type == "Transfer") {
         this.transfer.category = this.category;
         this.transfer.value = this.value;
         axios.post("api/transfer/" + this.user.id, this.transfer).then(function (response) {
-          _this2.user.balance = response.data;
+          _this3.user.balance = response.data;
 
-          _this2.$emit("expense-added");
+          _this3.$emit("expense-added");
         });
+        this.messageUser();
       } else {
         this.payment.category = this.category;
         this.payment.value = this.value;
@@ -2226,15 +2318,15 @@ __webpack_require__.r(__webpack_exports__);
 
         if (this.typeP == "mb") {
           axios.post("api/paymentMB/" + this.user.id, this.payment).then(function (response) {
-            _this2.user.balance = response.data;
+            _this3.user.balance = response.data;
 
-            _this2.$emit("expense-added");
+            _this3.$emit("expense-added");
           });
         } else {
           axios.post("api/paymentBT/" + this.user.id, this.payment).then(function (response) {
-            _this2.user.balance = response.data;
+            _this3.user.balance = response.data;
 
-            _this2.$emit("expense-added");
+            _this3.$emit("expense-added");
           });
         }
       }
@@ -2443,6 +2535,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 
@@ -2496,9 +2591,19 @@ __webpack_require__.r(__webpack_exports__);
       this.addingExpense = null;
       this.$toasted.success("Expense added");
       this.getMovements();
+      this.$store.commit("setUser", this.user);
     },
     cancelExpense: function cancelExpense() {
       this.addingExpense = null;
+    }
+  },
+  sockets: {
+    privateMessage: function privateMessage() {
+      this.$toasted.success("Recived moviment! moviments are beeing updated");
+      this.getMovements();
+    },
+    privateMessage_unavailable: function privateMessage_unavailable() {
+      this.sendmail();
     }
   },
   mounted: function mounted() {
@@ -2520,22 +2625,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -2585,15 +2674,15 @@ __webpack_require__.r(__webpack_exports__);
 
         if (response.data.data.type == "u") {
           _this.$router.push({
-            path: '/wallet'
+            path: "/wallet"
           });
         } else if (response.data.data.type == "a") {
           _this.$router.push({
-            path: '/users'
+            path: "/users"
           });
         } else if (response.data.data.type == "o") {
           _this.$router.push({
-            path: '/operator'
+            path: "/operator"
           });
         }
       })["catch"](function (error) {
@@ -2621,6 +2710,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _editMovement_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./editMovement.vue */ "./resources/js/components/editMovement.vue");
 //
 //
 //
@@ -2757,7 +2847,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-// Component code (not registered)
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ["movements"],
   data: function data() {
@@ -2796,7 +2898,9 @@ __webpack_require__.r(__webpack_exports__);
         id: "info-modal",
         title: "",
         content: ""
-      }
+      },
+      toggleEdit: false,
+      movement: []
     };
   },
   created: function created() {
@@ -2812,7 +2916,20 @@ __webpack_require__.r(__webpack_exports__);
       // Trigger pagination to update the number of buttons/pages due to filtering
       this.totalRows = filteredItems.length;
       this.currentPage = 1;
+    },
+    movementSaved: function movementSaved() {
+      this.$emit('get-movements');
+    },
+    editCanceled: function editCanceled() {
+      this.toggleEdit = false;
+    },
+    edit: function edit(item) {
+      this.toggleEdit = true;
+      this.movement = item;
     }
+  },
+  components: {
+    "edit-movement": _editMovement_vue__WEBPACK_IMPORTED_MODULE_0__["default"]
   }
 });
 
@@ -2869,9 +2986,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
-    return {
-      currentUser: ""
-    };
+    return {};
   },
   methods: {
     logout: function logout() {
@@ -2882,21 +2997,29 @@ __webpack_require__.r(__webpack_exports__);
           Authorization: "Bearer " + this.$store.state.token
         }
       }).then(function (response) {
+        _this.$socket.emit("user_exit", _this.$store.state.user);
+
+        _this.$store.commit("clearUserAndToken");
+
         _this.$store.commit("clearUserAndToken");
 
         _this.$router.push({
           path: "/"
         });
       })["catch"](function (error) {
-        _this.errorMessage = error.response.data.msg;
-        _this.showError = true;
+        _this.$socket.emit("user_exit", _this.$store.state.user);
+
+        _this.$store.commit("clearUserAndToken");
+
+        _this.typeofmsg = "alert-danger";
+        _this.message = "Logout incorrect. But local credentials were discarded";
+        _this.showMessage = true;
       });
     }
   },
   mounted: function mounted() {
     console.log("Component mounted.");
-  },
-  onChanged: function onChanged() {}
+  }
 });
 
 /***/ }),
@@ -2990,15 +3113,46 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    messageUser: function messageUser() {
+      var _this = this;
+
+      axios.get("api/userByEmail/" + this.income.email).then(function (response) {
+        _this.$socket.emit('privateMessage', "A movement was added to your wallet", _this.$store.state.user, response.data.id);
+      });
+    },
+    reset: function reset() {
+      this.income.value = 0;
+      this.income.email = "";
+      this.income.description = "";
+      this.income.iban = "";
+    },
     addIncome: function addIncome() {
+      var _this2 = this;
+
       if (this.income.type == "c") {
-        axios.post("api/incomeC", this.income).then(function (response) {});
+        axios.post("api/incomeC", this.income).then(function (response) {
+          _this2.messageUser();
+
+          _this2.$toasted.success("Income added");
+
+          _this2.reset();
+        });
       } else {
-        axios.post("api/incomeBT", this.income).then(function (response) {});
+        axios.post("api/incomeBT", this.income).then(function (response) {
+          _this2.messageUser();
+
+          _this2.$toasted.success("Income added");
+
+          _this2.reset();
+        });
       }
     }
   },
-  mounted: function mounted() {}
+  sockets: {
+    privateMessage_unavailable: function privateMessage_unavailable() {
+      this.sendmail();
+    }
+  }
 });
 
 /***/ }),
@@ -32368,7 +32522,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\n/*\t  Specific style applied only on the component*/\r\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\r\n/*\t  Specific style applied only on the component*/\r\n", ""]);
 
 // exports
 
@@ -74715,6 +74869,127 @@ render._withStripped = true
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/editMovement.vue?vue&type=template&id=41074424&scoped=true&":
+/*!***************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/editMovement.vue?vue&type=template&id=41074424&scoped=true& ***!
+  \***************************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "jumbotron" }, [
+    _c("h2", [_vm._v("Edit Movement")]),
+    _vm._v(" "),
+    _c("div", { staticClass: "form-group" }, [
+      _c(
+        "select",
+        {
+          directives: [
+            {
+              name: "model",
+              rawName: "v-model",
+              value: _vm.movement.category,
+              expression: "movement.category"
+            }
+          ],
+          on: {
+            change: function($event) {
+              var $$selectedVal = Array.prototype.filter
+                .call($event.target.options, function(o) {
+                  return o.selected
+                })
+                .map(function(o) {
+                  var val = "_value" in o ? o._value : o.value
+                  return val
+                })
+              _vm.$set(
+                _vm.movement,
+                "category",
+                $event.target.multiple ? $$selectedVal : $$selectedVal[0]
+              )
+            }
+          }
+        },
+        _vm._l(_vm.categories, function(category) {
+          return _c("option", { domProps: { value: category.id } }, [
+            _vm._v(_vm._s(category.name))
+          ])
+        }),
+        0
+      )
+    ]),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "form-group" },
+      [
+        _c("label", { attrs: { for: "description" } }, [_vm._v("Description")]),
+        _vm._v(" "),
+        _c("b-form-textarea", {
+          staticClass: "form-control",
+          attrs: { name: "desc", id: "description" },
+          model: {
+            value: _vm.movement.description,
+            callback: function($$v) {
+              _vm.$set(_vm.movement, "description", $$v)
+            },
+            expression: "movement.description"
+          }
+        })
+      ],
+      1
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "form-group" },
+      [
+        _c(
+          "b-button",
+          {
+            attrs: { type: "save", variant: "primary" },
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.saveMovement()
+              }
+            }
+          },
+          [_vm._v("Save")]
+        ),
+        _vm._v(" "),
+        _c(
+          "b-button",
+          {
+            attrs: { type: "cancel", variant: "light" },
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+                return _vm.cancelEdit()
+              }
+            }
+          },
+          [_vm._v("Cancel")]
+        )
+      ],
+      1
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
 /***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/expense.vue?vue&type=template&id=13645ddd&scoped=true&":
 /*!**********************************************************************************************************************************************************************************************************************!*\
   !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/expense.vue?vue&type=template&id=13645ddd&scoped=true& ***!
@@ -74847,9 +75122,11 @@ var render = function() {
           _vm._v(" "),
           _vm._l(_vm.categories, function(category) {
             return category.type == "e"
-              ? _c("option", { domProps: { value: category.id } }, [
-                  _vm._v(_vm._s(category.name))
-                ])
+              ? _c(
+                  "option",
+                  { key: category, domProps: { value: category.id } },
+                  [_vm._v(_vm._s(category.name))]
+                )
               : _vm._e()
           })
         ],
@@ -75341,7 +75618,10 @@ var render = function() {
                     )
                   : _vm._e(),
                 _vm._v(" "),
-                _c("movements", { attrs: { movements: _vm.movements } })
+                _c("movements", {
+                  attrs: { movements: _vm.movements },
+                  on: { "get-movements": _vm.getMovements }
+                })
               ],
               1
             ),
@@ -75517,62 +75797,68 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c(
-    "b-container",
-    { attrs: { fluid: "" } },
+    "div",
     [
       _c(
-        "b-row",
+        "b-container",
+        { attrs: { fluid: "" } },
         [
           _c(
-            "b-col",
-            { staticClass: "my-1", attrs: { lg: "6" } },
+            "b-row",
             [
               _c(
-                "b-form-group",
-                {
-                  staticClass: "mb-0",
-                  attrs: {
-                    label: "Filter",
-                    "label-cols-sm": "3",
-                    "label-align-sm": "left",
-                    "label-size": "sm",
-                    "label-for": "filterInput"
-                  }
-                },
+                "b-col",
+                { staticClass: "my-1", attrs: { lg: "6" } },
                 [
                   _c(
-                    "b-input-group",
-                    { attrs: { size: "sm" } },
+                    "b-form-group",
+                    {
+                      staticClass: "mb-0",
+                      attrs: {
+                        label: "Filter",
+                        "label-cols-sm": "3",
+                        "label-align-sm": "left",
+                        "label-size": "sm",
+                        "label-for": "filterInput"
+                      }
+                    },
                     [
-                      _c("b-form-input", {
-                        attrs: {
-                          type: "search",
-                          id: "filterInput",
-                          placeholder: "Type to Search"
-                        },
-                        model: {
-                          value: _vm.filter,
-                          callback: function($$v) {
-                            _vm.filter = $$v
-                          },
-                          expression: "filter"
-                        }
-                      }),
-                      _vm._v(" "),
                       _c(
-                        "b-input-group-append",
+                        "b-input-group",
+                        { attrs: { size: "sm" } },
                         [
-                          _c(
-                            "b-button",
-                            {
-                              attrs: { disabled: !_vm.filter },
-                              on: {
-                                click: function($event) {
-                                  _vm.filter = ""
-                                }
-                              }
+                          _c("b-form-input", {
+                            attrs: {
+                              type: "search",
+                              id: "filterInput",
+                              placeholder: "Type to Search"
                             },
-                            [_vm._v("Clear")]
+                            model: {
+                              value: _vm.filter,
+                              callback: function($$v) {
+                                _vm.filter = $$v
+                              },
+                              expression: "filter"
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "b-input-group-append",
+                            [
+                              _c(
+                                "b-button",
+                                {
+                                  attrs: { disabled: !_vm.filter },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.filter = ""
+                                    }
+                                  }
+                                },
+                                [_vm._v("Clear")]
+                              )
+                            ],
+                            1
                           )
                         ],
                         1
@@ -75585,45 +75871,248 @@ var render = function() {
               )
             ],
             1
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c(
-        "b-row",
-        [
+          ),
+          _vm._v(" "),
           _c(
-            "b-col",
-            { staticClass: "my-1", attrs: { sm: "5", md: "6" } },
+            "b-row",
             [
               _c(
-                "b-form-group",
-                {
-                  staticClass: "mb-0",
-                  attrs: {
-                    label: "Per page",
-                    "label-cols-sm": "6",
-                    "label-cols-md": "4",
-                    "label-cols-lg": "3",
-                    "label-align-sm": "left",
-                    "label-size": "sm",
-                    "label-for": "perPageSelect"
-                  }
-                },
+                "b-col",
+                { staticClass: "my-1", attrs: { sm: "5", md: "6" } },
                 [
-                  _c("b-form-select", {
+                  _c(
+                    "b-form-group",
+                    {
+                      staticClass: "mb-0",
+                      attrs: {
+                        label: "Per page",
+                        "label-cols-sm": "6",
+                        "label-cols-md": "4",
+                        "label-cols-lg": "3",
+                        "label-align-sm": "left",
+                        "label-size": "sm",
+                        "label-for": "perPageSelect"
+                      }
+                    },
+                    [
+                      _c("b-form-select", {
+                        attrs: {
+                          id: "perPageSelect",
+                          size: "sm",
+                          options: _vm.pageOptions
+                        },
+                        model: {
+                          value: _vm.perPage,
+                          callback: function($$v) {
+                            _vm.perPage = $$v
+                          },
+                          expression: "perPage"
+                        }
+                      })
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c(
+            "b-row",
+            [
+              _c(
+                "b-col",
+                { staticClass: "my-1", attrs: { lg: "9" } },
+                [
+                  _c(
+                    "b-form-group",
+                    {
+                      staticClass: "mb-0",
+                      attrs: {
+                        label: "Filter On",
+                        "label-cols-sm": "3",
+                        "label-align-sm": "left",
+                        "label-size": "sm",
+                        description: "Leave all unchecked to filter on all data"
+                      }
+                    },
+                    [
+                      _c(
+                        "b-form-checkbox-group",
+                        {
+                          staticClass: "mt-1",
+                          model: {
+                            value: _vm.filterOn,
+                            callback: function($$v) {
+                              _vm.filterOn = $$v
+                            },
+                            expression: "filterOn"
+                          }
+                        },
+                        [
+                          _c("b-form-checkbox", { attrs: { value: "id" } }, [
+                            _vm._v("ID")
+                          ]),
+                          _vm._v(" "),
+                          _c("b-form-checkbox", { attrs: { value: "type" } }, [
+                            _vm._v("Type")
+                          ]),
+                          _vm._v(" "),
+                          _c(
+                            "b-form-checkbox",
+                            { attrs: { value: "category" } },
+                            [_vm._v("Category")]
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "b-form-checkbox",
+                            { attrs: { value: "type_payment" } },
+                            [_vm._v("Type Of Payment")]
+                          ),
+                          _vm._v(" "),
+                          _c("b-form-checkbox", { attrs: { value: "email" } }, [
+                            _vm._v("Transfer Email")
+                          ])
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          ),
+          _vm._v(" "),
+          _c("b-table", {
+            attrs: {
+              "show-empty": "",
+              small: "",
+              stacked: "md",
+              items: _vm.movements,
+              fields: _vm.fields,
+              "current-page": _vm.currentPage,
+              "per-page": _vm.perPage,
+              filter: _vm.filter,
+              filterIncludedFields: _vm.filterOn,
+              "sort-by": _vm.sortBy,
+              "sort-desc": _vm.sortDesc,
+              "sort-direction": _vm.sortDirection
+            },
+            on: {
+              "update:sortBy": function($event) {
+                _vm.sortBy = $event
+              },
+              "update:sort-by": function($event) {
+                _vm.sortBy = $event
+              },
+              "update:sortDesc": function($event) {
+                _vm.sortDesc = $event
+              },
+              "update:sort-desc": function($event) {
+                _vm.sortDesc = $event
+              },
+              filtered: _vm.onFiltered
+            },
+            scopedSlots: _vm._u([
+              {
+                key: "cell(actions)",
+                fn: function(row) {
+                  return [
+                    !_vm.toggleEdit
+                      ? _c(
+                          "b-button",
+                          {
+                            attrs: { size: "sm" },
+                            on: {
+                              click: function($event) {
+                                return _vm.edit(row.item)
+                              }
+                            }
+                          },
+                          [_vm._v("Edit")]
+                        )
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _c(
+                      "b-button",
+                      {
+                        attrs: { size: "sm" },
+                        on: { click: row.toggleDetails }
+                      },
+                      [
+                        _vm._v(
+                          _vm._s(row.detailsShowing ? "Hide" : "Show") +
+                            "\n                    Details"
+                        )
+                      ]
+                    )
+                  ]
+                }
+              },
+              {
+                key: "row-details",
+                fn: function(row) {
+                  return [
+                    _c("b-card", [
+                      _c(
+                        "ul",
+                        _vm._l(row.item, function(value, key) {
+                          return _c("li", { key: key }, [
+                            _vm._v(
+                              "\n                            " +
+                                _vm._s(key) +
+                                " : " +
+                                _vm._s(value) +
+                                "\n                            "
+                            ),
+                            key == "photo" &&
+                            value != "Not a transfer" &&
+                            value != "No image"
+                              ? _c("img", {
+                                  attrs: {
+                                    src: "storage/fotos/" + value,
+                                    width: "50",
+                                    height: "50"
+                                  }
+                                })
+                              : _vm._e()
+                          ])
+                        }),
+                        0
+                      )
+                    ])
+                  ]
+                }
+              }
+            ])
+          }),
+          _vm._v(" "),
+          _c(
+            "b-row",
+            [
+              _c(
+                "b-col",
+                { staticClass: "my-1", attrs: { sm: "7", md: "6" } },
+                [
+                  _c("b-pagination", {
+                    staticClass: "my-0",
                     attrs: {
-                      id: "perPageSelect",
-                      size: "sm",
-                      options: _vm.pageOptions
+                      "total-rows": _vm.movements.length,
+                      "per-page": _vm.perPage,
+                      align: "fill",
+                      size: "sm"
                     },
                     model: {
-                      value: _vm.perPage,
+                      value: _vm.currentPage,
                       callback: function($$v) {
-                        _vm.perPage = $$v
+                        _vm.currentPage = $$v
                       },
-                      expression: "perPage"
+                      expression: "currentPage"
                     }
                   })
                 ],
@@ -75636,188 +76125,15 @@ var render = function() {
         1
       ),
       _vm._v(" "),
-      _c(
-        "b-row",
-        [
-          _c(
-            "b-col",
-            { staticClass: "my-1", attrs: { lg: "9" } },
-            [
-              _c(
-                "b-form-group",
-                {
-                  staticClass: "mb-0",
-                  attrs: {
-                    label: "Filter On",
-                    "label-cols-sm": "3",
-                    "label-align-sm": "left",
-                    "label-size": "sm",
-                    description: "Leave all unchecked to filter on all data"
-                  }
-                },
-                [
-                  _c(
-                    "b-form-checkbox-group",
-                    {
-                      staticClass: "mt-1",
-                      model: {
-                        value: _vm.filterOn,
-                        callback: function($$v) {
-                          _vm.filterOn = $$v
-                        },
-                        expression: "filterOn"
-                      }
-                    },
-                    [
-                      _c("b-form-checkbox", { attrs: { value: "id" } }, [
-                        _vm._v("ID")
-                      ]),
-                      _vm._v(" "),
-                      _c("b-form-checkbox", { attrs: { value: "type" } }, [
-                        _vm._v("Type")
-                      ]),
-                      _vm._v(" "),
-                      _c("b-form-checkbox", { attrs: { value: "category" } }, [
-                        _vm._v("Category")
-                      ]),
-                      _vm._v(" "),
-                      _c(
-                        "b-form-checkbox",
-                        { attrs: { value: "type_payment" } },
-                        [_vm._v("Type Of Payment")]
-                      ),
-                      _vm._v(" "),
-                      _c("b-form-checkbox", { attrs: { value: "email" } }, [
-                        _vm._v("Transfer Email")
-                      ])
-                    ],
-                    1
-                  )
-                ],
-                1
-              )
-            ],
-            1
-          )
-        ],
-        1
-      ),
-      _vm._v(" "),
-      _c("b-table", {
-        attrs: {
-          "show-empty": "",
-          small: "",
-          stacked: "md",
-          items: _vm.movements,
-          fields: _vm.fields,
-          "current-page": _vm.currentPage,
-          "per-page": _vm.perPage,
-          filter: _vm.filter,
-          filterIncludedFields: _vm.filterOn,
-          "sort-by": _vm.sortBy,
-          "sort-desc": _vm.sortDesc,
-          "sort-direction": _vm.sortDirection
-        },
-        on: {
-          "update:sortBy": function($event) {
-            _vm.sortBy = $event
-          },
-          "update:sort-by": function($event) {
-            _vm.sortBy = $event
-          },
-          "update:sortDesc": function($event) {
-            _vm.sortDesc = $event
-          },
-          "update:sort-desc": function($event) {
-            _vm.sortDesc = $event
-          },
-          filtered: _vm.onFiltered
-        },
-        scopedSlots: _vm._u([
-          {
-            key: "cell(actions)",
-            fn: function(row) {
-              return [
-                _c(
-                  "b-button",
-                  { attrs: { size: "sm" }, on: { click: row.toggleDetails } },
-                  [
-                    _vm._v(
-                      _vm._s(row.detailsShowing ? "Hide" : "Show") +
-                        "\n                Details"
-                    )
-                  ]
-                )
-              ]
+      _vm.toggleEdit
+        ? _c("edit-movement", {
+            attrs: { movement: _vm.movement },
+            on: {
+              "movement-saved": _vm.movementSaved,
+              "edit-canceled": _vm.editCanceled
             }
-          },
-          {
-            key: "row-details",
-            fn: function(row) {
-              return [
-                _c("b-card", [
-                  _c(
-                    "ul",
-                    _vm._l(row.item, function(value, key) {
-                      return _c("li", { key: key }, [
-                        _vm._v(
-                          "\n                        " +
-                            _vm._s(key) +
-                            " : " +
-                            _vm._s(value) +
-                            "\n                        "
-                        ),
-                        key == "photo" &&
-                        value != "Not a transfer" &&
-                        value != "No image"
-                          ? _c("img", {
-                              attrs: {
-                                src: "storage/fotos/" + value,
-                                width: "50",
-                                height: "50"
-                              }
-                            })
-                          : _vm._e()
-                      ])
-                    }),
-                    0
-                  )
-                ])
-              ]
-            }
-          }
-        ])
-      }),
-      _vm._v(" "),
-      _c(
-        "b-row",
-        [
-          _c(
-            "b-col",
-            { staticClass: "my-1", attrs: { sm: "7", md: "6" } },
-            [
-              _c("b-pagination", {
-                staticClass: "my-0",
-                attrs: {
-                  "total-rows": _vm.movements.length,
-                  "per-page": _vm.perPage,
-                  align: "fill",
-                  size: "sm"
-                },
-                model: {
-                  value: _vm.currentPage,
-                  callback: function($$v) {
-                    _vm.currentPage = $$v
-                  },
-                  expression: "currentPage"
-                }
-              })
-            ],
-            1
-          )
-        ],
-        1
-      )
+          })
+        : _vm._e()
     ],
     1
   )
@@ -76158,9 +76474,19 @@ var render = function() {
                 [_vm._v("Save")]
               ),
               _vm._v(" "),
-              _c("b-button", { attrs: { type: "reset", variant: "light" } }, [
-                _vm._v("Reset")
-              ])
+              _c(
+                "b-button",
+                {
+                  attrs: { type: "reset", variant: "light" },
+                  on: {
+                    click: function($event) {
+                      $event.preventDefault()
+                      return _vm.reset()
+                    }
+                  }
+                },
+                [_vm._v("Reset")]
+              )
             ],
             1
           )
@@ -93076,24 +93402,16 @@ var app = new vue__WEBPACK_IMPORTED_MODULE_1___default.a({
   el: "#app",
   router: router,
   store: _stores_global_store__WEBPACK_IMPORTED_MODULE_6__["default"],
-  data: {
-    user: null,
-    token: ''
-  },
-  methods: {
-    persist: function persist() {
-      localStorage.user = this.user;
-      localStorage.token = this.token;
-      console.log(this.token);
-    }
-  },
-  mounted: function mounted() {
-    if (localStorage.user) {
-      this.user = localStorage.user;
-    }
-
-    if (localStorage.token) {
-      this.token = localStorage.token;
+  sockets: {
+    privateMessage: function privateMessage(dataFromServer) {
+      var name = dataFromServer[1] === null ? "Unknown" : dataFromServer[1].name;
+      this.$toasted.show('Message "' + dataFromServer[0] + '" sent from "' + name + '"');
+    },
+    privateMessage_unavailable: function privateMessage_unavailable(destUser) {
+      this.$toasted.error('User "' + destUser.name + '" is not available');
+    },
+    privateMessage_sent: function privateMessage_sent(dataFromServer) {
+      this.$toasted.success('Message "' + dataFromServer[0] + '" was sent to "' + dataFromServer[1].name + '"');
     }
   },
   created: function created() {
@@ -93289,6 +93607,75 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_createAO_vue_vue_type_template_id_4b1ff675___WEBPACK_IMPORTED_MODULE_0__["render"]; });
 
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_createAO_vue_vue_type_template_id_4b1ff675___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
+/***/ "./resources/js/components/editMovement.vue":
+/*!**************************************************!*\
+  !*** ./resources/js/components/editMovement.vue ***!
+  \**************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _editMovement_vue_vue_type_template_id_41074424_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./editMovement.vue?vue&type=template&id=41074424&scoped=true& */ "./resources/js/components/editMovement.vue?vue&type=template&id=41074424&scoped=true&");
+/* harmony import */ var _editMovement_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./editMovement.vue?vue&type=script&lang=js& */ "./resources/js/components/editMovement.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _editMovement_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _editMovement_vue_vue_type_template_id_41074424_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _editMovement_vue_vue_type_template_id_41074424_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  "41074424",
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/editMovement.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/editMovement.vue?vue&type=script&lang=js&":
+/*!***************************************************************************!*\
+  !*** ./resources/js/components/editMovement.vue?vue&type=script&lang=js& ***!
+  \***************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_editMovement_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./editMovement.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/editMovement.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_editMovement_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/editMovement.vue?vue&type=template&id=41074424&scoped=true&":
+/*!*********************************************************************************************!*\
+  !*** ./resources/js/components/editMovement.vue?vue&type=template&id=41074424&scoped=true& ***!
+  \*********************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_editMovement_vue_vue_type_template_id_41074424_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./editMovement.vue?vue&type=template&id=41074424&scoped=true& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/editMovement.vue?vue&type=template&id=41074424&scoped=true&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_editMovement_vue_vue_type_template_id_41074424_scoped_true___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_editMovement_vue_vue_type_template_id_41074424_scoped_true___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
 

@@ -84,7 +84,7 @@ class MovementControllerAPI extends Controller
             $movement->category_id = $request->category;
 
             $movement->save();
-
+            return response()->json(['msg' => 'Unauthorized'], 401);   
         } else {
             return response()->json(['msg' => 'Unauthorized'], 401);
         }
