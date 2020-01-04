@@ -55,23 +55,28 @@ export default {
             this.$emit("edit-canceled");
         },
         getCategories: function() {
-            axios.get("api/categories").then(response => {
-                let arrI = [];
-                let arrE = [];
-                response.data.data.forEach(element => {
-                    if (element.type == "i") {
-                        arrI.push(element);
-                    } else {
-                        arrE.push(element);
-                    }
-                });
+            axios
+                .get("api/categories")
+                .then(response => {
+                    let arrI = [];
+                    let arrE = [];
+                    response.data.data.forEach(element => {
+                        if (element.type == "i") {
+                            arrI.push(element);
+                        } else {
+                            arrE.push(element);
+                        }
+                    });
 
-                if (this.movement.type == "Income") {
-                    this.categories = arrI;
-                } else {
-                    this.categories = arrE;
-                }
-            });
+                    if (this.movement.type == "Income") {
+                        this.categories = arrI;
+                    } else {
+                        this.categories = arrE;
+                    }
+                })
+                .catch(error => {
+                    this.$toasted.error("Reload the page to get CATEGORIES");
+                });
         }
     },
     mounted() {

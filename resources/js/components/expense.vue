@@ -151,7 +151,7 @@ export default {
             axios
                 .get("api/userByEmail/" + this.transfer.email)
                 .then(response => {
-                  console.log(response)
+                    console.log(response);
                     this.$socket.emit(
                         "privateMessage",
                         "A movement was added to your wallet",
@@ -162,9 +162,14 @@ export default {
         },
 
         getCategories: function() {
-            axios.get("api/categories").then(response => {
-                this.categories = response.data.data;
-            });
+            axios
+                .get("api/categories")
+                .then(response => {
+                    this.categories = response.data.data;
+                })
+                .catch(error => {
+                    this.$toasted.error("Reload the page to get CATEGORIES");
+                });
         },
         addExpense: function() {
             if (this.type == "Transfer") {
@@ -177,7 +182,6 @@ export default {
                         this.$emit("expense-added", this.transfer);
                         this.messageUser();
                     });
-               
             } else {
                 this.payment.category = this.category;
                 this.payment.value = this.value;

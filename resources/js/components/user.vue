@@ -1,35 +1,37 @@
 <template>
-<div>
-    <div v-if="!this.$store.state.user" >
-        <b-jumbotron>
-        <h1>401 (Unauthorized)</h1>
-        </b-jumbotron>
-    </div>
-    <div v-else-if="this.$store.state.user.type=='a'">
-        <b-jumbotron>
-            <template v-slot:header>{{ title }}</template>
-             <b-button v-if="!addingUser" v-on:click.prevent="addingUser = true"
-            >Add New Admin Or Operator</b-button
-        >
-        </b-jumbotron>
-       
-        <create-ao
-            v-if="addingUser"
-            @ao-created="createdAO"
-            @create-canceled="cancelCreate"
-            ref="createAORef"
-        ></create-ao>
-        <user-list
-            :users="users"
-            @delete-click="deleteUser"
-            ref="usersListRef"
-        ></user-list>
-    </div>
-    <div v-else>
-        <b-jumbotron>
-        <h1>401 (Unauthorized)</h1>
-        </b-jumbotron>
-    </div>
+    <div>
+        <div v-if="!this.$store.state.user">
+            <b-jumbotron>
+                <h1>401 (Unauthorized)</h1>
+            </b-jumbotron>
+        </div>
+        <div v-else-if="this.$store.state.user.type == 'a'">
+            <b-jumbotron>
+                <template v-slot:header>{{ title }}</template>
+                <b-button
+                    v-if="!addingUser"
+                    v-on:click.prevent="addingUser = true"
+                    >Add New Admin Or Operator</b-button
+                >
+            </b-jumbotron>
+
+            <create-ao
+                v-if="addingUser"
+                @ao-created="createdAO"
+                @create-canceled="cancelCreate"
+                ref="createAORef"
+            ></create-ao>
+            <user-list
+                :users="users"
+                @delete-click="deleteUser"
+                ref="usersListRef"
+            ></user-list>
+        </div>
+        <div v-else>
+            <b-jumbotron>
+                <h1>401 (Unauthorized)</h1>
+            </b-jumbotron>
+        </div>
     </div>
 </template>
 <script type="text/javascript">
@@ -71,9 +73,14 @@ export default {
             this.$refs.createAORef.addingUser = null;
         },
         getUsers: function() {
-            axios.get("api/users").then(response => {
-                this.users = response.data.data;
-            });
+            axios
+                .get("api/users")
+                .then(response => {
+                    this.users = response.data.data;
+                })
+                .catch(error => {
+                    this.$toasted.error("Reload the page to get USERS");
+                });
         }
     },
     components: {

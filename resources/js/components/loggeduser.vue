@@ -34,6 +34,7 @@
                     :movements="movements"
                     @get-movements="getMovements"
                 />
+                <zoomable :graphs="graphs" v-if="showGraphs"></zoomable>
                 <pie-chart-exp
                     :pchart="pchart"
                     v-if="showGraphs"
@@ -80,6 +81,7 @@ import ChangePass from "./changePass";
 import Expense from "./expense";
 import PieChartExp from "./pieChartExp.vue";
 import PieChartInc from "./pieChartInc.vue";
+import Zoomable from "./zoomable.vue";
 
 export default {
     data() {
@@ -96,10 +98,7 @@ export default {
             editingUser: null,
             changePass: null,
             addingExpense: null,
-            graphs: {
-                date: "",
-                endBalance: ""
-            },
+            graphs: [],
             showGraphs: false,
             categories: null,
             pchart: {
@@ -120,31 +119,19 @@ export default {
         "change-pass": ChangePass,
         expense: Expense,
         "pie-chart-exp": PieChartExp,
-        "pie-chart-inc": PieChartInc
+        "pie-chart-inc": PieChartInc,
+        zoomable: Zoomable
     },
     methods: {
         getMovements() {
-            axios.get("api/wallet/me/movements").then(response => {
-                this.movements = response.data.data;
-
-                //this.barChartData = this.movements.end_balance;
-                let arrEndBalance = [];
-                this.movements.forEach((value, index) => {
-                    arrEndBalance.push(value.end_balance);
-                    //console.log(value);
-                    //console.log(index);
+            axios
+                .get("api/wallet/me/movements")
+                .then(response => {
+                    this.movements = response.data.data;
+                })
+                .catch(error => {
+                    this.$toasted.error("Reload the page to get MOVEMENTS");
                 });
-
-                let arrDate = [];
-                this.movements.forEach((value, index) => {
-                    arrDate.push(value.date);
-                    //console.log(value);
-                    //console.log(index);
-                });
-
-                this.graphs.endBalance = arrEndBalance;
-                this.graphs.date = arrDate;
-            });
         },
         savedUser: function() {
             this.editingUser = null;
@@ -171,9 +158,14 @@ export default {
             this.addingExpense = null;
         },
         getCategories: function() {
-            axios.get("api/categories").then(response => {
-                this.categories = response.data.data;
-            });
+            axios
+                .get("api/categories")
+                .then(response => {
+                    this.categories = response.data.data;
+                })
+                .catch(error => {
+                    this.$toasted.error("Reload the page to get CATEGORIES");
+                });
         },
         sendmail: function() {
             axios
@@ -187,6 +179,7 @@ export default {
                 });
         },
         showGraph: function() {
+            //PIE CHARTS
             let catNameE = [];
             let catNameI = [];
             this.categories.forEach((value, index) => {
@@ -224,7 +217,6 @@ export default {
                             if (catTotalI[c.id - 20]) {
                                 catTotalI[c.id - 20] += parseInt(m.value);
                             } else {
-
                                 catTotalI[c.id - 20] = parseInt(m.value);
                             }
                         } else {
@@ -260,7 +252,21 @@ export default {
             this.pchart.seriesI = catTotalI;
             this.pchart.labelsI = catNameI;
 
-            console.log(this.pchart);
+            //ZOOMABLE
+            let arrEndBalance = [];
+            let arrDate = [];
+            this.movements.forEach((value, index) => {
+                arrEndBalance.push(value.end_balance);
+                arrDate.push(value.date);
+            });
+
+            let matrix = [];
+            arrDate.forEach((v, index) => {
+                matrix[index] = [v, parseInt(arrEndBalance[index])];
+            });
+            this.graphs = matrix;
+            console.log(this.graphs);
+
             this.showGraphs = true;
         }
     },
@@ -286,5 +292,5 @@ export default {
 </script>
 
 <style lang="scss">
-    @import "./resources/sass/app.scss";
+@import "./resources/sass/app.scss";
 </style>
