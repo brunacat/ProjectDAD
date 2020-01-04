@@ -1,28 +1,38 @@
 <template>
-    <GChart
-    type="ColumnChart"
-    :data="chartData"
-    :options="chartOptions"
-  />
-</template>
+    <div>
+      <apexchart width="380" type="donut" :series="series"></apexchart>
+    </div>
+  </template>
 
 
 <script>
+import VueApexCharts from 'vue-apexcharts'
 export default {
     props:["pchart"],
   data () {
     return {
+      options: {},
+      series: []
 
-      chartData:null,
-      chartOptions: {
-        chart: {
-          title: 'Expenses per category'
-        }
-      }
+ 
+
+    }
+},
+components: {
+        apexchart: VueApexCharts
+    },
+  methods: {
+    getdata: function(){
+      console.log(this.pchart.series);
+      console.log(this.pchart.labels)
+      
+     this.series =this.pchart.series;
     }
   },
   mounted(){
-      this.chartData= this.pchart;
+      this.getdata();
+
+
   }
 }
 </script>

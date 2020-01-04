@@ -94,7 +94,11 @@ export default {
             },
             showGraphs: false,
             categories: null,
-            pchart: null
+            pchart:{
+                series:null,
+                labels:null
+
+            }
         };
     },
     components: {
@@ -193,13 +197,15 @@ export default {
                     }
                 });
             });
-            let matrix = [];
+           /* let matrix = [];
             arrDate.forEach((v,index)=>{
                 matrix[index]= [v,arr[index]];
             })
             this.pchart = matrix;
-
-            console.log(this.pchart);
+            */
+           this.pchart.series =arr;
+           this.pchart.labels =arrDate;
+           console.log(this.pchart);
 
 
             this.showGraphs = true;
