@@ -16,6 +16,9 @@
                     v-on:click.prevent="editingUser = true"
                     >Edit Profile</b-button
                 >
+                <b-button v-if="!showGraphs" v-on:click.prevent="showGraph()"
+                    >Show Graphs</b-button
+                >
                 <b-button
                     v-if="!changePass"
                     v-on:click.prevent="changePass = true"
@@ -31,6 +34,7 @@
                     :movements="movements"
                     @get-movements="getMovements"
                 />
+                <pie-chart :pchart="pchart" v-if="showGraphs"></pie-chart>
             </b-jumbotron>
             <user-edit
                 :user="user"
@@ -67,6 +71,7 @@ import Movements from "./movements";
 import UserEdit from "./loggedUserEdit";
 import ChangePass from "./changePass";
 import Expense from "./expense";
+import PieChart from "./pieChart.vue";
 
 export default {
     data() {
@@ -82,19 +87,45 @@ export default {
             movements: [],
             editingUser: null,
             changePass: null,
-            addingExpense: null
+            addingExpense: null,
+            graphs: {
+                date: "",
+                endBalance: ""
+            },
+            showGraphs: false,
+            categories: null,
+            pchart: null
         };
     },
     components: {
         movements: Movements,
         "user-edit": UserEdit,
         "change-pass": ChangePass,
-        expense: Expense
+        expense: Expense,
+        "pie-chart": PieChart
     },
     methods: {
         getMovements() {
             axios.get("api/wallet/me/movements").then(response => {
                 this.movements = response.data.data;
+
+                //this.barChartData = this.movements.end_balance;
+                let arrEndBalance = [];
+                this.movements.forEach((value, index) => {
+                    arrEndBalance.push(value.end_balance);
+                    //console.log(value);
+                    //console.log(index);
+                });
+
+                let arrDate = [];
+                this.movements.forEach((value, index) => {
+                    arrDate.push(value.date);
+                    //console.log(value);
+                    //console.log(index);
+                });
+
+                this.graphs.endBalance = arrEndBalance;
+                this.graphs.date = arrDate;
             });
         },
         savedUser: function() {
@@ -121,6 +152,11 @@ export default {
         cancelExpense: function() {
             this.addingExpense = null;
         },
+        getCategories: function(){
+             axios.get("api/categories").then(response => {
+                this.categories = response.data.data;
+            });
+        },
         sendmail: function() {
             axios
                 .post("api/sendEmail", this.email)
@@ -131,6 +167,42 @@ export default {
                 .catch(error => {
                     this.$toasted.error("Notification email failed");
                 });
+        },
+        showGraph: function() { 
+            console.log(this.categories);
+            let arrDate = [];
+            this.categories.forEach((value, index) => {
+                arrDate.push(value.name);
+            });
+
+            let arr = [];
+            this.movements.forEach(m => {
+                this.categories.forEach(c => {
+                    if (c.name == m.category) {
+                        if (arr[c.id - 1]) {
+                            arr[c.id - 1] += parseInt(m.value);
+                        } else {
+                            arr[c.id - 1] = parseInt(m.value);
+                        }
+                    } else {
+                        if (arr[29]) {
+                            arr[29] += parseInt(m.value);
+                        } else {
+                            arr[29] = parseInt(m.value);
+                        }
+                    }
+                });
+            });
+            let matrix = [];
+            arrDate.forEach((v,index)=>{
+                matrix[index]= [v,arr[index]];
+            })
+            this.pchart = matrix;
+
+            console.log(this.pchart);
+
+
+            this.showGraphs = true;
         }
     },
     sockets: {
@@ -147,9 +219,9 @@ export default {
     mounted() {
         console.log(this.$store.state.user);
         this.getMovements();
+        this.getCategories();
         this.user = this.$store.state.user;
         console.log("Component mounted.");
-        this.renderChart(this.chartdata, this.options)
     }
 };
 </script>

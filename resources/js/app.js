@@ -16,9 +16,10 @@ Vue.use(VueRouter);
 import Vue from 'vue'
 import BootstrapVue from 'bootstrap-vue'
 
-import VueSocketIO from "vue-socket.io";
+import VueGoogleCharts from 'vue-google-charts'
+Vue.use(VueGoogleCharts)
 
-import { Bar } from 'vue-chartjs';
+import VueSocketIO from "vue-socket.io";
 
 Vue.use(
     new VueSocketIO({
