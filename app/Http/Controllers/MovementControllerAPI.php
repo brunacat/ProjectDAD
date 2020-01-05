@@ -32,6 +32,7 @@ class MovementControllerAPI extends Controller
             $movement->end_balance = $wallet->balance + $request->value;
             $movement->type_payment = $request->type;
             $movement->iban = $request->iban;
+            $movement->source_description = $request->description;
             $wallet->balance += $request->value;
 
             $wallet->save();
@@ -62,6 +63,7 @@ class MovementControllerAPI extends Controller
             $movement->start_balance = $wallet->balance;
             $movement->end_balance = $wallet->balance + $request->value;
             $movement->type_payment = $request->type;
+            $movement->source_description = $request->description;
             $wallet->balance += $request->value;
 
             $wallet->save();
@@ -83,8 +85,7 @@ class MovementControllerAPI extends Controller
             $movement->description = $request->description;
             $movement->category_id = $request->category;
 
-            $movement->save();
-            return response()->json(['msg' => 'Unauthorized'], 401);   
+            $movement->save(); 
         } else {
             return response()->json(['msg' => 'Unauthorized'], 401);
         }
