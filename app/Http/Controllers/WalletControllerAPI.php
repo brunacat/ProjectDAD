@@ -37,7 +37,5 @@ class WalletControllerAPI extends Controller
         }else{
             return response()->json(['msg' => 'Unauthorized'], 401);
         }
-
-        
     }
 }
