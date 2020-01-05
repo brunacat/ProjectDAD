@@ -112,6 +112,7 @@ class UserControllerAPI extends Controller
     public function destroy($id)
     {
         if (Auth::user() &&  Auth::user()->type == "a") {
+            $admin  = Auth::user();
             $user = User::findOrFail($id);
             if ($user->wallet) {
                 if ($user->wallet->balance == 0) {
@@ -128,8 +129,13 @@ class UserControllerAPI extends Controller
                     return response('Can not deactivate user with money', 400);
                 }
             } else {
-                $user->delete();
-                return response('User Deleted', 200);
+                if ($user->id != $admin->id) {
+                    $user->delete();
+                    return response('User Deleted', 200);
+                }else{
+                    return response('Can not delete yourself', 400);
+                }
+              
             }
         } else {
             return response()->json(['msg' => 'Unauthorized'], 401);
