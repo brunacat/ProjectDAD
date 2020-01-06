@@ -6,8 +6,34 @@
             </b-jumbotron>
         </div>
         <div v-else-if="this.$store.state.user.type == 'o'" class="jumbotron">
+            <div>
+                <b-button
+                    v-if="!editingSelf"
+                    v-on:click.prevent="editingSelf = true"
+                    >Edit Profile</b-button
+                >
+                <b-button
+                    v-if="!changePass"
+                    v-on:click.prevent="changePass = true"
+                    >Change Password</b-button
+                >
+                <edit-ao
+                    :user="this.$store.state.user"
+                    @user-saved="savedUser"
+                    @user-canceled="cancelEdit"
+                    v-if="editingSelf"
+                >
+                </edit-ao>
+                <change-pass
+                    :user="this.$store.state.user"
+                    @pass-saved="savedPass"
+                    @pass-canceled="cancelPass"
+                    v-if="changePass"
+                >
+                </change-pass>
+            </div>
+            <p />
             <h2>Add Expense</h2>
-
             <input type="radio" id="cash" value="c" v-model="income.type" />
             <label for="one">Cash</label>
             <br />
@@ -19,7 +45,7 @@
             />
             <label for="two">Transfer</label>
             <br />
-            <p></p>
+            <p />
 
             <div class="form-group">
                 <label for="valueCredit">Value of the Credit</label>
@@ -86,6 +112,8 @@
 </template>
 
 <script type="text/javascript">
+import EditAO from "./editAO";
+import ChangePass from "./changePass";
 export default {
     props: ["user"],
     data() {
@@ -96,8 +124,14 @@ export default {
                 email: "",
                 description: "",
                 iban: ""
-            }
+            },
+            editingSelf: false,
+            changePass: false
         };
+    },
+    components: {
+        "edit-ao": EditAO,
+        "change-pass": ChangePass
     },
     methods: {
         messageUser: function() {
@@ -131,6 +165,20 @@ export default {
                 });
             }
         },
+        savedUser: function() {
+            this.editingUser = false;
+            this.$toasted.success("User saved");
+        },
+        cancelEdit: function() {
+            this.editingSelf = false;
+        },
+        savedPass: function() {
+            this.changePass = false;
+            this.$toasted.success("Password saved");
+        },
+        cancelPass: function() {
+            this.changePass = false;
+        },
         sendmail: function() {
             axios
                 .post("api/sendEmail", this.income)
@@ -150,4 +198,6 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style lang="scss">
+@import "./resources/sass/app.scss";
+</style>
