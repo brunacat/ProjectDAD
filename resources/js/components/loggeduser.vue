@@ -25,11 +25,15 @@
                     >Show Graphs</b-button
                 >
                 <b-button
+                    v-if="showGraphs"
+                    v-on:click.prevent="showGraphs = false"
+                    >Hide Graphs</b-button
+                >
+                <b-button
                     v-if="!addingExpense"
                     v-on:click.prevent="addingExpense = true"
                     >Add Expense</b-button
                 >
-
                 <movements
                     :movements="movements"
                     @get-movements="getMovements"
@@ -179,6 +183,8 @@ export default {
                 });
         },
         showGraph: function() {
+            this.showGraphs = true;
+
             //PIE CHARTS
             let catNameE = [];
             let catNameI = [];
@@ -265,9 +271,6 @@ export default {
                 matrix[index] = [v, parseInt(arrEndBalance[index])];
             });
             this.graphs = matrix;
-            console.log(this.graphs);
-
-            this.showGraphs = true;
         }
     },
     sockets: {
