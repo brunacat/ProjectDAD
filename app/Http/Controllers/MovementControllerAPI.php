@@ -14,7 +14,7 @@ class MovementControllerAPI extends Controller
     {
         if (Auth::user() &&  Auth::user()->type == "o") {
             $request->validate([
-                'value' =>          'required|between:0,5000',
+                'value' =>          'required|numeric|between:0,5000',
                 'description' =>    'max:256',
                 'iban' =>           'required|regex:/[A-Z]{2}[0-9]{23}/',
                 'email' =>          'required|exists:wallets'
@@ -46,7 +46,7 @@ class MovementControllerAPI extends Controller
     {
         if (Auth::user() &&  Auth::user()->type == "o") {
             $request->validate([
-                'value' =>          'required|between:0,5000',
+                'value' =>          'required|numeric|between:0,5000',
                 'description' =>    'max:256',
                 'email' =>          'required|exists:wallets'
             ]);

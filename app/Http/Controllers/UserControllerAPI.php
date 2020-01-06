@@ -169,7 +169,7 @@ class UserControllerAPI extends Controller
     {
         if (Auth::user() &&  Auth::user()->type == "u") {
             $request->validate([
-                'value' => 'required|between:0,5000',
+                'value' => 'required|numeric|between:0,5000',
                 'email' => 'required|exists:wallets',
                 'description' => 'max:256'
             ]);
@@ -225,7 +225,7 @@ class UserControllerAPI extends Controller
     {
         if (Auth::user() &&  Auth::user()->type == "u") {
             $request->validate([
-                'value' =>          'required|between:0,5000',
+                'value' =>          'required|numeric|between:0,5000',
                 'description' =>    'max:256',
                 'mbECode' =>        'required|regex:/[0-9]{5}/',
                 'mbRef' =>          'required|regex:/[0-9]{9}/'
@@ -261,7 +261,7 @@ class UserControllerAPI extends Controller
     {
         if (Auth::user() &&  Auth::user()->type == "u") {
             $request->validate([
-                'value' =>          'required|between:0,5000',
+                'value' =>          'required|numeric|between:0,5000',
                 'description' =>    'max:256',
                 'iban' =>           'required|regex:/[A-Z]{2}[0-9]{23}/',
             ]);
