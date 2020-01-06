@@ -10,12 +10,12 @@ class EmailControllerAPI extends Controller
 {
     public function send(Request $request)
     {
-        $title = ('Movement received');
+        $title = ('Value and Description');
         $content = $request->value . ' ' . $request->description;
         $address = $request->email;
 
         Mail::send("mail", ['title' => $title, 'content' => $content], function ($message) use ($address) {
-            $message->subject('iWallet');
+            $message->subject('iWallet - Movement received');
             $message->to($address);
         });
 

@@ -2,7 +2,7 @@
 
 <head></head>
 
-<body style="background: black; color: white">
+<body style="background: white; color: black">
     <h1>{{ $title }}</h1>
     <p>{{ $content }}</p>
 </body>
