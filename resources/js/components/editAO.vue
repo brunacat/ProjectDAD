@@ -28,18 +28,6 @@
         </div>
 
         <div class="form-group">
-            <label for="inputNif">NIF</label>
-            <input
-                type="number"
-                class="form-control"
-                v-model="user.nif"
-                name="nif"
-                id="inputNif"
-                placeholder="NIF"
-            />
-        </div>
-
-        <div class="form-group">
             <b-button
                 type="save"
                 variant="primary"
@@ -68,7 +56,7 @@ export default {
         saveUser: function() {
             console.log(this.user);
             axios
-                .put("api/users/" + this.user.id, this.user)
+                .put("api/users-ao/" + this.user.id, this.user)
                 .then(response => {
                     if (this.user.photo == this.$refs.photo.file.name) {
                         this.submitFile();

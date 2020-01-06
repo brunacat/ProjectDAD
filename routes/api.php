@@ -35,6 +35,7 @@ Route::middleware('auth:api')->get('userByEmail/{email}', 'UserControllerAPI@fin
 
 
 Route::middleware('auth:api')->put('users/{id}', 'UserControllerAPI@update');
+Route::middleware('auth:api')->put('users-ao/{id}', 'UserControllerAPI@updateAO');
 Route::middleware('auth:api')->post('transfer/{id}', 'UserControllerAPI@addTransfer');
 Route::middleware('auth:api')->post('paymentMB/{id}', 'UserControllerAPI@addPaymentMB');
 Route::middleware('auth:api')->post('paymentBT/{id}', 'UserControllerAPI@addPaymentBT');

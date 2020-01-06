@@ -16,13 +16,13 @@
                     v-on:click.prevent="editingUser = true"
                     >Edit Profile</b-button
                 >
-                <b-button v-if="!showGraphs" v-on:click.prevent="showGraph()"
-                    >Show Graphs</b-button
-                >
                 <b-button
                     v-if="!changePass"
                     v-on:click.prevent="changePass = true"
                     >Change Password</b-button
+                >
+                <b-button v-if="!showGraphs" v-on:click.prevent="showGraph()"
+                    >Show Graphs</b-button
                 >
                 <b-button
                     v-if="!addingExpense"
@@ -95,9 +95,9 @@ export default {
             },
             email: "",
             movements: [],
-            editingUser: null,
-            changePass: null,
-            addingExpense: null,
+            editingUser: false,
+            changePass: false,
+            addingExpense: false,
             graphs: [],
             showGraphs: false,
             categories: null,
@@ -134,18 +134,18 @@ export default {
                 });
         },
         savedUser: function() {
-            this.editingUser = null;
+            this.editingUser = false;
             this.$toasted.success("User saved");
         },
         cancelEdit: function() {
-            this.editingUser = null;
+            this.editingUser = false;
         },
         savedPass: function() {
-            this.changePass = null;
+            this.changePass = false;
             this.$toasted.success("Password saved");
         },
         cancelPass: function() {
-            this.changePass = null;
+            this.changePass = false;
         },
         addExpense: function(transfer) {
             this.addingExpense = null;
@@ -155,7 +155,7 @@ export default {
             this.email = transfer;
         },
         cancelExpense: function() {
-            this.addingExpense = null;
+            this.addingExpense = false;
         },
         getCategories: function() {
             axios

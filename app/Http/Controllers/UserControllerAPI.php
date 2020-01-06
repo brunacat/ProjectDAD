@@ -90,9 +90,23 @@ class UserControllerAPI extends Controller
         }
     }
 
+    public function updateAO(Request $request, $id)
+    {
+        if (Auth::user() &&  (Auth::user()->type == "a" || Auth::user()->type == "o")) {
+            $request->validate([
+                'name' => 'required|min:3|regex:/^[A-Za-záàâãéèêíóôõúçÁÀÂÃÉÈÍÓÔÕÚÇ ]+$/',
+            ]);
+            $user = User::findOrFail($id);
+            $user->update($request->all());
+            return new UserSelfResource($user);
+        } else {
+            return response()->json(['msg' => 'Unauthorized'], 401);
+        }
+    }
+
     public function updatePass(Request $request, $id)
     {
-        if (Auth::user() &&  Auth::user()->type == "u") {
+        if (Auth::user()) {
             $request->validate([
                 'oldPass' => 'required|min:3',
                 'newPass' => 'required|min:3'

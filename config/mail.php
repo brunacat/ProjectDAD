@@ -56,8 +56,8 @@ return [
     */
 
     'from' => [
-        'address' => 'mailgun@sandbox1d45435ef36648e4a96ab8c384d21a55.mailgun.org',
-        'name' => 'iWallet',
+        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
+        'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 
     /*
@@ -71,7 +71,7 @@ return [
     |
     */
 
-    'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+    'encryption' => env('MAIL_ENCRYPTION'),
 
     /*
     |--------------------------------------------------------------------------

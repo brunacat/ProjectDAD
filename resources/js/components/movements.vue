@@ -212,6 +212,6 @@ export default {
 };
 </script>
 
-<style scoped>
-/*	  Specific style applied only on the component*/
+<style lang="scss">
+@import "./resources/sass/app.scss";
 </style>
