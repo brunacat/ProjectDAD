@@ -24,8 +24,6 @@
         <user-statistics v-if="showStats" :statistics="statistics"></user-statistics>
         <user-list :users="users" @delete-click="deleteUser" ref="usersListRef"></user-list>
       </b-jumbotron>
-
-      
     </div>
     <div v-else>
       <b-jumbotron>

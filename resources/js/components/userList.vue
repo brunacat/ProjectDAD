@@ -126,7 +126,7 @@ export default {
   mounted() {},
   methods: {
     deleteUser: function(user) {
-      if (user.balance != "Has money") {
+      if (user.balance != "Has money" && user.id != this.$store.state.user.id) {
         this.$emit("delete-click", user.id);
       } else {
         if (user.id == this.$store.state.user.id) {
