@@ -18,6 +18,12 @@ class WalletControllerAPI extends Controller
         $total = Wallet::count();
         return response()->json($total);
     }
+     public function totalSum()
+    {
+        $total = Wallet::sum('balance');
+        return response()->json($total);
+    }
+
 
     public function myWallet(Request $request)
     {

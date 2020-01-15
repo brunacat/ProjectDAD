@@ -6,6 +6,8 @@
                     <div class="card-header">TOTAL OF WALLETS</div>
                     <div class="card-body">
                         {{ totalWallets }}
+                        <p/>
+                        {{ totalSum }}
                     </div>
                 </div>
             </div>
@@ -17,7 +19,8 @@
 export default {
     data: function() {
         return {
-            totalWallets: null
+            totalWallets: null,
+            totalSum:null
         };
     },
     methods: {
@@ -25,10 +28,20 @@ export default {
             axios.get("api/wallets/total").then(response => {
                 this.totalWallets = response.data;
             });
+             axios.get("api/wallets/totalSum").then(response => {
+                this.totalSum = response.data;
+            });
+        },
+        getTotalSum : function(){
+            axios.get("api/wallets/totalSum").then(response => {
+                this.totalSum = response.data;
+            });
         }
     },
     mounted() {
         this.getWallets();
+        this.getTotalSum();
+
     }
 };
 </script>

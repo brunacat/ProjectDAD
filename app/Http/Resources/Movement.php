@@ -26,7 +26,7 @@ class Movement extends JsonResource
             'date' => $this->date,
             'start_balance' => $this->start_balance,
             'end_balance' => $this->end_balance,
-            'value' => $this->value,
+            'value' => $this->type == "i" ? "$this->value €" :  "($this->value €)",
             'iban' => $this->when($this->iban, $this->iban),
             'mb_entity_code' => $this->when($this->mb_entity_code,$this->mb_entity_code),
             'mb_payment_reference' => $this->when($this->mb_payment_reference,$this->mb_payment_reference),

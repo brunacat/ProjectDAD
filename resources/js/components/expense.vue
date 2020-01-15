@@ -160,6 +160,19 @@ export default {
                     );
                 });
         },
+         messageAdmin: function() {
+            axios
+                .get("api/userByEmail/" + "admin1@mail.pt")
+                .then(response => {
+                    console.log(response);
+                    this.$socket.emit(
+                        "privateMessage",
+                        "A movement was added to your wallet",
+                        this.$store.state.user,
+                        response.data.data
+                    );
+                });
+        },
 
         getCategories: function() {
             axios
@@ -181,6 +194,9 @@ export default {
                         this.user.balance = response.data;
                         this.$emit("expense-added", this.transfer);
                         this.messageUser();
+                        if(this.value > 1000){
+                            this.messageAdmin();
+                        }
                     });
             } else {
                 this.payment.category = this.category;
